@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=kiku
+Exec=kiku
+Icon=%%PREFIX%%/share/kiku/images/kiku.png
+Terminal=false
+Type=Application
+Categories=Universal Access;
+StartupNotify=true

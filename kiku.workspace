@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Workspace Name="kiku" Database="./kiku.tags">
+  <Project Name="kiku" Path="kiku/kiku.project" Active="Yes"/>
+  <Project Name="plugin" Path="plugin/plugin.project"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Debug" Selected="no">
+      <Project Name="kiku" ConfigName="Debug"/>
+      <Project Name="plugin" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release" Selected="yes">
+      <Project Name="kiku" ConfigName="Release"/>
+      <Project Name="plugin" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>

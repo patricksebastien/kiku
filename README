@@ -1,0 +1,6 @@
+kiku (pronounced key cue) is a simple voice recognition software
+using Julius and wxWidgets and VoxForge. It's a GPL software.
+
+http://julius.sourceforge.jp/en_index.php
+http://www.wxwidgets.org/
+http://www.voxforge.org/

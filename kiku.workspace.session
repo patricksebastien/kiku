@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Session Name="/home/psc/11h11/code/kiku/kiku.workspace">
+  <int Value="0" Name="m_selectedTab"/>
+  <wxString Value="/home/psc/11h11/code/kiku/kiku.workspace" Name="m_workspaceName"/>
+  <TabInfoArray Name="TabInfoArray">
+    <TabInfo>
+      <wxString Value="/home/psc/11h11/code/kiku/kiku/main.cpp" Name="FileName"/>
+      <int Value="2637" Name="FirstVisibleLine"/>
+      <int Value="2648" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/psc/11h11/code/kiku/kiku/main.h" Name="FileName"/>
+      <int Value="75" Name="FirstVisibleLine"/>
+      <int Value="59" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/psc/11h11/code/kiku/kiku/julius.cpp" Name="FileName"/>
+      <int Value="0" Name="FirstVisibleLine"/>
+      <int Value="6" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/psc/11h11/code/kiku/kiku/language.cpp" Name="FileName"/>
+      <int Value="0" Name="FirstVisibleLine"/>
+      <int Value="5" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/psc/11h11/code/kiku/kiku/v2capplication.cpp" Name="FileName"/>
+      <int Value="33" Name="FirstVisibleLine"/>
+      <int Value="39" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/psc/11h11/code/kiku/kiku/v2ceditor.cpp" Name="FileName"/>
+      <int Value="0" Name="FirstVisibleLine"/>
+      <int Value="5" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/psc/11h11/code/kiku/kiku/web.cpp" Name="FileName"/>
+      <int Value="0" Name="FirstVisibleLine"/>
+      <int Value="5" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/psc/11h11/code/kiku/kiku/gui.h" Name="FileName"/>
+      <int Value="151" Name="FirstVisibleLine"/>
+      <int Value="160" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+    </TabInfo>
+  </TabInfoArray>
+  <SerializedObject Name="m_breakpoints">
+    <long Value="0" Name="Count"/>
+  </SerializedObject>
+</Session>
