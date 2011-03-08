@@ -1,24 +1,18 @@
 /*********************************************************************
  * Author: Patrick Sébastien
- * http://www.workinprogress.ca
+ * http://www.workinprogress.ca/kiku
  * 
  * no openLogFile(); at release and add -nolog in the julius.conf (not working for now)
- * todo switch to library notification
  * webupdate not always calling...
  * 
  * // CLEAN
  * cleanup removeat and insertat...
  * eventually clean the constructor of v2ceditor (this, this)
- * 
  * do i need to clean pidra and pidcount on v2cloading?
  * check if words exist... (should we let a word be use twice if not the same app / pretrig)?
  * 
  * todo read julius.conf regexp
  * need to understand v2clauncher bool
- * 
- * xdotools static link
- * is notification get window then xdotool not!!! to test
- * http://groups.google.com/group/wx-users/browse_thread/thread/80cfca741faf88a4
  * 
  * maybe use wav_config from voxforge?
  * make binary of hmmdefs master_prompts...
@@ -34,12 +28,11 @@ data->exitcode = DoWaitForChild(data->pid);
  * for the video voice:
  * http://homepages.inf.ed.ac.uk/jyamagis/Demo-html/map-new.html
  * 
- * website: forum, add in taskbar website, irc
+ * website: forum, irc
  * 
  * 
  * NOTE
  * when updating this application do not forget to #define VERSION "x"
- * html help in /usr/share/kiku
  * each time i touch gui (or on release) : 145 & 178 (pc_v2capplication / pc_v2cshortcut) = wxCB_SORT
  *********************************************************************/
  
@@ -67,8 +60,8 @@ wxArrayString command;
 wxArrayString type; // xdotool, shell
 wxArrayString process; // processname
 wxArrayString v2c; // shortcut, application, launcher
-wxArrayString juliusformat_word;
-wxArrayString juliusformat_pronoun;
+wxArrayString juliusformat_word; // dict of the language
+wxArrayString juliusformat_pronoun; // dict of the language
 
 pidrahash pidra;
 pidcounthash pidcount;
@@ -180,6 +173,19 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	// language gui
 	st_languagedownloading->Hide();
 	g_languagedownloading->Hide();
+	
+	// eye
+    osd = xosd_create(2);
+    if (!osd) {
+        wxMessageBox("Error creating XOSD notification, please report this bug: kiku@11h11.com");
+    }
+    xosd_set_timeout(osd, sp_notdelay->GetValue());
+    xosd_set_colour (osd, "white");
+    xosd_set_outline_colour(osd, "black");
+	xosd_set_font(osd, "-adobe-helvetica-bold-r-normal-*-17-120-100-100-p-182-iso8859-1");
+    xosd_set_outline_offset (osd, 3);
+    xosd_set_align (osd, XOSD_right);
+    xosd_set_vertical_offset(osd, 30);
 	
 	// check if julius.conf exist, if not it's a brand new installation
 	if(!wxFileExists(GetCurrentWorkingDirectory()+"/language/julius.conf")) {
@@ -2480,40 +2486,12 @@ void MainFrame::Onc_notification(wxCommandEvent& event)
 {
 	if(c_notstyle->GetStringSelection() != "None") {
 		if(c_notstyle->GetStringSelection() == "Notify") {
-			wxString cp;
-			wxArrayString output, errors;
-			int code = wxExecute("which notify-send", output, errors);
-			if ( code != -1 )
-			{
-				if(!output.IsEmpty()) {
-					cp = output[0];
-				}
-			}
-			if(cp == "") {
-				wxMessageBox("notify-send is not installed:\nsudo apt-get install libnotify-bin\n\nUsing Built-in instead.");
-				c_notstyle->SetStringSelection("Built-in");
-			} else {
-				wxMessageBox("If you are using Notify OSD (default on Ubuntu) the delay will not work. Hopefully this bug will be fix in a near future.");
-				sp_notdelay->Enable(1);
-				cb_notpretrig->Enable(1);
-			}
+			wxMessageBox("If you are using Notify OSD (default on Ubuntu) the delay will not work. Hopefully this bug will be fix in a near future.");
+			sp_notdelay->Enable(1);
+			cb_notpretrig->Enable(1);
 		} else if(c_notstyle->GetStringSelection() == "XOSD") {
-			wxString cp;
-			wxArrayString output, errors;
-			int code = wxExecute("which osd_cat", output, errors);
-			if ( code != -1 )
-			{
-				if(!output.IsEmpty()) {
-					cp = output[0];
-				}
-			}
-			if(cp == "") {
-				wxMessageBox("XOSD is not installed:\nsudo apt-get install xosd-bin\n\nUsing Built-in instead.");
-				c_notstyle->SetStringSelection("Built-in");
-			} else {
-				sp_notdelay->Enable(1);
-				cb_notpretrig->Enable(1);
-			}
+			sp_notdelay->Enable(1);
+			cb_notpretrig->Enable(1);
 		}
 		sp_notdelay->Enable(1);
 		cb_notpretrig->Enable(1);
@@ -2621,52 +2599,49 @@ void MainFrame::searchandexecute(wxString word)
     }
 }
 
-void MainFrame::Eye(wxString txt) {
-
-    wxString cp;
-    wxArrayString output, errors;
-
-    if(c_notstyle->GetStringSelection() == "Built-in") {
-        wxNotificationMessage hey;
-		hey.SetMessage(txt);
-        hey.Show(sp_notdelay->GetValue());
-    } else if(c_notstyle->GetStringSelection() == "Notify") {
-		/*
-        notify_init("be");
-        nn = notify_notification_new("Binary Ear", txt, NULL, NULL);
-        notify_notification_set_timeout(nn, sp_notdelay->GetValue());
-        if (!notify_notification_show(nn, NULL))
-        {
-            wxMessageBox("Please report this problem to: patrick@11h11.com");
-        }
-        g_object_unref(G_OBJECT(nn));
-		*/
-        wxString delay;
-        delay << sp_notdelay->GetValue();
-        int code = wxExecute("notify-send -t " + delay + " \"" + txt + "\"", output, errors);
-        if ( code != -1 )
-        {
-            if(!output.IsEmpty()) {
-                cp = output[0];
-            }
-        }
-        
-    } else if(c_notstyle->GetStringSelection() == "XOSD") {
-		/*
-        char cstring[4024];
-        strncpy(cstring, (const char*)txt.mb_str(wxConvUTF8), 4023);
-        xosd_display(osd, 0, XOSD_string, "Binary Ear");
-        xosd_display(osd, 1, XOSD_string, cstring);
-		
-        int code = wxExecute("osd_cat -d 5 -p top -A right -o 30 -c white -O 3 -b percentage --text \""+test+"\" -P 0", output, errors, wxEXEC_ASYNC);
-        if ( code != -1 )
-        {
-            if(!output.IsEmpty()) {
-                cp = output[0];
-            }
-        }
-		*/
-    }
+void MainFrame::Eye(wxString txt)
+{
+	if(txt != "") {
+		if(c_notstyle->GetStringSelection() == "Built-in") {
+			wxNotificationMessage hey;
+			hey.SetMessage(txt);
+			hey.Show(sp_notdelay->GetValue());
+		} else if(c_notstyle->GetStringSelection() == "Notify") {
+			notify_init("kiku");
+			nn = notify_notification_new("kiku", txt, NULL, NULL);
+			notify_notification_set_timeout(nn, sp_notdelay->GetValue());
+			if (!notify_notification_show(nn, NULL))
+			{
+				wxMessageBox("Please report this problem to: kiku@11h11.com");
+			}
+			g_object_unref(G_OBJECT(nn));
+			/*
+			wxString delay;
+			delay << sp_notdelay->GetValue();
+			int code = wxExecute("notify-send -t " + delay + " \"" + txt + "\"", output, errors);
+			if ( code != -1 )
+			{
+				if(!output.IsEmpty()) {
+					cp = output[0];
+				}
+			}
+			*/
+		} else if(c_notstyle->GetStringSelection() == "XOSD") {
+			
+			char cstring[4024];
+			strncpy(cstring, (const char*)txt.mb_str(wxConvUTF8), 4023);
+			xosd_display(osd, 0, XOSD_string, cstring);
+			/*
+			int code = wxExecute("osd_cat -d 5 -p top -A right -o 30 -c white -O 3 -b percentage --text \""+test+"\" -P 0", output, errors, wxEXEC_ASYNC);
+			if ( code != -1 )
+			{
+				if(!output.IsEmpty()) {
+					cp = output[0];
+				}
+			}
+			*/
+		}
+	}
 }
 
 long MainFrame::Hand(wxString type, wxString cmd)
@@ -2765,6 +2740,19 @@ BEGIN_EVENT_TABLE(MainTaskBarIcon, wxTaskBarIcon)
 	EVT_MENU(PU_ACTIVEWORD, MainTaskBarIcon::OnMenuActiveWord)
 END_EVENT_TABLE()
 
+
+MainTaskBarIcon::MainTaskBarIcon(MainFrame *handler)
+{
+	wxStandardPaths stdpath = wxStandardPaths::Get();
+	
+	m_pHandler = handler;
+	if(!wxFileExists(stdpath.GetUserDataDir()+"/language/julius.conf")) {
+		check = true;
+	} else {
+		check = false;
+	}
+}
+
 void MainTaskBarIcon::OnShowKiku(wxCommandEvent& )
 {
 	if(check) {
@@ -2824,7 +2812,6 @@ void MainTaskBarIcon::OnMenuActiveWord(wxCommandEvent& )
 {
 	wxStandardPaths stdpath = wxStandardPaths::Get();
 	
-	// TODO check if there's a file in V2C
 	if(!wxFileExists(stdpath.GetUserDataDir()+"/language/julius.conf")) {
 		wxMessageBox("You need to install a language.");
 	} else {

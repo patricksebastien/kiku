@@ -1,9 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=kiku
+Comment=Voice recognition to control the OS
 Exec=kiku
-Icon=%%PREFIX%%/share/kiku/images/kiku.png
+Icon=/usr/share/kiku/images/kiku.png
 Terminal=false
 Type=Application
-Categories=Universal Access;
+Categories=Accessibility;
 StartupNotify=true

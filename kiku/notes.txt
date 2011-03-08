@@ -15,5 +15,4 @@ only wxwidgets
 10-11mb de mémoire
 
 
-DEB
-http://standards.freedesktop.org/menu-spec/latest/apa.html
+Requires the installation of 1 packages

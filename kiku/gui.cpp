@@ -142,7 +142,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer371 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxArrayString pc_v2capplicationChoices;
-	pc_v2capplication = new wxChoice( p_v2capplication, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2capplicationChoices, 0 );
+	pc_v2capplication = new wxChoice( p_v2capplication, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2capplicationChoices, wxCB_SORT );
 	pc_v2capplication->SetSelection( 0 );
 	bSizer371->Add( pc_v2capplication, 1, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxLEFT, 5 );
 	
@@ -175,7 +175,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer372 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxArrayString pc_v2cshortcutChoices;
-	pc_v2cshortcut = new wxChoice( p_v2cshortcut, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2cshortcutChoices, 0 );
+	pc_v2cshortcut = new wxChoice( p_v2cshortcut, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2cshortcutChoices, wxCB_SORT );
 	pc_v2cshortcut->SetSelection( 0 );
 	bSizer372->Add( pc_v2cshortcut, 1, wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -203,7 +203,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer40 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxArrayString pc_v2cimportappChoices;
-	pc_v2cimportapp = new wxChoice( p_v2cimport, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2cimportappChoices, 0 );
+	pc_v2cimportapp = new wxChoice( p_v2cimport, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2cimportappChoices, wxCB_SORT );
 	pc_v2cimportapp->SetSelection( 0 );
 	bSizer40->Add( pc_v2cimportapp, 1, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxLEFT, 5 );
 	
@@ -220,7 +220,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer401 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxArrayString pc_v2cimportshortcutChoices;
-	pc_v2cimportshortcut = new wxChoice( p_v2cimport, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2cimportshortcutChoices, 0 );
+	pc_v2cimportshortcut = new wxChoice( p_v2cimport, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2cimportshortcutChoices, wxCB_SORT );
 	pc_v2cimportshortcut->SetSelection( 0 );
 	bSizer401->Add( pc_v2cimportshortcut, 1, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxLEFT, 5 );
 	
@@ -372,7 +372,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	m_staticText112->Wrap( -1 );
 	bSizer13->Add( m_staticText112, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	wxString c_notstyleChoices[] = { _("None"), _("Built-in"), _("Notify") };
+	wxString c_notstyleChoices[] = { _("None"), _("Built-in"), _("Notify"), _("XOSD") };
 	int c_notstyleNChoices = sizeof( c_notstyleChoices ) / sizeof( wxString );
 	c_notstyle = new wxChoice( p_configutation, wxID_ANY, wxDefaultPosition, wxDefaultSize, c_notstyleNChoices, c_notstyleChoices, 0 );
 	c_notstyle->SetSelection( 0 );

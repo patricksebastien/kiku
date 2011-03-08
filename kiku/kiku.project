@@ -60,10 +60,10 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g;$(shell /home/psc/src/wx291svn/bin/wx-config --cxxflags);$(shell /home/psc/11h11/oreilles/juliuscvs/bin/libjulius-config --cflags);$(shell /home/psc/11h11/oreilles/juliuscvs/bin/libsent-config --cflags);$(shell /usr/bin/xosd-config --cflags)" C_Options="" Required="yes" PreCompiledHeader="">
+      <Compiler Options="-g;$(shell /home/psc/src/wx291svn/bin/wx-config --cxxflags);$(shell /home/psc/11h11/oreilles/juliuscvs/bin/libjulius-config --cflags);$(shell /home/psc/11h11/oreilles/juliuscvs/bin/libsent-config --cflags);$(shell /usr/bin/xosd-config --cflags);$(shell pkg-config --cflags libnotify)" C_Options="" Required="yes" PreCompiledHeader="">
         <Preprocessor Value="__WX__ -DDEBUG"/>
       </Compiler>
-      <Linker Options="$(shell /home/psc/src/wx291svn/bin/wx-config --libs);$(shell /home/psc/11h11/oreilles/juliuscvs/bin/libjulius-config --libs);$(shell /home/psc/11h11/oreilles/juliuscvs/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs)" Required="yes"/>
+      <Linker Options="$(shell /home/psc/src/wx291svn/bin/wx-config --libs);$(shell /home/psc/11h11/oreilles/juliuscvs/bin/libjulius-config --libs);$(shell /home/psc/11h11/oreilles/juliuscvs/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs);$(shell pkg-config --libs libnotify)" Required="yes"/>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="no"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
@@ -89,10 +89,10 @@
       </AdditionalRules>
     </Configuration>
     <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-O2;$(shell /home/psc/src/wx291svn/bin/wx-config --cxxflags);$(shell /home/psc/11h11/oreilles/juliuscvs/bin/libjulius-config --cflags);$(shell /home/psc/11h11/oreilles/juliuscvs/bin/libsent-config --cflags);$(shell /usr/bin/xosd-config --cflags)" C_Options="" Required="yes" PreCompiledHeader="">
+      <Compiler Options="-O2;$(shell /home/psc/src/wx291svn/bin/wx-config --cxxflags);$(shell /home/psc/11h11/oreilles/juliuscvs/bin/libjulius-config --cflags);$(shell /home/psc/11h11/oreilles/juliuscvs/bin/libsent-config --cflags);$(shell /usr/bin/xosd-config --cflags);$(shell pkg-config --cflags libnotify)" C_Options="" Required="yes" PreCompiledHeader="">
         <Preprocessor Value="__WX__"/>
       </Compiler>
-      <Linker Options="-s;$(shell /home/psc/src/wx291svn/bin/wx-config --libs);$(shell /home/psc/11h11/oreilles/juliuscvs/bin/libjulius-config --libs);$(shell /home/psc/11h11/oreilles/juliuscvs/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs)" Required="yes"/>
+      <Linker Options="-s;$(shell /home/psc/src/wx291svn/bin/wx-config --libs);$(shell /home/psc/11h11/oreilles/juliuscvs/bin/libjulius-config --libs);$(shell /home/psc/11h11/oreilles/juliuscvs/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs);$(shell pkg-config --libs libnotify)" Required="yes"/>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="no"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>

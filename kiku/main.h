@@ -6,7 +6,7 @@
 #ifndef __main__
 #define __main__
 
-#define VERSION "4683"
+#define VERSION "1"
 
 // main wxWidgets header file
 #include <wx/wx.h>
@@ -55,6 +55,12 @@ static const size_t DLBUFSIZE = 4096;
 // language downloader
 //#include "languagedownloader.h"
 #include "language.h"
+
+// eye
+#include <libnotify/notify.h>
+extern "C" {
+    #include <xosd.h>
+}
 
 //monitor process
 #include <stdio.h>
@@ -295,6 +301,10 @@ protected:
 		wxStandardPaths stdpath;
 		wxString GetCurrentWorkingDirectory();
 		
+		// eye
+		NotifyNotification *nn;
+        xosd* osd;
+		
 		bool actionwaiting;
 		double score;
 		double threshold;
@@ -341,10 +351,7 @@ class JuliusThread : public wxThread
 class MainTaskBarIcon: public wxTaskBarIcon
 {
 	public:
-		MainTaskBarIcon(MainFrame *handler) {
-			m_pHandler = handler;
-			check = false;
-		}
+		MainTaskBarIcon(MainFrame *handler);
         void OnLeftButtonDClick(wxTaskBarIconEvent&);
         void OnMenuExit(wxCommandEvent&);
 		void OnMenuWebsite(wxCommandEvent& );

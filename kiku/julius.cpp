@@ -308,7 +308,7 @@ void output_result(Recog *recog, void *dummy)
 
 bool Julius::start_recognition()
 {
-	openLogFile();
+	//openLogFile();
 	loadConfigFile();
 	addCallbacks();
 	
@@ -318,8 +318,8 @@ bool Julius::start_recognition()
 	}
 
 	//will output julius info to log
-	j_recog_info(recog);
-    fflush(srm_log_fp);
+	//j_recog_info(recog);
+    //fflush(srm_log_fp);
 
 	switch(j_open_stream(recog, NULL)) {
 		case 0:
@@ -348,8 +348,8 @@ bool Julius::start_recognition()
 	j_recog_free(recog);
     recog = NULL;
     jconf = NULL;
-	fclose(srm_log_fp);
-	srm_log_fp = NULL;
+	//fclose(srm_log_fp);
+	//srm_log_fp = NULL;
 
 	return true;
 }

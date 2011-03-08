@@ -50,7 +50,7 @@ gui_v2capplication::gui_v2capplication( wxWindow* parent, wxWindowID id, const w
 	bSizer41 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxArrayString c_editactionChoices;
-	c_editaction = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, c_editactionChoices, 0 );
+	c_editaction = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, c_editactionChoices, wxCB_SORT );
 	c_editaction->SetSelection( 0 );
 	bSizer41->Add( c_editaction, 1, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5 );
 	

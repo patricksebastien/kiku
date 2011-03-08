@@ -4,7 +4,8 @@
 ## under the terms of the GNU General Public License as published by
 ##    the Free Software Foundation; either version 2 of the License, or
 ##    (at your option) any later version.
-## TODO - x11 - section (menu)
+##
+## Modified for kiku
 ################################################################################
 
 
@@ -52,20 +53,21 @@ EOF
 ## Making control and postinst files
 generateDebianFiles()
 {
-    cat > fakeroot/DEBIAN/control <<EOF
+	cat > fakeroot/DEBIAN/control <<EOF
 Package: kiku
 Version: 0.${cur_rev}
-Section: Utilities
+Section: Accessibility
 Priority: optional
 Architecture: ${arch}
 Essential: no
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: libx11-6, libc6, libgcc1, libstdc++6, libasound2, zlib1g, libexpat1, libtiff4, libjpeg62, libpng12-0, libsm6, libxxf86vm1, libglib2.0-0, libfontconfig1, libfreetype6, libpango1.0-0, libcairo2, libgtk2.0-0, libatk1.0-0, libxosd2, libxext6, libxinerama1, libnotify1, libdbus-glib-1-2, libdbus-1-3
 Installed-Size: ${inst_size}
 Maintainer: Patrick Sebastien [kiku@11h11.com]
 Description: Voice recognition
-     Kiku is a simple voice recognition soft
+     Kiku is a simple voice recognition software to control your OS.
 
 EOF
+
     cat > fakeroot/DEBIAN/postinst <<EOF
 #!/bin/sh
 echo "Running postinst step..."
@@ -118,7 +120,7 @@ generateDesktopFile()
 generateMenuFile()
 {
     rm -fr fakeroot/usr/share/menu/kiku
-    echo "?package(kiku):needs=\"x11\" section=\"Apps/Programming\" \ " >> fakeroot/usr/share/menu/kiku
+    echo "?package(kiku):needs=\"x11\" section=\"Applications/Accessibility\" \ " >> fakeroot/usr/share/menu/kiku
     echo "        title=\"kiku\" command=\"${PREFIX}/bin/kiku\" \ " >> fakeroot/usr/share/menu/kiku
     echo "        icon=\"${PREFIX}/share/kiku/images/kiku.png\" " >> fakeroot/usr/share/menu/kiku
     echo "" >> fakeroot/usr/share/menu/kiku
