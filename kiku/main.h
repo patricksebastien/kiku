@@ -21,6 +21,11 @@
 #include <wx/uri.h>
 #include <wx/filesys.h>
 #include <wx/fs_inet.h>
+#include <wx/mstream.h>
+#include <wx/gdicmn.h>
+#include <wx/bitmap.h>
+#include <wx/image.h>
+#include <wx/imagpng.h>
 
 // gzip - tar
 #include <iostream>
@@ -304,6 +309,11 @@ protected:
 		// eye
 		NotifyNotification *nn;
         xosd* osd;
+		
+		// icon
+		void LoadPngIcon(const unsigned char *embedded_png, int length, int icon_number);
+		wxBitmap *iconpng[7];
+		wxIcon icontb;
 		
 		bool actionwaiting;
 		double score;

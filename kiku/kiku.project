@@ -39,6 +39,7 @@
     <File Name="jsonreader.h"/>
     <File Name="jsonval.h"/>
     <File Name="jsonwriter.h"/>
+    <File Name="readyicon.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="resources">
     <File Name="gui.fbp"/>

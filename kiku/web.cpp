@@ -10,7 +10,7 @@
 void Web::ParseFile(wxString whaturl)
 {
 	
-	if(whaturl == "/kiku/packages.txt") {
+	if(whaturl == "/KIKU/packages.txt") {
 		wxString packageName(wxT("MSW"));
 		#if defined(__WXGTK__)
 			packageName = wxT("GTK");
@@ -45,6 +45,7 @@ void Web::ParseFile(wxString whaturl)
 
 					wxString sUrlRev(rev);
 					sUrlRev.ToLong(&webrev);
+					wxMessageBox(rev);
 
 					if ( webrev > currev ) {
 						// notify the user that a new version is available

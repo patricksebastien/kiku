@@ -2,14 +2,17 @@
 <CodeLite_Workspace Name="kiku" Database="./kiku.tags">
   <Project Name="kiku" Path="kiku/kiku.project" Active="Yes"/>
   <Project Name="plugin" Path="plugin/plugin.project"/>
+  <Project Name="bin2c" Path="bin2c/bin2c.project" Active="No"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="no">
       <Project Name="kiku" ConfigName="Debug"/>
       <Project Name="plugin" ConfigName="Debug"/>
+      <Project Name="bin2c" ConfigName="Debug"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Release" Selected="yes">
       <Project Name="kiku" ConfigName="Release"/>
       <Project Name="plugin" ConfigName="Release"/>
+      <Project Name="bin2c" ConfigName="Release"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>

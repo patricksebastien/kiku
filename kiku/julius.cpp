@@ -100,7 +100,7 @@ void put_hypo_phoneme(WORD_ID *seq, int n, WORD_INFO *winfo)
 	if (seq != NULL) {
 		for (i=0;i<n;i++) {
 			if (i > 0) {
-			    printf(" |");
+			    //printf(" |");
 
                 wxCommandEvent event( wxEVT_COMMAND_TEXT_UPDATED, PRONUN_ID );
                 event.SetString("-");
@@ -116,7 +116,7 @@ void put_hypo_phoneme(WORD_ID *seq, int n, WORD_INFO *winfo)
                 event.SetString(buf);
                 wxGetApp().AddPendingEvent( event );
 
-				printf(" %s", buf);
+				//printf(" %s", buf);
 			}
 		}
 	}
@@ -124,7 +124,7 @@ void put_hypo_phoneme(WORD_ID *seq, int n, WORD_INFO *winfo)
     event.SetString("\n");
     wxGetApp().AddPendingEvent( event );
 
-    printf("\n");
+    //printf("\n");
 }
 
 void output_result(Recog *recog, void *dummy)
@@ -153,22 +153,22 @@ void output_result(Recog *recog, void *dummy)
 			/* outout message according to the status code */
 			switch(r->result.status) {
 				case J_RESULT_STATUS_REJECT_POWER:
-					printf("<input rejected by power>\n");
+					//printf("<input rejected by power>\n");
 					break;
 				case J_RESULT_STATUS_TERMINATE:
-					printf("<input teminated by request>\n");
+					//printf("<input teminated by request>\n");
 					break;
 				case J_RESULT_STATUS_ONLY_SILENCE:
-					printf("<input rejected by decoder (silence input result)>\n");
+					//printf("<input rejected by decoder (silence input result)>\n");
 					break;
 				case J_RESULT_STATUS_REJECT_GMM:
-					printf("<input rejected by GMM>\n");
+					//printf("<input rejected by GMM>\n");
 					break;
 				case J_RESULT_STATUS_REJECT_SHORT:
-					printf("<input rejected by short input>\n");
+					//printf("<input rejected by short input>\n");
 					break;
 				case J_RESULT_STATUS_FAIL:
-					printf("<search failed>\n");
+					//printf("<search failed>\n");
 					break;
 			}
 			/* continue to next process instance */
@@ -189,33 +189,35 @@ void output_result(Recog *recog, void *dummy)
 
 
 			/* LM entry sequence */
-			printf("wseq%d:", n+1);
-			for(i=0;i<seqnum;i++) printf(" %s", winfo->wname[seq[i]]);
-			printf("\n");
+			//printf("wseq%d:", n+1);
+			for(i=0;i<seqnum;i++) {
+				//printf(" %s", winfo->wname[seq[i]]);
+			}
+			//printf("\n");
 			/* phoneme sequence */
-			printf("phseq%d:", n+1);
+			//printf("phseq%d:", n+1);
 			put_hypo_phoneme(seq, seqnum, winfo);
-			printf("\n");
+			//printf("\n");
 
 
 			/* confidence scores */
-			printf("cmscore%d:", n+1);
+			//printf("cmscore%d:", n+1);
 			for (i=0;i<seqnum; i++) {
 
                 wxCommandEvent event( wxEVT_COMMAND_TEXT_UPDATED, SCORE_ID );
                 event.SetString(wxString::Format("%f", s->confidence[i]));
                 wxGetApp().AddPendingEvent( event );
 
-			    printf(" %5.3f", s->confidence[i]);
+			    //printf(" %5.3f", s->confidence[i]);
 			}
-			printf("\n");
+			//printf("\n");
 
 
 
 			/* output word sequence like Julius */
-			printf("sentence%d:", n+1);
+			//printf("sentence%d:", n+1);
 			for(i=0;i<seqnum;i++) {
-			     printf(" %s", winfo->woutput[seq[i]]);
+			     //printf(" %s", winfo->woutput[seq[i]]);
 
 			     wxCommandEvent event( wxEVT_COMMAND_TEXT_UPDATED, SENTENCE_ID );
                  event.SetString(to_utf(winfo->woutput[seq[i]]));
@@ -226,77 +228,77 @@ void output_result(Recog *recog, void *dummy)
             event.SetString("\n");
             wxGetApp().AddPendingEvent( event );
             */
-			printf("\n");
+			//printf("\n");
 
 
 			/* AM and LM scores */
-			printf("score%d: %f", n+1, s->score);
+			//printf("score%d: %f", n+1, s->score);
 			if (r->lmtype == LM_PROB) { /* if this process uses N-gram */
-				printf(" (AM: %f  LM: %f)", s->score_am, s->score_lm);
+				//printf(" (AM: %f  LM: %f)", s->score_am, s->score_lm);
 			}
-			printf("\n");
+			//printf("\n");
 			if (r->lmtype == LM_DFA) { /* if this process uses DFA grammar */
 				/* output which grammar the hypothesis belongs to
 				 when using multiple grammars */
 				if (multigram_get_all_num(r->lm) > 1) {
-					printf("grammar%d: %d\n", n+1, s->gram_id);
+					//printf("grammar%d: %d\n", n+1, s->gram_id);
 				}
 			}
 
 			/* output alignment result if exist */
 			for (align = s->align; align; align = align->next) {
-				printf("=== begin forced alignment ===\n");
+				//printf("=== begin forced alignment ===\n");
 				switch(align->unittype) {
 					case PER_WORD:
-						printf("-- word alignment --\n"); break;
+						//printf("-- word alignment --\n"); break;
 					case PER_PHONEME:
-						printf("-- phoneme alignment --\n"); break;
+						//printf("-- phoneme alignment --\n"); break;
 					case PER_STATE:
-						printf("-- state alignment --\n"); break;
+						//printf("-- state alignment --\n"); break;
 				}
-				printf(" id: from  to    n_score    unit\n");
-				printf(" ----------------------------------------\n");
+				//printf(" id: from  to    n_score    unit\n");
+				//printf(" ----------------------------------------\n");
 				for(i=0;i<align->num;i++) {
-					printf("[%4d %4d]  %f  ", align->begin_frame[i], align->end_frame[i], align->avgscore[i]);
+					//printf("[%4d %4d]  %f  ", align->begin_frame[i], align->end_frame[i], align->avgscore[i]);
 					switch(align->unittype) {
 						case PER_WORD:
-							printf("%s\t[%s]\n", winfo->wname[align->w[i]], winfo->woutput[align->w[i]]);
+							//printf("%s\t[%s]\n", winfo->wname[align->w[i]], winfo->woutput[align->w[i]]);
 							break;
 						case PER_PHONEME:
 							p = align->ph[i];
 							if (p->is_pseudo) {
-								printf("{%s}\n", p->name);
+								//printf("{%s}\n", p->name);
 							} else if (strmatch(p->name, p->body.defined->name)) {
-								printf("%s\n", p->name);
+								//printf("%s\n", p->name);
 							} else {
-								printf("%s[%s]\n", p->name, p->body.defined->name);
+								//printf("%s[%s]\n", p->name, p->body.defined->name);
 							}
 							break;
 						case PER_STATE:
 							p = align->ph[i];
 							if (p->is_pseudo) {
-								printf("{%s}", p->name);
+								//printf("{%s}", p->name);
 							} else if (strmatch(p->name, p->body.defined->name)) {
-								printf("%s", p->name);
+								//printf("%s", p->name);
 							} else {
-								printf("%s[%s]", p->name, p->body.defined->name);
+								//printf("%s[%s]", p->name, p->body.defined->name);
 							}
 							if (r->am->hmminfo->multipath) {
 								if (align->is_iwsp[i]) {
-									printf(" #%d (sp)\n", align->loc[i]);
+									//printf(" #%d (sp)\n", align->loc[i]);
 								} else {
-									printf(" #%d\n", align->loc[i]);
+									//printf(" #%d\n", align->loc[i]);
 								}
 							} else {
-								printf(" #%d\n", align->loc[i]);
+								//printf(" #%d\n", align->loc[i]);
 							}
 							break;
 					}
 				}
 
-				printf("re-computed AM score: %f\n", align->allscore);
+				//printf("re-computed AM score: %f\n", align->allscore);
 
-				printf("=== end forced alignment ===\n");
+				//printf("=== end forced alignment ===\n");
 			}
 		}
 	}
@@ -309,6 +311,7 @@ void output_result(Recog *recog, void *dummy)
 bool Julius::start_recognition()
 {
 	//openLogFile();
+	jlog_set_output(NULL);
 	loadConfigFile();
 	addCallbacks();
 	
@@ -320,6 +323,7 @@ bool Julius::start_recognition()
 	//will output julius info to log
 	//j_recog_info(recog);
     //fflush(srm_log_fp);
+	
 
 	switch(j_open_stream(recog, NULL)) {
 		case 0:

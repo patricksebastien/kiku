@@ -16,7 +16,7 @@ V2cEditor::V2cEditor(wxWindow *parent, wxString language, wxString v2a, V2cAppli
 	g_v2a = v2a;
 	autocomplete();
 	editmode = false;
-	html_v2ceditor->LoadPage("http://www.workinprogress.ca/kiku/help/v2ceditor.html");
+	html_v2ceditor->LoadPage("http://www.workinprogress.ca/KIKU/help/v2ceditor.html");
 }
 
 V2cEditor::V2cEditor(MainFrame *parent, wxString language, wxString v2a) : gui_v2ceditor( parent )
@@ -28,7 +28,7 @@ V2cEditor::V2cEditor(MainFrame *parent, wxString language, wxString v2a) : gui_v
 	g_v2a = v2a;
 	autocomplete();
 	editmode = false;
-	html_v2ceditor->LoadPage("http://www.workinprogress.ca/kiku/help/v2ceditor.html");
+	html_v2ceditor->LoadPage("http://www.workinprogress.ca/KIKU/help/v2ceditor.html");
 }
 
 V2cEditor::V2cEditor(wxWindow *parent, wxString language, wxString v2a, V2cApplication *myparent, wxString edit) : gui_v2ceditor( parent )
@@ -72,7 +72,7 @@ V2cEditor::V2cEditor(wxWindow *parent, wxString language, wxString v2a, V2cAppli
 			c_type->SetStringSelection(modules[i]["Type"].AsString());
 		}
 	}
-	html_v2ceditor->LoadPage("http://www.workinprogress.ca/kiku/help/v2ceditor.html");
+	html_v2ceditor->LoadPage("http://www.workinprogress.ca/KIKU/help/v2ceditor.html");
 }
 	
 V2cEditor::V2cEditor(MainFrame *parent, wxString language, wxString v2a, wxString edit) : gui_v2ceditor( parent )
@@ -116,7 +116,7 @@ V2cEditor::V2cEditor(MainFrame *parent, wxString language, wxString v2a, wxStrin
 			c_type->SetStringSelection(modules[i]["Type"].AsString());
 		}
 	}
-	html_v2ceditor->LoadPage("http://www.workinprogress.ca/kiku/help/v2ceditor.html");
+	html_v2ceditor->LoadPage("http://www.workinprogress.ca/KIKU/help/v2ceditor.html");
 }
 
 

@@ -2,8 +2,8 @@
  * Author: Patrick Sébastien
  * http://www.workinprogress.ca/kiku
  * 
- * no openLogFile(); at release and add -nolog in the julius.conf (not working for now)
  * webupdate not always calling...
+ * multiple icon bundle pour le frame principal
  * 
  * // CLEAN
  * cleanup removeat and insertat...
@@ -39,13 +39,8 @@ data->exitcode = DoWaitForChild(data->pid);
 #include "main.h"
 
 // icons
-#include "readyicon.xpm"
-#include "listenicon.xpm"
-#include "thinkicon.xpm"
-#include "pauseicon.xpm"
-#include "unknownicon.xpm"
-#include "pretrigicon.xpm"
-#include "updateicon.xpm"
+#include "readyicon.xpm" // todo
+#include "readyicon.h"
 
 // initialize the application
 IMPLEMENT_APP(MainApp);
@@ -101,7 +96,7 @@ bool MainApp::OnInit()
 	#if wxUSE_FS_INET && wxUSE_STREAMS && wxUSE_SOCKETS
 		wxFileSystem::AddHandler(new wxInternetFSHandler);
 	#endif
-	
+
 	return true;
 }
 
@@ -130,6 +125,16 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
     wxAcceleratorTable accel(1, entries);
     MainFrame::SetAcceleratorTable(accel);
 	
+	// icons
+	wxImage::AddHandler(new wxPNGHandler);
+	LoadPngIcon(ready_png, sizeof(ready_png), 0); // ready
+	LoadPngIcon(ready_png, sizeof(ready_png), 1); // update available
+	LoadPngIcon(ready_png, sizeof(ready_png), 2); // pause
+	LoadPngIcon(ready_png, sizeof(ready_png), 3); // pre-trig
+	LoadPngIcon(ready_png, sizeof(ready_png), 4); // unknown word
+	LoadPngIcon(ready_png, sizeof(ready_png), 5); // thinking
+	LoadPngIcon(ready_png, sizeof(ready_png), 6); // listening
+	
 	// taskbar
 	if ( !wxTaskBarIcon::IsAvailable() )
     {
@@ -141,8 +146,10 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
         );
     }
     m_taskBarIcon = new MainTaskBarIcon(this);
-    if (!m_taskBarIcon->SetIcon(wxICON(readyicon), "kiku"))
-        wxMessageBox("Could not set icon.");
+    icontb.CopyFromBitmap( *iconpng[0] );
+	if (!m_taskBarIcon->SetIcon( icontb )) {
+		wxMessageBox(wxT("Could not set icon."));
+	}
 
 	// global state
 	paused = false;
@@ -222,7 +229,7 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 		readpreference();
 	
 		// web update
-		startwebthread("/kiku/packages.txt");
+		startwebthread("/KIKU/packages.txt");
 
 		// load v2c
 		V2cApplicationLoad(); // fill the V2C panel
@@ -235,6 +242,15 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Icons
+////////////////////////////////////////////////////////////////////////////////
+void MainFrame::LoadPngIcon(const unsigned char *embedded_png, int length, int icon_number)
+{
+        wxMemoryInputStream istream(embedded_png, length);
+        iconpng[icon_number] = new wxBitmap(wxImage(istream, wxBITMAP_TYPE_PNG));
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Notebooks
 ////////////////////////////////////////////////////////////////////////////////
 void MainFrame::Onm_nb( wxNotebookEvent& event )
@@ -242,17 +258,17 @@ void MainFrame::Onm_nb( wxNotebookEvent& event )
 	unsigned int nb_current_page = m_nb->GetSelection();
 	if(nb_current_page == 5) {
 		// load help
-		html_help->LoadPage("http://www.workinprogress.ca/kiku/help/help.html");
+		html_help->LoadPage("http://www.workinprogress.ca/KIKU/help/help.html");
 	} else if(nb_current_page == 4) {
 		if(!wxFileExists(GetCurrentWorkingDirectory()+"/language/julius.conf")) {
 			// load html help language / installed
-			html_language->LoadPage("http://www.workinprogress.ca/kiku/help/language_install.html");
+			html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_install.html");
 		} else {
 			// load html help language / installed
-			html_language->LoadPage("http://www.workinprogress.ca/kiku/help/language_installed.html");
+			html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_installed.html");
 		} 
 	} else if(nb_current_page == 1) {
-		html_v2capplication->LoadPage("http://www.workinprogress.ca/kiku/help/v2capplication.html");
+		html_v2capplication->LoadPage("http://www.workinprogress.ca/KIKU/help/v2capplication.html");
 	}
 }
 
@@ -260,11 +276,11 @@ void MainFrame::Onm_nbv2c( wxNotebookEvent& event )
 {
 	unsigned int nb_current_page = m_nbv2c->GetSelection();
 	if(nb_current_page == 0) {
-		html_v2capplication->LoadPage("http://www.workinprogress.ca/kiku/help/v2capplication.html");
+		html_v2capplication->LoadPage("http://www.workinprogress.ca/KIKU/help/v2capplication.html");
 	} else if(nb_current_page == 1) {
-		html_v2cshortcut->LoadPage("http://www.workinprogress.ca/kiku/help/v2cshortcut.html");
+		html_v2cshortcut->LoadPage("http://www.workinprogress.ca/KIKU/help/v2cshortcut.html");
 	} else if(nb_current_page == 2) {
-		html_import->LoadPage("http://www.workinprogress.ca/kiku/help/import.html");
+		html_import->LoadPage("http://www.workinprogress.ca/KIKU/help/import.html");
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -482,9 +498,9 @@ bool MainFrame::listv2c(wxString v2c)
 {
 	wxString urltxt;
 	if(v2c == "application") {
-		urltxt = "/kiku/v2c/v2c_application.txt";
+		urltxt = "/KIKU/v2c/v2c_application.txt";
 	} else if(v2c == "shortcut") {
-		urltxt = "/kiku/v2c/v2c_shortcut.txt";
+		urltxt = "/KIKU/v2c/v2c_shortcut.txt";
 	}
 	wxHTTP get;
 	get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
@@ -991,7 +1007,7 @@ void MainFrame::v2cloading()
 	
 	// TODO remove
 	#ifdef DEBUG
-		int i = 0;
+		unsigned int i = 0;
 		while(i < trigger.GetCount()) {
 			wxPuts("-----------------");
 			wxPuts("Process:"+process.Item(i));
@@ -1400,7 +1416,7 @@ bool MainFrame::languagedownload() {
 		st_language_select->SetLabel(c_language->GetStringSelection());
 		
 		// gui & html loadpage (other documentation when language is installed)
-		html_language->LoadPage("http://www.workinprogress.ca/kiku/help/language_firstinstalled.html");
+		html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_firstinstalled.html");
 		
 	} else { // not an update
 		
@@ -2144,7 +2160,7 @@ void MainFrame::onJuliusSentence(wxCommandEvent& event)
 			if(b_languagedownload->GetLabel() == "Download") {
 				if(c_language->GetStringSelection() == "English [VoxForge]") {
 					if(event.GetString().Upper() == "GIVE") {
-						wxLaunchDefaultBrowser("http://www.workinprogress.ca/kiku/donate/");
+						wxLaunchDefaultBrowser("http://www.workinprogress.ca/kiku/donation/");
 					}
 				} else {
 					if(event.GetString().Upper() == "kaeru") {
@@ -2192,23 +2208,32 @@ void MainFrame::onJuliusReady(wxCommandEvent& event)
 {
 	if(!paused) {
 		if(event.GetString() == "Listening...") {
-			if (!m_taskBarIcon->SetIcon(wxICON(listenicon), "kiku"))
+			icontb.CopyFromBitmap( *iconpng[6] );
+			if (!m_taskBarIcon->SetIcon( icontb )) {
 				wxMessageBox(wxT("Could not set icon."));
+			}
 		} else {
-			// last sentence was unknown
-			if(unknown) {
-				if (!m_taskBarIcon->SetIcon(wxICON(unknownicon), "kiku"))
-						wxMessageBox(wxT("Could not set icon."));
-			} else if(actionwaiting) {
-				if (!m_taskBarIcon->SetIcon(wxICON(pretrigicon), "kiku"))
-						wxMessageBox(wxT("Could not set icon."));
+			if(unknown) { // last sentence was unknown
+				icontb.CopyFromBitmap( *iconpng[4] );
+				if (!m_taskBarIcon->SetIcon( icontb )) {
+					wxMessageBox(wxT("Could not set icon."));
+				}
+			} else if(actionwaiting) { // pre-trig
+				icontb.CopyFromBitmap( *iconpng[3] );
+				if (!m_taskBarIcon->SetIcon( icontb )) {
+					wxMessageBox(wxT("Could not set icon."));
+				}
 			} else {
 				if(webupdateicon) {
-					if (!m_taskBarIcon->SetIcon(wxICON(updateicon), "kiku"))
+					icontb.CopyFromBitmap( *iconpng[1] );
+					if (!m_taskBarIcon->SetIcon( icontb )) {
 						wxMessageBox(wxT("Could not set icon."));
+					}
 				} else {
-					if (!m_taskBarIcon->SetIcon(wxICON(readyicon), "kiku"))
+					icontb.CopyFromBitmap( *iconpng[0] );
+					if (!m_taskBarIcon->SetIcon( icontb )) {
 						wxMessageBox(wxT("Could not set icon."));
+					}
 				}
 			}
 		}
@@ -2220,8 +2245,10 @@ void MainFrame::onJuliusWatch(wxCommandEvent& event)
 {
 	// for time check
 	duration = event.GetInt();
-    if (!m_taskBarIcon->SetIcon(wxICON(thinkicon), "kiku"))
-        wxMessageBox(wxT("Could not set icon."));
+    icontb.CopyFromBitmap( *iconpng[5] );
+	if (!m_taskBarIcon->SetIcon( icontb )) {
+		wxMessageBox(wxT("Could not set icon."));
+	}
 		
     sb->SetStatusText("Duration: "+wxString::Format("%i", event.GetInt())+" ms", 1);
 }
@@ -2243,11 +2270,15 @@ void MainFrame::onJuliusLevelMeter(wxCommandEvent& event)
 				if(!aup_userpause) {
 					cb_pause->SetValue(0);
 					if(webupdateicon) {
-						if (!m_taskBarIcon->SetIcon(wxICON(updateicon), "kiku"))
+						icontb.CopyFromBitmap( *iconpng[1] );
+						if (!m_taskBarIcon->SetIcon( icontb )) {
 							wxMessageBox(wxT("Could not set icon."));
+						}
 					} else {
-						if (!m_taskBarIcon->SetIcon(wxICON(readyicon), "kiku"))
+						icontb.CopyFromBitmap( *iconpng[0] );
+						if (!m_taskBarIcon->SetIcon( icontb )) {
 							wxMessageBox(wxT("Could not set icon."));
+						}
 					}
 					m_Julius->resume_recognition();
 					sb->SetStatusText("You can now speak.");
@@ -2282,19 +2313,25 @@ void MainFrame::pauser(bool state)
     if(state) {
 		aup_userpause = true;
 		cb_pause->SetValue(1);
-        if (!m_taskBarIcon->SetIcon(wxICON(pauseicon), "kiku"))
-            wxMessageBox(wxT("Could not set icon."));
+        icontb.CopyFromBitmap( *iconpng[2] );
+		if (!m_taskBarIcon->SetIcon( icontb )) {
+			wxMessageBox(wxT("Could not set icon."));
+		}
         m_Julius->pause_recognition();
         paused = true;
 		sb->SetStatusText("Paused.");
     } else {
 		cb_pause->SetValue(0);
 		if(webupdateicon) {
-			if (!m_taskBarIcon->SetIcon(wxICON(updateicon), "kiku"))
-					wxMessageBox(wxT("Could not set icon."));
-		} else {
-			if (!m_taskBarIcon->SetIcon(wxICON(readyicon), "kiku"))
+			icontb.CopyFromBitmap( *iconpng[1] );
+			if (!m_taskBarIcon->SetIcon( icontb )) {
 				wxMessageBox(wxT("Could not set icon."));
+			}
+		} else {
+			icontb.CopyFromBitmap( *iconpng[0] );
+			if (!m_taskBarIcon->SetIcon( icontb )) {
+				wxMessageBox(wxT("Could not set icon."));
+			}
 		}
         m_Julius->resume_recognition();
         paused = false;
@@ -2510,11 +2547,15 @@ void MainFrame::OnPreTrigTimer(wxTimerEvent& event)
 	if(actionwaiting) {
 		if(pretrig_timer.Time() > PRETRIGTIME) {
 			if(webupdateicon) {
-				if (!m_taskBarIcon->SetIcon(wxICON(updateicon), "kiku"))
-						wxMessageBox(wxT("Could not set icon."));
-			} else {
-				if (!m_taskBarIcon->SetIcon(wxICON(readyicon), "kiku"))
+				icontb.CopyFromBitmap( *iconpng[1] );
+				if (!m_taskBarIcon->SetIcon( icontb )) {
 					wxMessageBox(wxT("Could not set icon."));
+				}
+			} else {
+				icontb.CopyFromBitmap( *iconpng[0] );
+				if (!m_taskBarIcon->SetIcon( icontb )) {
+					wxMessageBox(wxT("Could not set icon."));
+				}
 			}
 			actionwaiting = false;
 			sb->SetStatusText("", 2);
@@ -2529,11 +2570,15 @@ void MainFrame::OnUnknownTimer(wxTimerEvent& event)
 	if(!paused) {
 		if(unknown) {
 			if(webupdateicon) {
-				if (!m_taskBarIcon->SetIcon(wxICON(updateicon), "kiku"))
-						wxMessageBox(wxT("Could not set icon."));
-			} else {
-				if (!m_taskBarIcon->SetIcon(wxICON(readyicon), "kiku"))
+				icontb.CopyFromBitmap( *iconpng[1] );
+				if (!m_taskBarIcon->SetIcon( icontb )) {
 					wxMessageBox(wxT("Could not set icon."));
+				}
+			} else {
+				icontb.CopyFromBitmap( *iconpng[0] );
+				if (!m_taskBarIcon->SetIcon( icontb )) {
+					wxMessageBox(wxT("Could not set icon."));
+				}
 			}
 			unknown = false;
 			unknownm_timer->Stop();
