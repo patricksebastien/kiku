@@ -93,6 +93,8 @@ class MainFrameBase : public wxFrame
 		wxRadioBox* rb_v2cmethod;
 		wxCheckBox* cb_v2cmonitor;
 		wxCheckBox* cb_v2clauncher;
+		wxStaticText* m_staticText35;
+		wxCheckBox* cb_dict;
 		wxStaticLine* m_staticline2;
 		wxStaticText* m_staticText81;
 		wxSpinCtrl* sp_apmistake;
@@ -179,6 +181,7 @@ class MainFrameBase : public wxFrame
 		virtual void Onrb_v2cmethod( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Oncb_v2cmonitor( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Oncb_v2clauncher( wxCommandEvent& event ) { event.Skip(); }
+		virtual void Oncb_dict( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onc_notification( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onc_engdriver( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Ons_englevel( wxScrollEvent& event ) { event.Skip(); }

@@ -5,6 +5,8 @@
 #include <wx/thread.h>
 #include <wx/url.h>
 #include <wx/tokenzr.h>
+#include <wx/sstream.h>
+#include <wx/protocol/http.h>
 
 class MainFrame; // forward declaration
 

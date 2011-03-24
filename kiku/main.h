@@ -27,6 +27,13 @@
 #include <wx/image.h>
 #include <wx/imagpng.h>
 
+// xdotool
+extern "C" {
+	#include "xdo.h"
+	#include "xdotool.h"
+	#include <linux/string.h>
+}
+
 // gzip - tar
 #include <iostream>
 #include <memory>
@@ -86,6 +93,7 @@ extern "C" {
 #define PROCESSTIMER_ID 10000
 #define PRETRIGTIMER_ID 10001
 #define UNKNOWNTIMER_ID 10002
+#define RECOGNIZEDTIMER_ID 10003
 
 #define POLLING 2000 // monitor process
 #define PRETRIGTIME 10000 // how long to hold for the action word
@@ -157,11 +165,19 @@ class MainFrame : public MainFrameBase
 		void Dopb_v2cshortcut();
 		void autocomplete();
 		
+		// dictionary
+		void writedictionary();
+		
 		virtual void OnCloseFrame( wxCloseEvent& event );
 		void OnQuit();
 		
 protected:
-
+		
+		// xdotool
+		xdo_t *xdo;
+		Window xdotoolwindow;
+		useconds_t xdotooldelay;
+		
 		// notbook
 		void Onm_nb( wxNotebookEvent& event );
 		void Onm_nbv2c( wxNotebookEvent& event );
@@ -205,7 +221,7 @@ protected:
 		wxString language;
 		
 		// dictionary
-		void writedictionary();
+		virtual void Oncb_dict( wxCommandEvent& event );
 		
 		// v2c
 		virtual void Onrb_v2cmethod( wxCommandEvent& event );
@@ -290,6 +306,12 @@ protected:
 		wxStopWatch unknown_timer;
 		bool unknown;
 
+		// recognized
+		wxTimer *recognizedm_timer;
+		void OnRecognizedTimer(wxTimerEvent& event);
+		wxStopWatch recognized_timer;
+		bool recognized;
+		
 		// regex
 		wxRegEx onlyint;
 		int regexonlyint(wxString conftxt);
@@ -312,14 +334,13 @@ protected:
 		
 		// icon
 		void LoadPngIcon(const unsigned char *embedded_png, int length, int icon_number);
-		wxBitmap *iconpng[7];
+		wxBitmap *iconpng[8];
 		wxIcon icontb;
 		
 		bool actionwaiting;
 		double score;
 		double threshold;
 		bool webupdateicon;
-		wxString updateurl;
 		
 		int nbmistake;
 		int triggering;
@@ -365,6 +386,7 @@ class MainTaskBarIcon: public wxTaskBarIcon
         void OnLeftButtonDClick(wxTaskBarIconEvent&);
         void OnMenuExit(wxCommandEvent&);
 		void OnMenuWebsite(wxCommandEvent& );
+		void OnMenuDownloadUpdate(wxCommandEvent& );
 		void OnMenuApp(wxCommandEvent&);
 		void OnMenuShortcut(wxCommandEvent&);
 		void OnMenuActiveWord(wxCommandEvent&);

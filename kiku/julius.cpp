@@ -34,9 +34,9 @@ void status_recready(Recog *recog, void *dummy)
             event.SetString("Paused.");
             wxGetApp().AddPendingEvent( event );
         } else {
-            wxCommandEvent event( wxEVT_COMMAND_TEXT_UPDATED, READY_ID );
-            event.SetString("You can now speak.");
-            wxGetApp().AddPendingEvent( event );
+			wxCommandEvent event( wxEVT_COMMAND_TEXT_UPDATED, READY_ID );
+			event.SetString("You can now speak.");
+			wxGetApp().AddPendingEvent( event );
         }
 	}
 }
@@ -248,6 +248,7 @@ void output_result(Recog *recog, void *dummy)
 			/* output alignment result if exist */
 			for (align = s->align; align; align = align->next) {
 				//printf("=== begin forced alignment ===\n");
+				/*
 				switch(align->unittype) {
 					case PER_WORD:
 						//printf("-- word alignment --\n"); break;
@@ -256,6 +257,7 @@ void output_result(Recog *recog, void *dummy)
 					case PER_STATE:
 						//printf("-- state alignment --\n"); break;
 				}
+				*/
 				//printf(" id: from  to    n_score    unit\n");
 				//printf(" ----------------------------------------\n");
 				for(i=0;i<align->num;i++) {
@@ -412,6 +414,11 @@ void Julius::addCallbacks()
 bool Julius::stop_recognition()
 {
 	j_close_stream(recog);
+	return 1;
+}
+
+bool Julius::update_grammar()
+{
 	return 1;
 }
 

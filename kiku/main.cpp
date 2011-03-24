@@ -2,18 +2,21 @@
  * Author: Patrick Sébastien
  * http://www.workinprogress.ca/kiku
  * 
+ * japanese silB/E same as english
+ * if internet doesnt work = shorten delay
+ * key not workign with multiple Ctrl+s ie http://groups.google.com/group/xdotool-users/browse_thread/thread/95d36fd1da9b7c14
+ * some problem when playing too much with cb_dictionary / cb_monitor / cb_apps and v2c editor (dictionary lost what is what)
+ * if quitting quickly = lag
+ * 
  * webupdate not always calling...
- * multiple icon bundle pour le frame principal
  * 
  * // CLEAN
  * cleanup removeat and insertat...
  * eventually clean the constructor of v2ceditor (this, this)
- * do i need to clean pidra and pidcount on v2cloading?
  * check if words exist... (should we let a word be use twice if not the same app / pretrig)?
+ * switch from dictionary file to grammar_manager julius API
  * 
  * todo read julius.conf regexp
- * need to understand v2clauncher bool
- * 
  * maybe use wav_config from voxforge?
  * make binary of hmmdefs master_prompts...
  * 
@@ -24,12 +27,8 @@ data->exitcode = DoWaitForChild(data->pid);
  * 
  * genereic/notifmsgg.cpp
  * m_dialog->ShowWithoutActivating();
- 
  * for the video voice:
  * http://homepages.inf.ed.ac.uk/jyamagis/Demo-html/map-new.html
- * 
- * website: forum, irc
- * 
  * 
  * NOTE
  * when updating this application do not forget to #define VERSION "x"
@@ -39,8 +38,14 @@ data->exitcode = DoWaitForChild(data->pid);
 #include "main.h"
 
 // icons
-#include "readyicon.xpm" // todo
-#include "readyicon.h"
+#include "icon_ready.h"
+#include "icon_update.h"
+#include "icon_pause.h"
+#include "icon_pretrig.h"
+#include "icon_unknown.h"
+#include "icon_think.h"
+#include "icon_listening.h"
+#include "icon_recognized.h"
 
 // initialize the application
 IMPLEMENT_APP(MainApp);
@@ -63,18 +68,32 @@ pidcounthash pidcount;
 wxArrayString processname; // fill if monitor process
 wxArrayString processnamepid; // fill by monitor process
 wxArrayString pspid; // fill by monitor process
+wxArrayString pspnameid; // avoiding multiple call to v2cloading for the same processname
+wxString finaldictprevious; // is there any change to the dictionary
 
+bool juliusisready;
 bool v2clauncher;
 bool paused;
+bool haveupdate;
+wxString updateurl;
 
 ////////////////////////////////////////////////////////////////////////////////
 // application class implementation 
 ////////////////////////////////////////////////////////////////////////////////
 bool MainApp::OnInit()
 {
+	// web update / download language
+	wxSocketBase::Initialize();
+	
 	kiku = new MainFrame( NULL );
 	SetTopWindow(kiku);
-	kiku->SetIcon(wxICON(readyicon));
+	
+	// TODO bundle (many sizes)
+	wxMemoryInputStream istream(ready_png, sizeof(ready_png));
+	wxBitmap *iconpng = new wxBitmap(wxImage(istream, wxBITMAP_TYPE_PNG));
+	wxIcon icontb;
+	icontb.CopyFromBitmap( *iconpng );	
+	kiku->SetIcon(icontb);
 	
 	wxStandardPaths stdpath;
 	if(!wxFileExists(stdpath.GetUserDataDir()+"/language/julius.conf")) {
@@ -107,12 +126,26 @@ BEGIN_EVENT_TABLE(MainFrame,wxFrame)
     EVT_TIMER(PROCESSTIMER_ID, MainFrame::OnMonitorTimer) // monitor process name to match v2a
 	EVT_TIMER(PRETRIGTIMER_ID, MainFrame::OnPreTrigTimer) // was waiting for the trig, reset the original icon
 	EVT_TIMER(UNKNOWNTIMER_ID, MainFrame::OnUnknownTimer) // the word is unknown, reset the original icon
+	EVT_TIMER(RECOGNIZEDTIMER_ID, MainFrame::OnRecognizedTimer) // the word is recognized, reset the original icon
 END_EVENT_TABLE()
 
 MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 {	
-	// web update / download language
-	wxSocketBase::Initialize();
+	/*
+	xdo_t *xdo;
+	xdo = xdo_new(getenv("DISPLAY"));
+	Window window = 0;
+	useconds_t delay = 12000;
+	wxString tmp;
+	tmp = "hello!";
+	xdo_type(xdo, window, (const_cast<char*>((const char*)tmp.mb_str())), delay);	
+	xdo_free(xdo);
+	*/
+
+	// xdotool
+	xdo = xdo_new(getenv("DISPLAY"));
+	xdotoolwindow = 0;
+	xdotooldelay = 12000;
 	
 	// standard path
 	stdpath = wxStandardPaths::Get();
@@ -128,12 +161,13 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	// icons
 	wxImage::AddHandler(new wxPNGHandler);
 	LoadPngIcon(ready_png, sizeof(ready_png), 0); // ready
-	LoadPngIcon(ready_png, sizeof(ready_png), 1); // update available
-	LoadPngIcon(ready_png, sizeof(ready_png), 2); // pause
-	LoadPngIcon(ready_png, sizeof(ready_png), 3); // pre-trig
-	LoadPngIcon(ready_png, sizeof(ready_png), 4); // unknown word
-	LoadPngIcon(ready_png, sizeof(ready_png), 5); // thinking
-	LoadPngIcon(ready_png, sizeof(ready_png), 6); // listening
+	LoadPngIcon(update_png, sizeof(update_png), 1); // update available
+	LoadPngIcon(pause_png, sizeof(pause_png), 2); // pause
+	LoadPngIcon(pretrig_png, sizeof(pretrig_png), 3); // pre-trig
+	LoadPngIcon(unknown_png, sizeof(unknown_png), 4); // unknown word
+	LoadPngIcon(think_png, sizeof(think_png), 5); // thinking
+	LoadPngIcon(listening_png, sizeof(listening_png), 6); // listening
+	LoadPngIcon(recognized_png, sizeof(recognized_png), 7); // recognized word
 	
 	// taskbar
 	if ( !wxTaskBarIcon::IsAvailable() )
@@ -152,8 +186,8 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	}
 
 	// global state
+	juliusisready = false;
 	paused = false;
-	v2clauncher = false;
 	// pretrigged
 	actionwaiting = false;
 	// autopause
@@ -176,6 +210,10 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	// unknown timer
 	unknownm_timer = new wxTimer(this, UNKNOWNTIMER_ID);
 	unknown = false;
+	
+	// recognized
+	recognizedm_timer = new wxTimer(this, RECOGNIZEDTIMER_ID);
+	recognized = false;
 
 	// language gui
 	st_languagedownloading->Hide();
@@ -229,6 +267,7 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 		readpreference();
 	
 		// web update
+		haveupdate = false; // for tb
 		startwebthread("/KIKU/packages.txt");
 
 		// load v2c
@@ -330,9 +369,12 @@ void MainFrame::Onpc_v2capplication( wxUpdateUIEvent& event )
 
 void MainFrame::V2cApplicationReload()
 {
-	writedictionary();
 	V2cApplicationLoad();
 	v2cloading();
+	if(m_Julius && juliusisready) {
+		juliusgentlyexit();
+		startjuliusthread();
+	}
 }
 
 void MainFrame::V2cApplicationLoad()
@@ -387,9 +429,12 @@ void MainFrame::Onpb_v2cshortcutedit( wxCommandEvent& event )
 
 void MainFrame::V2cShortcutReload()
 {
-	writedictionary();
 	V2cShortcutLoad();
 	v2cloading();
+	if(m_Julius && juliusisready) {
+		juliusgentlyexit();
+		startjuliusthread();
+	}
 }
 
 void MainFrame::V2cShortcutLoad()
@@ -746,7 +791,10 @@ void MainFrame::importsuccess()
 	V2cApplicationLoad(); // fill the V2C panel
 	V2cShortcutLoad();  // fill the V2C panel
 	v2cloading();
-	writedictionary();
+	if(m_Julius && juliusisready) {
+		juliusgentlyexit();
+		startjuliusthread();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -764,63 +812,81 @@ void MainFrame::writedictionary()
 	// write dictionary with all words
 	wxArrayString allword;
 
-	// shortcut
-	if(wxFile::Exists(GetCurrentWorkingDirectory()+"/v2c/shortcut.v2s")) {
-		wxFileInputStream input(GetCurrentWorkingDirectory()+"/v2c/shortcut.v2s");
-		wxJSONValue  root;
-		wxJSONReader reader;
-		int numErrors = reader.Parse( input, &root );
-		if ( numErrors == 0 )  {
+	if(cb_dict->GetValue()) { // dictionary - match v2c
+	
+		unsigned int i = 0;
+		while(i < trigger.GetCount()) {
+			if(trigger[i] != "" && allword.Index(trigger[i].Upper()) == wxNOT_FOUND) {
+				allword.Add( trigger[i].Upper() );
+			}
+			if(pretrigger[i] != "" && allword.Index(pretrigger[i].Upper()) == wxNOT_FOUND) {
+				allword.Add( pretrigger[i].Upper() );
+			}
+			i++;
+		}
+
+		
+	} else { // dictionary - all
+	
+		// shortcut
+		if(wxFile::Exists(GetCurrentWorkingDirectory()+"/v2c/shortcut.v2s")) {
+			wxFileInputStream input(GetCurrentWorkingDirectory()+"/v2c/shortcut.v2s");
+			wxJSONValue  root;
+			wxJSONReader reader;
+			int numErrors = reader.Parse( input, &root );
+			if ( numErrors == 0 )  {
+				wxJSONValue modules = root["Actions"];
+				if (modules.IsArray() ) {
+					for ( int i = 0; i < modules.Size(); i++ ) {
+						if(allword.Index(modules[i]["Pretrigger"].AsString().Upper()) == wxNOT_FOUND && modules[i]["Pretrigger"].AsString().Upper() != "") {
+							allword.Add( modules[i]["Pretrigger"].AsString().Upper() );
+						}
+						if(allword.Index(modules[i]["Trigger"].AsString().Upper()) == wxNOT_FOUND && modules[i]["Trigger"].AsString().Upper() != "") {
+							allword.Add( modules[i]["Trigger"].AsString().Upper() );
+						}
+					}
+				}
+				if(pc_v2cshortcut->GetCount()){
+					pc_v2cshortcut->SetSelection(0);
+				}
+			}
+		}
+	
+		// aplication & launcher
+		wxDir dir(GetCurrentWorkingDirectory()+"/v2c");
+		wxString filename;
+		bool cont = dir.GetFirst(&filename, "*.v2a", wxDIR_FILES);
+		while ( cont )
+		{
+			wxFileInputStream input(GetCurrentWorkingDirectory()+"/v2c/"+filename);
+			wxJSONValue  root;
+			wxJSONReader reader;
+			int numErrors = reader.Parse( input, &root );
+			if ( numErrors > 0 )  {
+				wxMessageBox("ERROR: the JSON document is not well-formed");
+			}
+			// application
 			wxJSONValue modules = root["Actions"];
-			if (modules.IsArray() ) {
+			if ( modules.IsArray() ) {
 				for ( int i = 0; i < modules.Size(); i++ ) {
 					if(allword.Index(modules[i]["Pretrigger"].AsString().Upper()) == wxNOT_FOUND && modules[i]["Pretrigger"].AsString().Upper() != "") {
-						allword.Add( modules[i]["Pretrigger"].AsString().Upper() );
-					}
-					if(allword.Index(modules[i]["Trigger"].AsString().Upper()) == wxNOT_FOUND && modules[i]["Trigger"].AsString().Upper() != "") {
-						allword.Add( modules[i]["Trigger"].AsString().Upper() );
+							allword.Add( modules[i]["Pretrigger"].AsString().Upper() );
+						}
+						if(allword.Index(modules[i]["Trigger"].AsString().Upper()) == wxNOT_FOUND && modules[i]["Trigger"].AsString().Upper() != "") {
+							allword.Add( modules[i]["Trigger"].AsString().Upper() );
 					}
 				}
 			}
-			if(pc_v2cshortcut->GetCount()){
-				pc_v2cshortcut->SetSelection(0);
+			// launcher
+			if(allword.Index(root["Launcher"]["Pretrigger"].AsString().Upper()) == wxNOT_FOUND && root["Launcher"]["Pretrigger"].AsString().Upper() != "") {
+				allword.Add( root["Launcher"]["Pretrigger"].AsString().Upper() );
 			}
-		}
-	}
-	
-	// aplication & launcher
-	wxDir dir(GetCurrentWorkingDirectory()+"/v2c");
-	wxString filename;
-	bool cont = dir.GetFirst(&filename, "*.v2a", wxDIR_FILES);
-	while ( cont )
-	{
-		wxFileInputStream input(GetCurrentWorkingDirectory()+"/v2c/"+filename);
-		wxJSONValue  root;
-		wxJSONReader reader;
-		int numErrors = reader.Parse( input, &root );
-		if ( numErrors > 0 )  {
-			wxMessageBox("ERROR: the JSON document is not well-formed");
-		}
-		// application
-		wxJSONValue modules = root["Actions"];
-		if ( modules.IsArray() ) {
-			for ( int i = 0; i < modules.Size(); i++ ) {
-				if(allword.Index(modules[i]["Pretrigger"].AsString().Upper()) == wxNOT_FOUND && modules[i]["Pretrigger"].AsString().Upper() != "") {
-						allword.Add( modules[i]["Pretrigger"].AsString().Upper() );
-					}
-					if(allword.Index(modules[i]["Trigger"].AsString().Upper()) == wxNOT_FOUND && modules[i]["Trigger"].AsString().Upper() != "") {
-						allword.Add( modules[i]["Trigger"].AsString().Upper() );
-				}
+			if(allword.Index(root["Launcher"]["Trigger"].AsString().Upper()) == wxNOT_FOUND && root["Launcher"]["Trigger"].AsString().Upper() != "") {
+				allword.Add( root["Launcher"]["Trigger"].AsString().Upper() );
 			}
+			cont = dir.GetNext(&filename);
 		}
-		// launcher
-		if(allword.Index(root["Launcher"]["Pretrigger"].AsString().Upper()) == wxNOT_FOUND && root["Launcher"]["Pretrigger"].AsString().Upper() != "") {
-			allword.Add( root["Launcher"]["Pretrigger"].AsString().Upper() );
-		}
-		if(allword.Index(root["Launcher"]["Trigger"].AsString().Upper()) == wxNOT_FOUND && root["Launcher"]["Trigger"].AsString().Upper() != "") {
-			allword.Add( root["Launcher"]["Trigger"].AsString().Upper() );
-		}
-		cont = dir.GetNext(&filename);
+		
 	}
 	
 	wxString finaldict;
@@ -838,32 +904,30 @@ void MainFrame::writedictionary()
 		}
 	}
 	
-	// create dict (with silence)
-	wxFile dictb;
-	dictb.Create(GetCurrentWorkingDirectory()+"/language/dictionary", wxFile::write);
-	dictb.Write(finaldict);
-	dictb.Close();
-	
-	/*
-	// TODO remove
-	#ifdef DEBUG
-		int i = 0;
-		while(i < juliusformat_word.GetCount()) {
-			wxPuts("-----------------");
-			wxPuts("ALLWORD:-"+juliusformat_word.Item(i)+"-");
-			i++;
+	if(finaldictprevious != finaldict) {
+		// create dict (with silence)
+		wxFile dictb;
+		dictb.Create(GetCurrentWorkingDirectory()+"/language/dictionary", wxFile::write);
+		dictb.Write(finaldict);
+		finaldictprevious = finaldict;
+		dictb.Close();
+		
+		// need to restart julius after changing dictionary
+		if(cb_dict->GetValue()) {
+			if(m_Julius && juliusisready) {
+				wxPuts("---------------REBOOT-------------");
+				juliusgentlyexit();
+				startjuliusthread();
+			}
 		}
-	#endif
-	*/
-	
-	// need to restart julius after changing dictionary
-	if(m_Julius) {
-		juliusgentlyexit();
-		sleep(1);
-		startjuliusthread();
 	}
 }
 
+void MainFrame::Oncb_dict( wxCommandEvent& event )
+{
+	writepreference();
+	v2cloading();
+}
 
 void MainFrame::autocomplete()
 {
@@ -887,15 +951,13 @@ void MainFrame::autocomplete()
 ////////////////////////////////////////////////////////////////////////////////
 // V2C LOADING
 ////////////////////////////////////////////////////////////////////////////////
-
-// TODO
 void MainFrame::v2cloading()
 {
-    noti.Empty();
-    pretrigger.Empty();
-    trigger.Empty();
-    command.Empty();
-    type.Empty();
+	noti.Empty();
+	pretrigger.Empty();
+	trigger.Empty();
+	command.Empty();
+	type.Empty();
 	process.Empty();
 	v2c.Empty();
 	
@@ -970,7 +1032,7 @@ void MainFrame::v2cloading()
 		} else { // method match
 
 			if(cb_v2clauncher->GetValue()) { // Launcher
-			
+				v2clauncher = true;
 				wxDir dir(GetCurrentWorkingDirectory()+"/v2c");
 				wxString filename;
 				bool cont = dir.GetFirst(&filename, "*.v2a", wxDIR_FILES);
@@ -1005,7 +1067,9 @@ void MainFrame::v2cloading()
 		}
 	}
 	
-	// TODO remove
+	// write the dictionary to use
+	writedictionary();
+	
 	#ifdef DEBUG
 		unsigned int i = 0;
 		while(i < trigger.GetCount()) {
@@ -1020,12 +1084,6 @@ void MainFrame::v2cloading()
 
 void MainFrame::v2cloading(wxString file, long pid)
 {
-	#ifdef DEBUG
-		wxPuts("++++++++++++++++++++++++++++");
-		wxPuts("FILE: "+file);
-		wxPuts(wxString::Format("PID: %i", pid));
-		wxPuts("++++++++++++++++++++++++++++");
-	#endif
     wxFileInputStream input(file);
     wxJSONValue  root;
     wxJSONReader reader;
@@ -1041,6 +1099,7 @@ void MainFrame::v2cloading(wxString file, long pid)
 		//if(pidra.find(pid) == pidra.end()) { // to protect from loading twice (if launcher & monitor)
 			pidra[pid] = noti.GetCount();
 			pidcount[pid] = modules.Size();
+	
 			for ( int i = 0; i < modules.Size(); i++ ) {
 				noti.Add( modules[i]["Notification"].AsString() );
 				pretrigger.Add( modules[i]["Pretrigger"].AsString().Upper() );
@@ -1052,6 +1111,9 @@ void MainFrame::v2cloading(wxString file, long pid)
 			}
 		//}
 	}
+	
+	// write the dictionary to use
+	writedictionary();
 }
 
 // TODO
@@ -1189,11 +1251,20 @@ void MainFrame::OnMonitorTimer(wxTimerEvent& event)
                     //found one
                     if(ps != wxNOT_FOUND) {
 
-                            if(processnamepid.Index(wxString::Format("%i",pid_ProcessIdentifier)) == wxNOT_FOUND) {
-                                //load associated v2c
+                            if(processnamepid.Index(wxString::Format("%i",pid_ProcessIdentifier)) == wxNOT_FOUND && pspnameid.Index(chrptr_StringToCompare) == wxNOT_FOUND) {
+                                #ifdef DEBUG
+									wxPuts("++++++++++++++++++++++++++++");
+									wxPuts("Monitor...");
+									wxPuts("File: "+GetCurrentWorkingDirectory() + "/v2c/" + processname.Item(ps) + ".v2a");
+									wxPuts(wxString::Format("PID: %i", pid_ProcessIdentifier));
+									wxPuts("++++++++++++++++++++++++++++");
+								#endif
+								
+								//load associated v2c
                                 v2cloading(GetCurrentWorkingDirectory()+"/v2c/"+processname.Item(ps)+".v2a", pid_ProcessIdentifier);
                                 processnamepid.Add(wxString::Format("%i",pid_ProcessIdentifier));
-                            }
+								pspnameid.Add(processname.Item(ps)); // avoid to call this v2cloading() multiple times for the same process with multiple instance
+							}
 
                     }
                     /*
@@ -1217,7 +1288,13 @@ void MainFrame::OnMonitorTimer(wxTimerEvent& event)
 
                 long pid = wxAtoi(processnamepid[i]);
                 processnamepid.RemoveAt(i);
-
+				
+				// to allow to reload the application
+				int n = pspnameid.Index(process.Item(pidra[pid]));
+				if(n != wxNOT_FOUND) {
+					pspnameid.RemoveAt(n);
+				}
+			
                 noti.RemoveAt(pidra[pid], pidcount[pid]);
                 noti.Insert("", pidra[pid], pidcount[pid]);
                 pretrigger.RemoveAt(pidra[pid], pidcount[pid]);
@@ -1232,20 +1309,26 @@ void MainFrame::OnMonitorTimer(wxTimerEvent& event)
                 type.Insert("", pidra[pid], pidcount[pid]);
 				v2c.RemoveAt(pidra[pid], pidcount[pid]);
                 v2c.Insert("", pidra[pid], pidcount[pid]);
-				
+
+				writedictionary();
             }
         }
     }
     closedir(dir_proc) ;
 }
 
-// TODO when process quit clean up v2a
 void Process::OnTerminate(int pid, int status)
 {
     if(pidra.find(pid) != pidra.end()) {
-        if(v2clauncher) { // TODO
-			// protection against a v2cloading by user
+        if(v2clauncher) {
 			if(noti.GetCount()) {
+				
+				// to allow to reload the application
+				int n = pspnameid.Index(process.Item(pidra[pid]));
+				if(n != wxNOT_FOUND) {
+					pspnameid.RemoveAt(n);
+				}
+				
 				noti.RemoveAt(pidra[pid], pidcount[pid]);
 				noti.Insert("", pidra[pid], pidcount[pid]);
 				pretrigger.RemoveAt(pidra[pid], pidcount[pid]);
@@ -1263,6 +1346,7 @@ void Process::OnTerminate(int pid, int status)
 			}
         }
     }
+	m_parent->writedictionary();
     // we're not needed any more
     delete this;
 }
@@ -1468,10 +1552,12 @@ void MainFrame::OnCloseFrame(wxCloseEvent& event)
 void MainFrame::OnQuit()
 {
 	wxSocketBase::Shutdown();
+	xdo_free(xdo);
 	delete m_taskBarIcon;
 	delete m_timer;
 	delete pretrigm_timer;
 	delete unknownm_timer;
+	delete recognizedm_timer;
 	webexit();
 	juliusgentlyexit();
 	Destroy();
@@ -1504,8 +1590,9 @@ void MainFrame::webexit()
 
 void MainFrame::juliusgentlyexit()
 {
-	if(m_Julius) {
-		m_Julius->resume_recognition();
+	if(m_Julius && juliusisready) {
+		//m_Julius->resume_recognition();
+		//wxSleep(1);
 		m_Julius->stop_recognition();
 	}
 	{
@@ -1585,8 +1672,10 @@ void MainFrame::OnWeb(wxCommandEvent& event)
 	
 	// show update icon in taskbar
 	webupdateicon = true;
+	haveupdate = true;
 	
 	// show update button
+	bm_update->SetBitmap(*iconpng[1]);
 	bm_update->Show(1);
 	b_update->Show(1);
 	kiku->Layout();
@@ -1604,6 +1693,13 @@ void MainFrame::Onb_update( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void MainFrame::startjuliusthread()
 {
+	    icontb.CopyFromBitmap( *iconpng[5] );
+		if (!m_taskBarIcon->SetIcon( icontb )) {
+			wxMessageBox(wxT("Could not set icon."));
+		}
+	
+		juliusisready = false;
+		
 		// statusbar
 		sb->SetStatusText("Loading configuration.", 0);
 		
@@ -1743,7 +1839,6 @@ void MainFrame::readjuliusconf()
             if(line.Find(wxT("#-penalty1")) >= 0) {
 				//TODO default?
             } else {
-                //TODO using line.Mid...
 				tc_engpenalty->ChangeValue(line.Mid(10,4));
             }
         }
@@ -2090,7 +2185,6 @@ void MainFrame::Onc_engdriver( wxCommandEvent& event )
 void MainFrame::Onb_restartjulius( wxCommandEvent& event ) {
 	p_engine->Enable(0);
 	juliusgentlyexit();
-	sleep(1);
 	startjuliusthread();
 	p_engine->Enable(1);
 }
@@ -2149,6 +2243,10 @@ void MainFrame::onJuliusSentence(wxCommandEvent& event)
 	
 	// ok process the word
     if(process) {
+		
+		recognized = true;
+		recognizedm_timer->Start(1000);
+		
 		tcro_word->SetDefaultStyle(wxTextAttr(*wxBLACK));
         // next word should be an action
         if(actionwaiting) {
@@ -2206,6 +2304,7 @@ void MainFrame::onJuliusScore(wxCommandEvent& event)
 
 void MainFrame::onJuliusReady(wxCommandEvent& event)
 {
+	juliusisready = true;
 	if(!paused) {
 		if(event.GetString() == "Listening...") {
 			icontb.CopyFromBitmap( *iconpng[6] );
@@ -2213,7 +2312,12 @@ void MainFrame::onJuliusReady(wxCommandEvent& event)
 				wxMessageBox(wxT("Could not set icon."));
 			}
 		} else {
-			if(unknown) { // last sentence was unknown
+			if(recognized) {
+				icontb.CopyFromBitmap( *iconpng[7] ); // last sentence recognized
+				if (!m_taskBarIcon->SetIcon( icontb )) {
+					wxMessageBox(wxT("Could not set icon."));
+				}
+			} else if(unknown) { // last sentence was unknown
 				icontb.CopyFromBitmap( *iconpng[4] );
 				if (!m_taskBarIcon->SetIcon( icontb )) {
 					wxMessageBox(wxT("Could not set icon."));
@@ -2244,12 +2348,7 @@ void MainFrame::onJuliusReady(wxCommandEvent& event)
 void MainFrame::onJuliusWatch(wxCommandEvent& event)
 {
 	// for time check
-	duration = event.GetInt();
-    icontb.CopyFromBitmap( *iconpng[5] );
-	if (!m_taskBarIcon->SetIcon( icontb )) {
-		wxMessageBox(wxT("Could not set icon."));
-	}
-		
+	duration = event.GetInt();		
     sb->SetStatusText("Duration: "+wxString::Format("%i", event.GetInt())+" ms", 1);
 }
 
@@ -2310,7 +2409,7 @@ void MainFrame::Oncb_pause(wxCommandEvent& event)
 
 void MainFrame::pauser(bool state)
 {
-    if(state) {
+    if(state && juliusisready) {
 		aup_userpause = true;
 		cb_pause->SetValue(1);
         icontb.CopyFromBitmap( *iconpng[2] );
@@ -2376,6 +2475,8 @@ void MainFrame::readpreference()
     sp_notdelay->SetValue(rootpref["notificationdelay"].AsInt());
     cb_notpretrig->SetValue(rootpref["notificationtrig"].AsBool());
 
+	cb_dict->SetValue(rootpref["dictionary"].AsBool());
+	
     sp_apmistake->SetValue(rootpref["autopause_mistake"].AsInt());
     sp_apsec->SetValue(rootpref["autopause_sec"].AsInt());
     cb_apscore->SetValue(rootpref["autopause_score"].AsBool());
@@ -2455,6 +2556,8 @@ void MainFrame::writepreference()
     preference["minimum"] = sp_minlength->GetValue();
     preference["maximum"] = sp_maxlength->GetValue();
 
+	preference["dictionary"] = cb_dict->GetValue();
+	
     preference["notificationstyle"] = c_notstyle->GetStringSelection();
     preference["notificationdelay"] = sp_notdelay->GetValue();
     preference["notificationtrig"] = cb_notpretrig->GetValue();
@@ -2503,6 +2606,7 @@ void MainFrame::createpreference()
     preference["autopause_sp"] = true;
     preference["autounpause_threshold"] = 1999;
     preference["autounpause_sec"] = 5;
+	preference["dictionary"] = true;
     preference["v2c_loading"] = 1;
     preference["v2c_monitor"] = true;
     preference["v2c_apps"] = true;
@@ -2586,6 +2690,27 @@ void MainFrame::OnUnknownTimer(wxTimerEvent& event)
 	}
 }
 
+void MainFrame::OnRecognizedTimer(wxTimerEvent& event)
+{
+	if(!paused) {
+		if(recognized) {
+			if(webupdateicon) {
+				icontb.CopyFromBitmap( *iconpng[1] );
+				if (!m_taskBarIcon->SetIcon( icontb )) {
+					wxMessageBox(wxT("Could not set icon."));
+				}
+			} else {
+				icontb.CopyFromBitmap( *iconpng[0] );
+				if (!m_taskBarIcon->SetIcon( icontb )) {
+					wxMessageBox(wxT("Could not set icon."));
+				}
+			}
+			recognized = false;
+			recognizedm_timer->Stop();
+		}
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // AUTOPAUSE
 ////////////////////////////////////////////////////////////////////////////////
@@ -2629,12 +2754,19 @@ void MainFrame::searchandexecute(wxString word)
 			
 			// v2clauncher mode
 			if(v2clauncher == true) {
-
+					
 					// load the corresponding .v2c
-					if(v2c.Item(actionning) != "launcher") {
+					if(v2c.Item(actionning) == "launcher") {
+							#ifdef DEBUG
+								wxPuts("++++++++++++++++++++++++++++");
+								wxPuts("Launcher...");
+								wxPuts("File: "+GetCurrentWorkingDirectory() + "/v2c/" + process.Item(actionning) + ".v2a");
+								wxPuts(wxString::Format("PID: %i", pid));
+								wxPuts("++++++++++++++++++++++++++++");
+							#endif
+							
 							v2cloading(GetCurrentWorkingDirectory() + "/v2c/" + process.Item(actionning) + ".v2a", pid);
-							// TODO
-							wxPuts("LOOOOOOOOOOOOOOOOAAAAAAAAAAAAAAAAAADDDDDDD"+process.Item(actionning));
+							pspnameid.Add(process.Item(actionning));
 					}
 					
 			}
@@ -2703,15 +2835,22 @@ long MainFrame::Hand(wxString type, wxString cmd)
                 delete proc;
             }
             return m_pidLast;
-        } else if(type == "xdotool") { // xdotool
-			
+        } else if(type == "xdotool") { // xdotool			
 			// tokenize |:|
-			wxArrayString acmd = wxStringTokenize(cmd, "|:|");
+			wxArrayString acmd = wxStringTokenize(cmd, "|");
 			for (size_t i=0; i < acmd.GetCount(); i++) {
 				if(acmd[i].Trim().Trim(false) != "") {
 					#ifdef DEBUG
 						wxPuts(type + ": " + acmd[i].Trim().Trim(false));
 					#endif
+					// get the function to call (key, type, ...)
+					wxArrayString xcmd = wxStringTokenize(acmd[i].Trim().Trim(false), " ");
+					if(xcmd[0] == "key") {
+						xdo_keysequence(xdo, xdotoolwindow, (const_cast<char*>((const char*)acmd[i].Trim().Trim(false).Mid(4).mb_str())), xdotooldelay);
+					} else if(xcmd[0] == "type") {
+						xdo_type(xdo, xdotoolwindow, (const_cast<char*>((const char*)acmd[i].Trim().Trim(false).Mid(5).mb_str())), xdotooldelay);
+					}
+					/*
 					wxString cp;
 					wxArrayString output, errors;
 					int code = wxExecute("xdotool "+acmd[i].Trim().Trim(false), output, errors);
@@ -2721,6 +2860,7 @@ long MainFrame::Hand(wxString type, wxString cmd)
 							cp = output[0];
 						}
 					}
+					*/
 				}
 			}
         }
@@ -2771,7 +2911,8 @@ enum {
 	PU_SHORTCUT,
     PU_CHECKMARK,
 	PU_ACTIVEWORD,
-	PU_WEBSITE
+	PU_WEBSITE,
+	PU_UPDATE
 };
 
 BEGIN_EVENT_TABLE(MainTaskBarIcon, wxTaskBarIcon)
@@ -2783,6 +2924,7 @@ BEGIN_EVENT_TABLE(MainTaskBarIcon, wxTaskBarIcon)
 	EVT_MENU(PU_SHORTCUT, MainTaskBarIcon::OnMenuShortcut)
 	EVT_MENU(PU_WEBSITE, MainTaskBarIcon::OnMenuWebsite)
 	EVT_MENU(PU_ACTIVEWORD, MainTaskBarIcon::OnMenuActiveWord)
+	EVT_MENU(PU_UPDATE, MainTaskBarIcon::OnMenuDownloadUpdate)
 END_EVENT_TABLE()
 
 
@@ -2816,7 +2958,7 @@ void MainTaskBarIcon::OnMenuUICheckmark(wxUpdateUIEvent &event)
 
 void MainTaskBarIcon::OnLeftButtonDClick(wxTaskBarIconEvent&)
 {
-	if(m_pHandler->m_Julius) {
+	if(m_pHandler->m_Julius && juliusisready) {
 		m_pHandler->pauser(!paused);
 	}
 }
@@ -2829,6 +2971,12 @@ void MainTaskBarIcon::OnMenuExit(wxCommandEvent& )
 void MainTaskBarIcon::OnMenuWebsite(wxCommandEvent& )
 {
 	wxLaunchDefaultBrowser("http://www.workinprogress.ca/kiku/");
+}
+
+void MainTaskBarIcon::OnMenuDownloadUpdate(wxCommandEvent& )
+{
+	wxLaunchDefaultBrowser(updateurl);
+	m_pHandler->OnQuit();
 }
 
 void MainTaskBarIcon::OnMenuApp(wxCommandEvent& )
@@ -2873,6 +3021,9 @@ wxMenu *MainTaskBarIcon::CreatePopupMenu()
 	menu->Append(PU_SHORTCUT, "Add a shortcut");
 	menu->Append(PU_ACTIVEWORD, "Active word");\
 	menu->AppendSeparator();
+	if(haveupdate) {
+		menu->Append(PU_UPDATE, "Download update");
+	}
 	menu->Append(PU_WEBSITE, "Website");
     menu->Append(PU_EXIT, "Quit");
     return menu;

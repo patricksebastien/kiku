@@ -45,7 +45,7 @@ void Web::ParseFile(wxString whaturl)
 
 					wxString sUrlRev(rev);
 					sUrlRev.ToLong(&webrev);
-					wxMessageBox(rev);
+					//wxMessageBox(rev);
 
 					if ( webrev > currev ) {
 						// notify the user that a new version is available
@@ -71,7 +71,7 @@ Web::ExitCode Web::Entry()
 
 	wxHTTP get;
 	get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
-	get.SetTimeout(10); 
+	get.SetTimeout(30); 
 	 
 	while (!get.Connect(_T("www.workinprogress.ca")))
 		wxSleep(5);

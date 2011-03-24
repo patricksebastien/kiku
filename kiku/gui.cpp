@@ -7,8 +7,6 @@
 
 #include "gui.h"
 
-#include "updateicon.xpm"
-
 ///////////////////////////////////////////////////////////////////////////
 
 MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
@@ -74,11 +72,11 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	wxBoxSizer* sizer_update;
 	sizer_update = new wxBoxSizer( wxHORIZONTAL );
 	
-	bm_update = new wxStaticBitmap( p_recognition, wxID_ANY, wxBitmap( updateicon_xpm ), wxDefaultPosition, wxSize( -1,-1 ), 0 );
-	sizer_update->Add( bm_update, 0, wxALIGN_CENTER_VERTICAL|wxTOP, 5 );
+	bm_update = new wxStaticBitmap( p_recognition, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxDefaultSize, 0 );
+	sizer_update->Add( bm_update, 0, wxALIGN_BOTTOM|wxALL, 5 );
 	
 	b_update = new wxButton( p_recognition, wxID_ANY, _("Update"), wxDefaultPosition, wxDefaultSize, 0 );
-	sizer_update->Add( b_update, 0, wxALIGN_CENTER_VERTICAL|wxTOP, 5 );
+	sizer_update->Add( b_update, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 5 );
 	
 	bSizer8->Add( sizer_update, 0, 0, 5 );
 	
@@ -267,6 +265,16 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	cb_v2clauncher = new wxCheckBox( p_configutation, wxID_ANY, _("Launcher"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer10->Add( cb_v2clauncher, 0, wxALL, 5 );
+	
+	m_staticText35 = new wxStaticText( p_configutation, wxID_ANY, _("Dictionary:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText35->Wrap( -1 );
+	m_staticText35->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
+	bSizer10->Add( m_staticText35, 0, wxALL, 5 );
+	
+	cb_dict = new wxCheckBox( p_configutation, wxID_ANY, _("Match V2C"), wxDefaultPosition, wxDefaultSize, 0 );
+	cb_dict->SetValue(true); 
+	bSizer10->Add( cb_dict, 0, wxALL, 5 );
 	
 	bSizer91->Add( bSizer10, 0, 0, 5 );
 	
@@ -661,6 +669,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	rb_v2cmethod->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( MainFrameBase::Onrb_v2cmethod ), NULL, this );
 	cb_v2cmonitor->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_v2cmonitor ), NULL, this );
 	cb_v2clauncher->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_v2clauncher ), NULL, this );
+	cb_dict->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_dict ), NULL, this );
 	sp_apmistake->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	sp_apsec->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	cb_apscore->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
@@ -714,6 +723,7 @@ MainFrameBase::~MainFrameBase()
 	rb_v2cmethod->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( MainFrameBase::Onrb_v2cmethod ), NULL, this );
 	cb_v2cmonitor->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_v2cmonitor ), NULL, this );
 	cb_v2clauncher->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_v2clauncher ), NULL, this );
+	cb_dict->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_dict ), NULL, this );
 	sp_apmistake->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	sp_apsec->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	cb_apscore->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
