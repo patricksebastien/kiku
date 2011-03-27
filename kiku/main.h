@@ -91,9 +91,7 @@ extern "C" {
 #define INEXACT_MATCH     0
 
 #define PROCESSTIMER_ID 10000
-#define PRETRIGTIMER_ID 10001
-#define UNKNOWNTIMER_ID 10002
-#define RECOGNIZEDTIMER_ID 10003
+#define RESETICONTIMER_ID 10001
 
 #define POLLING 2000 // monitor process
 #define PRETRIGTIME 10000 // how long to hold for the action word
@@ -294,23 +292,19 @@ protected:
 		wxTimer *m_timer;
 		void OnMonitorTimer(wxTimerEvent& event);
 		int IsNumeric(const char* ccharptr_CharacterList);
+
+		// timer for reset icon
+		wxTimer *reseticonm_timer;
+		void OnResetIconTimer(wxTimerEvent& event);
 		
-		// timer for pretrig
-		wxTimer *pretrigm_timer;
-		void OnPreTrigTimer(wxTimerEvent& event);
-		wxStopWatch pretrig_timer;
-		
-		// timer for unknown word
-		wxTimer *unknownm_timer;
-		void OnUnknownTimer(wxTimerEvent& event);
-		wxStopWatch unknown_timer;
+		// unknown word
 		bool unknown;
 
 		// recognized
-		wxTimer *recognizedm_timer;
-		void OnRecognizedTimer(wxTimerEvent& event);
-		wxStopWatch recognized_timer;
 		bool recognized;
+		
+		// need a pre-trig
+		bool needpretrig;
 		
 		// regex
 		wxRegEx onlyint;
@@ -334,7 +328,7 @@ protected:
 		
 		// icon
 		void LoadPngIcon(const unsigned char *embedded_png, int length, int icon_number);
-		wxBitmap *iconpng[8];
+		wxBitmap *iconpng[9];
 		wxIcon icontb;
 		
 		bool actionwaiting;

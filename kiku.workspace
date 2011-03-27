@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CodeLite_Workspace Name="kiku" Database="./kiku.tags">
   <Project Name="kiku" Path="kiku/kiku.project" Active="Yes"/>
-  <Project Name="plugin" Path="plugin/plugin.project"/>
+  <Project Name="plugin" Path="plugin/plugin.project" Active="No"/>
   <Project Name="bin2c" Path="bin2c/bin2c.project" Active="No"/>
   <Project Name="libxdo" Path="libxdo/libxdo.project" Active="No"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Debug" Selected="no">
+    <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Project Name="kiku" ConfigName="Debug"/>
       <Project Name="plugin" ConfigName="Debug"/>
       <Project Name="bin2c" ConfigName="Debug"/>
       <Project Name="libxdo" ConfigName="Debug"/>
+      <Project Name="libxdo" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release" Selected="yes">
+    <WorkspaceConfiguration Name="Release" Selected="no">
       <Project Name="kiku" ConfigName="Release"/>
       <Project Name="plugin" ConfigName="Release"/>
       <Project Name="bin2c" ConfigName="Release"/>
+      <Project Name="libxdo" ConfigName="Release"/>
       <Project Name="libxdo" ConfigName="Release"/>
     </WorkspaceConfiguration>
   </BuildMatrix>

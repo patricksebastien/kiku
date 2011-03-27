@@ -3,32 +3,27 @@
  * http://www.workinprogress.ca/kiku
  * 
  * japanese silB/E same as english
- * if internet doesnt work = shorten delay
- * key not workign with multiple Ctrl+s ie http://groups.google.com/group/xdotool-users/browse_thread/thread/95d36fd1da9b7c14
- * some problem when playing too much with cb_dictionary / cb_monitor / cb_apps and v2c editor (dictionary lost what is what)
- * if quitting quickly = lag
+ * julius.conf - use plugin
  * 
- * webupdate not always calling...
+ * // FOLLOW-UP
+ * http://groups.google.com/group/xdotool-users/browse_thread/thread/95d36fd1da9b7c14
+ * 
+ * // WXWIDGETS
+ * webupdate not always calling (wxthread with wxsocket problem)
+ * ./src/unix/utilsunx.cpp
+ * //data->exitcode = DoWaitForChild(data->pid, WNOHANG);
+ * data->exitcode = DoWaitForChild(data->pid);
+ * genereic/notifmsgg.cpp
+ * m_dialog->ShowWithoutActivating();
  * 
  * // CLEAN
  * cleanup removeat and insertat...
  * eventually clean the constructor of v2ceditor (this, this)
- * check if words exist... (should we let a word be use twice if not the same app / pretrig)?
+ * check if words exist... (should we let a word be use twice if not the same app / pretrig) & checking if trig is a existing pretrig?
  * switch from dictionary file to grammar_manager julius API
- * 
- * todo read julius.conf regexp
+ * julius.conf regexp
  * maybe use wav_config from voxforge?
  * make binary of hmmdefs master_prompts...
- * 
-NEED TO MODIFY wxwidgets
-geany ./src/unix/utilsunx.cpp
-//data->exitcode = DoWaitForChild(data->pid, WNOHANG);
-data->exitcode = DoWaitForChild(data->pid);
- * 
- * genereic/notifmsgg.cpp
- * m_dialog->ShowWithoutActivating();
- * for the video voice:
- * http://homepages.inf.ed.ac.uk/jyamagis/Demo-html/map-new.html
  * 
  * NOTE
  * when updating this application do not forget to #define VERSION "x"
@@ -46,6 +41,7 @@ data->exitcode = DoWaitForChild(data->pid);
 #include "icon_think.h"
 #include "icon_listening.h"
 #include "icon_recognized.h"
+#include "icon_need.h"
 
 // initialize the application
 IMPLEMENT_APP(MainApp);
@@ -124,9 +120,7 @@ bool MainApp::OnInit()
 ////////////////////////////////////////////////////////////////////////////////
 BEGIN_EVENT_TABLE(MainFrame,wxFrame)
     EVT_TIMER(PROCESSTIMER_ID, MainFrame::OnMonitorTimer) // monitor process name to match v2a
-	EVT_TIMER(PRETRIGTIMER_ID, MainFrame::OnPreTrigTimer) // was waiting for the trig, reset the original icon
-	EVT_TIMER(UNKNOWNTIMER_ID, MainFrame::OnUnknownTimer) // the word is unknown, reset the original icon
-	EVT_TIMER(RECOGNIZEDTIMER_ID, MainFrame::OnRecognizedTimer) // the word is recognized, reset the original icon
+	EVT_TIMER(RESETICONTIMER_ID, MainFrame::OnResetIconTimer) // reset the original icon
 END_EVENT_TABLE()
 
 MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
@@ -168,6 +162,7 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	LoadPngIcon(think_png, sizeof(think_png), 5); // thinking
 	LoadPngIcon(listening_png, sizeof(listening_png), 6); // listening
 	LoadPngIcon(recognized_png, sizeof(recognized_png), 7); // recognized word
+	LoadPngIcon(need_png, sizeof(need_png), 8); // word need a pre-trig
 	
 	// taskbar
 	if ( !wxTaskBarIcon::IsAvailable() )
@@ -188,8 +183,6 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	// global state
 	juliusisready = false;
 	paused = false;
-	// pretrigged
-	actionwaiting = false;
 	// autopause
 	nbmistake = 0;
 	aup_timer_started = false;
@@ -203,17 +196,14 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	// process timer
 	m_timer = new wxTimer(this, PROCESSTIMER_ID);
 	
-	// pretrig timer (always on)
-	pretrigm_timer = new wxTimer(this, PRETRIGTIMER_ID);
-	pretrigm_timer->Start(1000);
-	
-	// unknown timer
-	unknownm_timer = new wxTimer(this, UNKNOWNTIMER_ID);
+	// reseticon timer
+	reseticonm_timer = new wxTimer(this, RESETICONTIMER_ID);
+
+	// flags
+	actionwaiting = false;
 	unknown = false;
-	
-	// recognized
-	recognizedm_timer = new wxTimer(this, RECOGNIZEDTIMER_ID);
 	recognized = false;
+	needpretrig = false;
 
 	// language gui
 	st_languagedownloading->Hide();
@@ -370,6 +360,7 @@ void MainFrame::Onpc_v2capplication( wxUpdateUIEvent& event )
 void MainFrame::V2cApplicationReload()
 {
 	V2cApplicationLoad();
+	pspnameid.Empty(); // allow monitor to reload the application
 	v2cloading();
 	if(m_Julius && juliusisready) {
 		juliusgentlyexit();
@@ -430,6 +421,7 @@ void MainFrame::Onpb_v2cshortcutedit( wxCommandEvent& event )
 void MainFrame::V2cShortcutReload()
 {
 	V2cShortcutLoad();
+	pspnameid.Empty(); // allow monitor to reload the application
 	v2cloading();
 	if(m_Julius && juliusisready) {
 		juliusgentlyexit();
@@ -549,9 +541,15 @@ bool MainFrame::listv2c(wxString v2c)
 	}
 	wxHTTP get;
 	get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
-	get.SetTimeout(10); 
-	while (!get.Connect("www.workinprogress.ca"))
-		wxSleep(5);
+	get.SetTimeout(10);
+	int tried = 0;
+	while (!get.Connect("www.workinprogress.ca")) {
+		if(tried > 2) {
+			return 0;
+		}
+		wxSleep(2);
+		tried++;
+	}
 	wxInputStream *httpStream = get.GetInputStream(urltxt);
 	if (get.GetError() == wxPROTO_NOERR)
 	{
@@ -708,8 +706,14 @@ bool MainFrame::downloadv2c(wxString server, wxString tgz)
 	wxHTTP get;
 	get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
 	get.SetTimeout(10); 
-	while (!get.Connect(server))
-		wxSleep(5);
+	int tried = 0;
+	while (!get.Connect(server)) {
+		if(tried > 2) {
+			return 0;
+		}
+		wxSleep(2);
+		tried++;
+	}
 	wxInputStream *httpStream = get.GetInputStream(tgz);
 	if (get.GetError() == wxPROTO_NOERR)
 	{
@@ -790,6 +794,7 @@ void MainFrame::importsuccess()
 	wxMessageBox("Installed!");
 	V2cApplicationLoad(); // fill the V2C panel
 	V2cShortcutLoad();  // fill the V2C panel
+	pspnameid.Empty(); // allow monitor to reload the application
 	v2cloading();
 	if(m_Julius && juliusisready) {
 		juliusgentlyexit();
@@ -896,11 +901,13 @@ void MainFrame::writedictionary()
 	// match with the language dictionary
 	for(unsigned int i=0; i<allword.GetCount(); i++)
 	{
-		long index = juliusformat_word.Index(allword.Item(i).Lower());
-		if(index != wxNOT_FOUND) {
-			finaldict.Append(juliusformat_word.Item(index)+" ["+juliusformat_word.Item(index)+"] "+juliusformat_pronoun.Item(index)+"\n");
-		} else {
-			wxMessageBox("You used a word that is not in the dictionary of the installed language: " + allword.Item(i));
+		if(allword.Item(i) != "NULL") {
+			long index = juliusformat_word.Index(allword.Item(i).Lower());
+			if(index != wxNOT_FOUND) {
+				finaldict.Append(juliusformat_word.Item(index)+" ["+juliusformat_word.Item(index)+"] "+juliusformat_pronoun.Item(index)+"\n");
+			} else {
+				wxMessageBox("You used a word that is not in the dictionary of the installed language: " + allword.Item(i));
+			}
 		}
 	}
 	
@@ -913,13 +920,12 @@ void MainFrame::writedictionary()
 		dictb.Close();
 		
 		// need to restart julius after changing dictionary
-		if(cb_dict->GetValue()) {
+		//if(cb_dict->GetValue()) {
 			if(m_Julius && juliusisready) {
-				wxPuts("---------------REBOOT-------------");
 				juliusgentlyexit();
 				startjuliusthread();
 			}
-		}
+		//}
 	}
 }
 
@@ -1163,7 +1169,7 @@ void MainFrame::Onrb_v2cmethod( wxCommandEvent& event )
 void MainFrame::Oncb_v2cmonitor( wxCommandEvent& event )
 {
 	if(cb_v2cmonitor->GetValue()) {
-		v2cloadingprocessname();
+		pspnameid.Empty(); // allow monitor to reload the application		v2cloadingprocessname();
 		m_timer->Start(POLLING);
 	} else {
 		if(!cb_v2clauncher->GetValue()) {
@@ -1174,7 +1180,7 @@ void MainFrame::Oncb_v2cmonitor( wxCommandEvent& event )
 			m_timer->Stop();
 		}
 	}
-	writepreference();
+		writepreference();
 }
 
 void MainFrame::Oncb_v2clauncher( wxCommandEvent& event )
@@ -1182,9 +1188,11 @@ void MainFrame::Oncb_v2clauncher( wxCommandEvent& event )
 	if(!cb_v2clauncher->GetValue() && !cb_v2cmonitor->GetValue()) {
 		wxMessageBox("You need at least one matching method.");
 		cb_v2clauncher->SetValue(1);
+	} else {
+		pspnameid.Empty(); // allow monitor to reload the application
+		v2cloading();
+		writepreference();
 	}
-	v2cloading();
-	writepreference();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1452,7 +1460,7 @@ bool MainFrame::languagedownload() {
 		myFile.Write("-iwsppenalty -70.0\n");
 		myFile.Write("-multipath\n");
 		myFile.Write("-plugindir plugin\n");
-		myFile.Write("-input alsa\n");
+		myFile.Write("-input mic\n");
 		myFile.Write("-smpFreq 16000\n");
 		myFile.Write("-iwcd1 avg\n");
 		myFile.Write("-tmix 4\n");
@@ -1551,16 +1559,17 @@ void MainFrame::OnCloseFrame(wxCloseEvent& event)
 
 void MainFrame::OnQuit()
 {
-	wxSocketBase::Shutdown();
-	xdo_free(xdo);
-	delete m_taskBarIcon;
-	delete m_timer;
-	delete pretrigm_timer;
-	delete unknownm_timer;
-	delete recognizedm_timer;
-	webexit();
-	juliusgentlyexit();
-	Destroy();
+	// can only quit if julius is ready (thread & engine)
+	if(m_Julius && juliusisready) {
+		wxSocketBase::Shutdown();
+		xdo_free(xdo);
+		delete m_taskBarIcon;
+		delete m_timer;
+		delete reseticonm_timer;
+		webexit();
+		juliusgentlyexit();
+		Destroy();
+	}
 }
 
 void MainFrame::webexit()
@@ -1591,8 +1600,7 @@ void MainFrame::webexit()
 void MainFrame::juliusgentlyexit()
 {
 	if(m_Julius && juliusisready) {
-		//m_Julius->resume_recognition();
-		//wxSleep(1);
+		m_Julius->resume_recognition();
 		m_Julius->stop_recognition();
 	}
 	{
@@ -1693,42 +1701,43 @@ void MainFrame::Onb_update( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void MainFrame::startjuliusthread()
 {
-	    icontb.CopyFromBitmap( *iconpng[5] );
-		if (!m_taskBarIcon->SetIcon( icontb )) {
-			wxMessageBox(wxT("Could not set icon."));
-		}
-	
-		juliusisready = false;
-		
-		// statusbar
-		sb->SetStatusText("Loading configuration.", 0);
-		
-		// fetch language/julius.conf
-		readjuliusconf();
-		
-		m_pThread = new JuliusThread(this);
+	juliusisready = false;
 
-        if ( m_pThread->Create() != wxTHREAD_NO_ERROR )
-        {
-            wxLogError(_("Can't create the thread!"));
-            delete m_pThread;
-            m_pThread = NULL;
-        }
-        else
-        {
-            if (m_pThread->Run() != wxTHREAD_NO_ERROR )
-            {
-                wxLogError(_("Can't create the thread!"));
-                delete m_pThread;
-                m_pThread = NULL;
-            }
-        }
+	icontb.CopyFromBitmap( *iconpng[5] );
+	if (!m_taskBarIcon->SetIcon( icontb )) {
+		wxMessageBox(wxT("Could not set icon."));
+	}
+
+	// statusbar
+	sb->SetStatusText("Loading configuration.", 0);
+	
+	// fetch language/julius.conf
+	readjuliusconf();
+	
+	m_pThread = new JuliusThread(this);
+
+	if ( m_pThread->Create() != wxTHREAD_NO_ERROR )
+	{
+		wxLogError(_("Can't create the thread!"));
+		delete m_pThread;
+		m_pThread = NULL;
+	}
+	else
+	{
+		if (m_pThread->Run() != wxTHREAD_NO_ERROR )
+		{
+			wxLogError(_("Can't create the thread!"));
+			delete m_pThread;
+			m_pThread = NULL;
+		}
+	}
 }
 
 void MainFrame::startjulius()
 {
 	m_Julius = new Julius(this);
 	m_Julius->start_recognition();
+	
 }
 
 
@@ -2243,16 +2252,13 @@ void MainFrame::onJuliusSentence(wxCommandEvent& event)
 	
 	// ok process the word
     if(process) {
-		
-		recognized = true;
-		recognizedm_timer->Start(1000);
-		
 		tcro_word->SetDefaultStyle(wxTextAttr(*wxBLACK));
-        // next word should be an action
+		
+        // this word is a trigger
         if(actionwaiting) {
+			// for the tb icon
             searchandexecute(event.GetString().Upper());
         } else {
-			
 			// TODO japanese
 			// exception first time test (give => donation)
 			if(b_languagedownload->GetLabel() == "Download") {
@@ -2267,7 +2273,7 @@ void MainFrame::onJuliusSentence(wxCommandEvent& event)
 				}
 			}
 			
-            // search word in trigger
+            // search word in pretrigger
             triggering = pretrigger.Index(event.GetString().Upper());
             if(triggering != wxNOT_FOUND) {
 				// notification pretrig enable
@@ -2275,17 +2281,31 @@ void MainFrame::onJuliusSentence(wxCommandEvent& event)
 					Eye(event.GetString().Upper());
 				}
 				actionwaiting = true;
+				reseticonm_timer->Start(PRETRIGTIME);
 				sb->SetStatusText("Waiting for action word", 2);
-				pretrig_timer.Start();
-				
             } else {
-                searchandexecute(event.GetString().Upper());
+				// this word cannot be directly said (needs a pretrigger)
+				int pos = trigger.Index(event.GetString().Upper());
+				// if case that no application using this word
+				if(pos != wxNOT_FOUND) {
+					if(pretrigger.Item(pos) == "") {
+						// for the tb icon
+						//recognized = true;
+						//reseticonm_timer->Start(1000);
+						searchandexecute(event.GetString().Upper());
+					} else {
+						needpretrig = true;
+						reseticonm_timer->Start(1000);
+					}
+				}
             }
         }
     } else {
 		// last sentence was unknown (reflect in the taskbar icon - using timer)
-		unknown = true;
-		unknownm_timer->Start(1000);
+		if(!actionwaiting) {
+			unknown = true;
+			reseticonm_timer->Start(1000);
+		}
 	}
 	
 	// visual feedback
@@ -2304,29 +2324,38 @@ void MainFrame::onJuliusScore(wxCommandEvent& event)
 
 void MainFrame::onJuliusReady(wxCommandEvent& event)
 {
-	juliusisready = true;
-	if(!paused) {
+	//juliusisready = true;
+	if(!paused && juliusisready) {
 		if(event.GetString() == "Listening...") {
 			icontb.CopyFromBitmap( *iconpng[6] );
 			if (!m_taskBarIcon->SetIcon( icontb )) {
 				wxMessageBox(wxT("Could not set icon."));
 			}
 		} else {
-			if(recognized) {
+			
+			if(actionwaiting) { // pre-trig
+				icontb.CopyFromBitmap( *iconpng[3] );
+				if (!m_taskBarIcon->SetIcon( icontb )) {
+					wxMessageBox(wxT("Could not set icon."));
+				}
+			} else if(recognized) {
 				icontb.CopyFromBitmap( *iconpng[7] ); // last sentence recognized
 				if (!m_taskBarIcon->SetIcon( icontb )) {
 					wxMessageBox(wxT("Could not set icon."));
 				}
+				recognized = false;
 			} else if(unknown) { // last sentence was unknown
 				icontb.CopyFromBitmap( *iconpng[4] );
 				if (!m_taskBarIcon->SetIcon( icontb )) {
 					wxMessageBox(wxT("Could not set icon."));
 				}
-			} else if(actionwaiting) { // pre-trig
-				icontb.CopyFromBitmap( *iconpng[3] );
+				unknown = false;
+			} else if(needpretrig) { // last sentence need a pretrig
+				icontb.CopyFromBitmap( *iconpng[8] );
 				if (!m_taskBarIcon->SetIcon( icontb )) {
 					wxMessageBox(wxT("Could not set icon."));
 				}
+				needpretrig = false;
 			} else {
 				if(webupdateicon) {
 					icontb.CopyFromBitmap( *iconpng[1] );
@@ -2341,8 +2370,8 @@ void MainFrame::onJuliusReady(wxCommandEvent& event)
 				}
 			}
 		}
+		sb->SetStatusText(event.GetString());
 	}
-	sb->SetStatusText(event.GetString());
 }
 
 void MainFrame::onJuliusWatch(wxCommandEvent& event)
@@ -2599,7 +2628,7 @@ void MainFrame::createpreference()
     preference["notificationstyle"] = _T("None");
     preference["notificationdelay"] = 1;
     preference["notificationtrig"] = false;
-    preference["autopause_mistake"] = 10;
+    preference["autopause_mistake"] = 6;
     preference["autopause_sec"] = 15;
     preference["autopause_score"] = true;
     preference["autopause_time"] = true;
@@ -2646,67 +2675,26 @@ void MainFrame::Onc_notification(wxCommandEvent& event)
 ////////////////////////////////////////////////////////////////////////////////
 // TIMERS
 ////////////////////////////////////////////////////////////////////////////////
-void MainFrame::OnPreTrigTimer(wxTimerEvent& event)
+void MainFrame::OnResetIconTimer(wxTimerEvent& event)
 {
-	if(actionwaiting) {
-		if(pretrig_timer.Time() > PRETRIGTIME) {
-			if(webupdateicon) {
-				icontb.CopyFromBitmap( *iconpng[1] );
-				if (!m_taskBarIcon->SetIcon( icontb )) {
-					wxMessageBox(wxT("Could not set icon."));
-				}
-			} else {
-				icontb.CopyFromBitmap( *iconpng[0] );
-				if (!m_taskBarIcon->SetIcon( icontb )) {
-					wxMessageBox(wxT("Could not set icon."));
-				}
+	if(!paused) {
+		if(webupdateicon) {
+			icontb.CopyFromBitmap( *iconpng[1] );
+			if (!m_taskBarIcon->SetIcon( icontb )) {
+				wxMessageBox(wxT("Could not set icon."));
 			}
+		} else {
+			icontb.CopyFromBitmap( *iconpng[0] );
+			if (!m_taskBarIcon->SetIcon( icontb )) {
+				wxMessageBox(wxT("Could not set icon."));
+			}
+		}
+		reseticonm_timer->Stop();
+		
+		// be sure it's an actionwaiting call
+		if(!recognized && !unknown) {
 			actionwaiting = false;
 			sb->SetStatusText("", 2);
-			pretrig_timer.Start();
-			pretrig_timer.Pause();
-		}
-	}
-}
-
-void MainFrame::OnUnknownTimer(wxTimerEvent& event)
-{
-	if(!paused) {
-		if(unknown) {
-			if(webupdateicon) {
-				icontb.CopyFromBitmap( *iconpng[1] );
-				if (!m_taskBarIcon->SetIcon( icontb )) {
-					wxMessageBox(wxT("Could not set icon."));
-				}
-			} else {
-				icontb.CopyFromBitmap( *iconpng[0] );
-				if (!m_taskBarIcon->SetIcon( icontb )) {
-					wxMessageBox(wxT("Could not set icon."));
-				}
-			}
-			unknown = false;
-			unknownm_timer->Stop();
-		}
-	}
-}
-
-void MainFrame::OnRecognizedTimer(wxTimerEvent& event)
-{
-	if(!paused) {
-		if(recognized) {
-			if(webupdateicon) {
-				icontb.CopyFromBitmap( *iconpng[1] );
-				if (!m_taskBarIcon->SetIcon( icontb )) {
-					wxMessageBox(wxT("Could not set icon."));
-				}
-			} else {
-				icontb.CopyFromBitmap( *iconpng[0] );
-				if (!m_taskBarIcon->SetIcon( icontb )) {
-					wxMessageBox(wxT("Could not set icon."));
-				}
-			}
-			recognized = false;
-			recognizedm_timer->Stop();
 		}
 	}
 }
@@ -2769,9 +2757,13 @@ void MainFrame::searchandexecute(wxString word)
 							pspnameid.Add(process.Item(actionning));
 					}
 					
+			} else {
+				recognized = true;
+				reseticonm_timer->Start(1000);
+				sb->SetStatusText("", 2);
 			}
-            actionwaiting = false;
-            sb->SetStatusText("", 2);
+		actionwaiting = false;
+            
         }
     }
 }
@@ -2849,6 +2841,28 @@ long MainFrame::Hand(wxString type, wxString cmd)
 						xdo_keysequence(xdo, xdotoolwindow, (const_cast<char*>((const char*)acmd[i].Trim().Trim(false).Mid(4).mb_str())), xdotooldelay);
 					} else if(xcmd[0] == "type") {
 						xdo_type(xdo, xdotoolwindow, (const_cast<char*>((const char*)acmd[i].Trim().Trim(false).Mid(5).mb_str())), xdotooldelay);
+					} else if(xcmd[0] == "mousemove_relative") {
+						xdo_mousemove_relative (xdo, wxAtoi(xcmd[1]), wxAtoi(xcmd[2]));
+					} else if(xcmd[0] == "mousedown") {
+						int button = 1;
+						if(xcmd.GetCount() > 1) {
+							if(xcmd[1] == "middle") {
+								button = 2;
+							} else if(xcmd[1] == "right") {
+								button = 3;
+							}
+						}
+						xdo_mousedown (xdo, xdotoolwindow, button);
+					} else if(xcmd[0] == "mouseup") {
+						int button = 1;
+						if(xcmd.GetCount() > 1) {
+							if(xcmd[1] == "middle") {
+								button = 2;
+							} else if(xcmd[1] == "right") {
+								button = 3;
+							}
+						}
+						xdo_mouseup (xdo, xdotoolwindow, button);
 					}
 					/*
 					wxString cp;

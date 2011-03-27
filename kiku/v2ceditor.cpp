@@ -146,7 +146,7 @@ bool V2cEditor::save()
 		wxMessageBox("You use a word that is not in the language dictionary");
 		return 0;
 	}
-	
+		
 	if(tc_pretrig->GetValue() != "") {
 		long index = juliusformat_word.Index(tc_pretrig->GetValue().Lower());
 		if(index == wxNOT_FOUND) {
@@ -223,6 +223,13 @@ bool V2cEditor::save()
 					actions["Type"] = type.Item(i);
 					root["Actions"].Append(actions);	
 				}
+			
+				// check if trigger is unique
+				long indext = trigger.Index(tc_trig->GetValue().Lower());
+				if(indext != wxNOT_FOUND) {
+					wxMessageBox("You already use that word (trigger)");
+					return 0;
+				}
 
 				wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_WRITE_COMMENTS );
 				wxString  jsonText;
@@ -292,6 +299,7 @@ bool V2cEditor::save()
 				wxArrayString trigger;
 				wxArrayString command;
 				wxArrayString type;
+				wxArrayString triggerunique;
 
 				wxString fileinput;
 				if(g_v2a == "shortcut") {
@@ -309,6 +317,9 @@ bool V2cEditor::save()
 				}
 				wxJSONValue modules = roottpm["Actions"];
 				if (modules.IsArray() ) {
+					for ( int i = 0; i < modules.Size(); i++ ) {
+						triggerunique.Add( modules[i]["Trigger"].AsString() );
+					}
 					for ( int i = 0; i < modules.Size(); i++ ) {
 						if(m_edit == modules[i]["Trigger"].AsString()) {
 							noti.Add(tc_notification->GetValue());
@@ -341,6 +352,15 @@ bool V2cEditor::save()
 					actions["Command"] = command.Item(i);
 					actions["Type"] = type.Item(i);
 					root["Actions"].Append(actions);	
+				}
+				
+				// check if trigger is unique
+				if(m_edit != tc_trig->GetValue()) {
+					long indext = triggerunique.Index(tc_trig->GetValue().Lower());
+					if(indext != wxNOT_FOUND) {
+						wxMessageBox("You already use that word (trigger)");
+						return 0;
+					}
 				}
 
 				wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_WRITE_COMMENTS );

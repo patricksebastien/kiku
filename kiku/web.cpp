@@ -73,8 +73,13 @@ Web::ExitCode Web::Entry()
 	get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
 	get.SetTimeout(30); 
 	 
-	while (!get.Connect(_T("www.workinprogress.ca")))
-		wxSleep(5);
+	while (!get.Connect(_T("www.workinprogress.ca"))) {
+		if(TestDestroy()) {
+			return (wxThread::ExitCode)0;
+		} else {
+			wxSleep(5);
+		}
+	}
 		
 	wxInputStream *in_stream = get.GetInputStream(whaturl);
 	

@@ -49,6 +49,7 @@
     <File Name="icon_think.h"/>
     <File Name="icon_unknown.h"/>
     <File Name="icon_update.h"/>
+    <File Name="icon_need.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="resources">
     <File Name="gui.fbp"/>

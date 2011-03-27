@@ -17,9 +17,15 @@ bool Language::download(wxString server, wxString tgz)
 	get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
 	get.SetTimeout(10); 
 	
-	while (!get.Connect(server))
-		wxSleep(5);
-	 
+	int tried = 0;
+	while (!get.Connect(server)) {
+		if(tried > 2) {
+			return 0;
+		}
+		wxSleep(2);
+		tried++;
+	}
+	
 	wxInputStream *httpStream = get.GetInputStream(tgz);
 	
 	if (get.GetError() == wxPROTO_NOERR)

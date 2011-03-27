@@ -8,6 +8,7 @@
 #include "main.h"
 
 extern bool paused;
+extern bool juliusisready;
 wxStopWatch watch;
 
 char *to_utf(char *src)
@@ -340,6 +341,7 @@ bool Julius::start_recognition()
 	}
 
 	// infinite loop - until j_close_stream is call
+	juliusisready = true;
 	int ret = j_recognize_stream(recog);
 
 	if (ret == -1) {
