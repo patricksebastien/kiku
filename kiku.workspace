@@ -3,7 +3,6 @@
   <Project Name="kiku" Path="kiku/kiku.project" Active="Yes"/>
   <Project Name="plugin" Path="plugin/plugin.project" Active="No"/>
   <Project Name="bin2c" Path="bin2c/bin2c.project" Active="No"/>
-  <Project Name="libxdo" Path="libxdo/libxdo.project" Active="No"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Project Name="kiku" ConfigName="Debug"/>

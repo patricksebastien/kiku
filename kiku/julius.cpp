@@ -11,22 +11,6 @@ extern bool paused;
 extern bool juliusisready;
 wxStopWatch watch;
 
-char *to_utf(char *src)
-{
-  char orig_buf[ICONV_BUFSIZE];
-  static char buf[ICONV_BUFSIZE];
-  strcpy(orig_buf, src);
-  iconv_t m_iconv = iconv_open("UTF-8", "EUC-JP"); // tocode, fromcode
-  size_t in_size = (size_t)ICONV_BUFSIZE;
-  size_t out_size = (size_t)ICONV_BUFSIZE;
-  char *in = orig_buf;
-  char *out = buf;
-  iconv(m_iconv, &in, &in_size, &out, &out_size);
-  iconv_close(m_iconv);
-  return buf;
-}
-
-
 void status_recready(Recog *recog, void *dummy)
 {
 	if (recog->jconf->input.speech_input == SP_MIC || recog->jconf->input.speech_input == SP_NETAUDIO) {
@@ -221,7 +205,7 @@ void output_result(Recog *recog, void *dummy)
 			     //printf(" %s", winfo->woutput[seq[i]]);
 
 			     wxCommandEvent event( wxEVT_COMMAND_TEXT_UPDATED, SENTENCE_ID );
-                 event.SetString(to_utf(winfo->woutput[seq[i]]));
+                 event.SetString(winfo->woutput[seq[i]]);
                  wxGetApp().AddPendingEvent( event );
 			}
 			/*

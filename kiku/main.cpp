@@ -3,7 +3,13 @@
  * http://www.workinprogress.ca/kiku
  * 
  * japanese silB/E same as english
- * julius.conf - use plugin
+ * julius.conf - use plugin (for libpd plugin, where /usr/share/kiku/plugins or .kiku/plugin)?
+ * write documentation
+ * basic import
+ * 64 bit version
+ * check TODO
+ * remove toutf()
+ * 
  * 
  * // FOLLOW-UP
  * http://groups.google.com/group/xdotool-users/browse_thread/thread/95d36fd1da9b7c14
@@ -25,9 +31,9 @@
  * maybe use wav_config from voxforge?
  * make binary of hmmdefs master_prompts...
  * 
- * NOTE
- * when updating this application do not forget to #define VERSION "x"
- * each time i touch gui (or on release) : 145 & 178 (pc_v2capplication / pc_v2cshortcut) = wxCB_SORT
+ * // NOTE
+ * when updating this application #define VERSION "x" & update make_deb version
+ * each time touch gui: 145 & 178 (pc_v2capplication / pc_v2cshortcut) = wxCB_SORT
  *********************************************************************/
  
 #include "main.h"
@@ -294,10 +300,19 @@ void MainFrame::Onm_nb( wxNotebookEvent& event )
 			html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_install.html");
 		} else {
 			// load html help language / installed
-			html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_installed.html");
+			if(language == "en") {
+				html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_installed.html");
+			} else if(language == "jp") {
+				html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_installed_jp.html");
+			}
 		} 
 	} else if(nb_current_page == 1) {
-		html_v2capplication->LoadPage("http://www.workinprogress.ca/KIKU/help/v2capplication.html");
+		// first install go to import directly
+		if(b_languagedownload->GetLabel() == "Download") {
+			m_nbv2c->SetSelection(2);
+		} else {
+			html_v2capplication->LoadPage("http://www.workinprogress.ca/KIKU/help/v2capplication.html");
+		}
 	}
 }
 
@@ -895,9 +910,13 @@ void MainFrame::writedictionary()
 	}
 	
 	wxString finaldict;
-	finaldict.Append("</s>	[]	sil\n");
-	finaldict.Append("<s>	[]	sil\n");
-	
+	if(language == "en") {
+		finaldict.Append("</s>	[]	sil\n");
+		finaldict.Append("<s>	[]	sil\n");
+	} else if(language == "jp") {
+		finaldict.Append("</s>	[]	silB\n");
+		finaldict.Append("<s>	[]	silE\n");
+	}
 	// match with the language dictionary
 	for(unsigned int i=0; i<allword.GetCount(); i++)
 	{
@@ -935,25 +954,51 @@ void MainFrame::Oncb_dict( wxCommandEvent& event )
 	v2cloading();
 }
 
+char *to_utf(char *src)
+{
+  char orig_buf[ICONV_BUFSIZE];
+  static char buf[ICONV_BUFSIZE];
+  strcpy(orig_buf, src);
+  iconv_t m_iconv = iconv_open("UTF-8", "EUC-JP"); // tocode, fromcode
+  size_t in_size = (size_t)ICONV_BUFSIZE;
+  size_t out_size = (size_t)ICONV_BUFSIZE;
+  char *in = orig_buf;
+  char *out = buf;
+  iconv(m_iconv, &in, &in_size, &out, &out_size);
+  iconv_close(m_iconv);
+  return buf;
+}
+
 void MainFrame::autocomplete()
 {
-	wxString dict;
-	if(language == "en") {
-		dict = stdpath.GetUserDataDir()+"/language/dict";
-	} else if(language == "jp") {
-		dict = stdpath.GetUserDataDir()+"/language/japanese-model/dict";
+	wxTextFile tfile;
+	tfile.Open(stdpath.GetUserDataDir()+"/language/dict");
+	wxString tokenit;
+	while(!tfile.Eof())
+	{
+		tokenit = to_utf(const_cast<char*>((const char*)tfile.GetNextLine()));
+		juliusformat_word.push_back(tokenit.AfterFirst('[').BeforeFirst(']').Trim().Lower());
+		juliusformat_pronoun.push_back(tokenit.AfterLast(']').Trim(false));
+		wxPuts(tokenit.AfterFirst('[').BeforeFirst(']').Trim().Lower());
 	}
-	
+	/*
+	// problem with utf8
 	wxFileInputStream input(dict);
     wxTextInputStream text( input );
 	wxString tokenit;
+	
     while(input.IsOk() && !input.Eof() )
     {
 		tokenit = text.ReadLine();
-		juliusformat_word.push_back(tokenit.BeforeFirst('[').Trim().Lower());
+		juliusformat_word.push_back(tokenit.AfterFirst('[').BeforeFirst(']').Trim().Lower().ToUTF8());
+		wxMessageBox(tokenit);
+
 		juliusformat_pronoun.push_back(tokenit.AfterLast(']').Trim(false));
 	}
+	*/
 }
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // V2C LOADING
 ////////////////////////////////////////////////////////////////////////////////
@@ -1094,6 +1139,7 @@ void MainFrame::v2cloading(wxString file, long pid)
     wxJSONValue  root;
     wxJSONReader reader;
     int numErrors = reader.Parse( input, &root );
+	wxPuts("oups");
     if ( numErrors > 0 )  {
         wxMessageBox("ERROR: the JSON apps.v2c document is not well-formed");
     }
@@ -1423,6 +1469,28 @@ bool MainFrame::languagedownload() {
 		return 0;
 	}
 	
+	// exception: gunzip dictionary if japanese
+	if(c_language->GetStringSelection() == "Japanese [Julius]") {
+		g_languagedownloading->Pulse();
+		wxYield();
+		if(!m_pLanguage->gunzip(GetCurrentWorkingDirectory()+"/language/dicteucjp", GetCurrentWorkingDirectory()+"/language/japanese-models/lang_m/20k.htkdic.gz")) {
+			wxMessageBox("Cannot gunzip the language file.");
+			return 0;
+		}
+		g_languagedownloading->Pulse();
+		wxYield();
+		// using iconv to convert from euc-jp to utf8
+		wxString cp;
+		wxArrayString output, errors;
+		int code = wxExecute("iconv --from-code=EUC-JP --to-code=UTF8 "+GetCurrentWorkingDirectory()+"/language/dicteucjp > "+GetCurrentWorkingDirectory()+"/language/dict", output, errors);
+		if ( code != -1 )
+		{
+			if(!output.IsEmpty()) {
+				cp = output[0];
+			}
+		}
+	}
+	
 	// 4) remove model.tar.gz & model.tar
 	g_languagedownloading->Pulse();
 	wxYield();
@@ -1486,7 +1554,7 @@ bool MainFrame::languagedownload() {
 			language = "jp";
 			dict.Write("</s>	[]	silE\n");
 			dict.Write("<s>	[]	silB\n");
-			// TODO
+			dict.Write("寄付	[寄付]	k i f u \n");
 		}
 		dict.Close();
 		
@@ -1508,7 +1576,11 @@ bool MainFrame::languagedownload() {
 		st_language_select->SetLabel(c_language->GetStringSelection());
 		
 		// gui & html loadpage (other documentation when language is installed)
-		html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_firstinstalled.html");
+		if(c_language->GetStringSelection() == "English [VoxForge]") {
+			html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_firstinstalled.html");
+		} else if(c_language->GetStringSelection() == "Japanese [Julius]") {
+			html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_firstinstalled_jp.html");
+		}
 		
 	} else { // not an update
 		
@@ -2267,11 +2339,14 @@ void MainFrame::onJuliusSentence(wxCommandEvent& event)
 						wxLaunchDefaultBrowser("http://www.workinprogress.ca/kiku/donation/");
 					}
 				} else {
-					if(event.GetString().Upper() == "kaeru") {
-						wxLaunchDefaultBrowser("http://www.workinprogress.ca/kiku/donate/");
+					// kifu = donation
+					if(event.GetString().Upper() == "寄付") {
+						wxLaunchDefaultBrowser("http://www.workinprogress.ca/kiku/donation/");
 					}
 				}
 			}
+			
+			wxPuts(event.GetString().Upper());
 			
             // search word in pretrigger
             triggering = pretrigger.Index(event.GetString().Upper());
@@ -2819,7 +2894,7 @@ long MainFrame::Hand(wxString type, wxString cmd)
 			#ifdef DEBUG
 				wxPuts(type + " : " + cmd);
 			#endif
-            proc = new Process(this, cmd);
+			proc = new Process(this, cmd);
             m_pidLast = wxExecute(cmd, wxEXEC_ASYNC, proc);
             if ( !m_pidLast )
             {
@@ -2887,7 +2962,7 @@ long MainFrame::Hand(wxString type, wxString cmd)
 void MainFrame::OnLink(wxHtmlLinkEvent& event) {
 	wxHtmlLinkInfo link;
 	link = event.GetLinkInfo();
-	wxLaunchDefaultBrowser(event.GetString());
+	wxLaunchDefaultBrowser(link.GetHref());
 }
 
 wxString MainFrame::GetCurrentWorkingDirectory()

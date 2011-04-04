@@ -84,6 +84,11 @@ extern "C" {
 #include <cstring>
 #include <cstdarg>
 
+ // to convert from EUC-JP to UTF-8
+#include <iconv.h>
+#define ICONV_BUFSIZE 4096
+char *to_utf(char *src);
+
 #define PROC_DIRECTORY "/proc/"
 #define CASE_SENSITIVE    1
 #define CASE_INSENSITIVE  0

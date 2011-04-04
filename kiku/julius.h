@@ -7,7 +7,6 @@
 #define JULIUS_H
 
 #include <julius/juliuslib.h>
-#include <iconv.h> // to convert from EUC-JP to UTF-8
 
 #include <wx/filename.h>
 #include <wx/file.h>
@@ -20,9 +19,6 @@
 #include <wx/textfile.h>
 #include <wx/regex.h>
 #include <wx/process.h>
-
-#define ICONV_BUFSIZE 4096
-char *to_utf(char *src);
 
 // julius callback
 void callback_engine_pause_func(Recog *recog, void *dummy);
