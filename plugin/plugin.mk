@@ -2,10 +2,10 @@
 ## Auto Generated makefile by CodeLite IDE
 ## any manual changes will be erased      
 ##
-## Release
+## Debug
 ProjectName            :=plugin
-ConfigurationName      :=Release
-IntermediateDirectory  :=./Release
+ConfigurationName      :=Debug
+IntermediateDirectory  :=./Debug
 OutDir                 := $(IntermediateDirectory)
 WorkspacePath          := "/home/psc/11h11/code/kiku"
 ProjectPath            := "/home/psc/11h11/code/kiku/plugin"
@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=psc
-Date                   :=11-03-26
+Date                   :=11-04-06
 CodeLitePath           :="/home/psc/.codelite"
 LinkerName             :=gcc
 ArchiveTool            :=ar rcus
@@ -36,9 +36,9 @@ ObjectSwitch           :=-o
 ArchiveOutputSwitch    := 
 PreprocessOnlySwitch   :=-E 
 MakeDirCommand         :=mkdir -p
-CmpOptions             :=  $(Preprocessors)
-C_CmpOptions           :=  $(Preprocessors)
-LinkOptions            :=  -O2
+CmpOptions             := -g $(Preprocessors)
+C_CmpOptions           := -g $(Preprocessors)
+LinkOptions            :=  
 IncludePath            :=  "$(IncludeSwitch)." "$(IncludeSwitch)." 
 RcIncludePath          :=
 Libs                   :=
@@ -61,7 +61,7 @@ $(OutputFile): makeDirStep $(Objects)
 	$(LinkerName) $(OutputSwitch)$(OutputFile) $(Objects) $(LibPath) $(Libs) $(LinkOptions)
 
 makeDirStep:
-	@test -d ./Release || $(MakeDirCommand) ./Release
+	@test -d ./Debug || $(MakeDirCommand) ./Debug
 
 PreBuild:
 

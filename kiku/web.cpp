@@ -72,7 +72,7 @@ Web::ExitCode Web::Entry()
 	wxHTTP get;
 	get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
 	get.SetTimeout(30); 
-	 
+	
 	while (!get.Connect(_T("www.workinprogress.ca"))) {
 		if(TestDestroy()) {
 			return (wxThread::ExitCode)0;

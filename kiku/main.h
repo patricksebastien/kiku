@@ -84,11 +84,6 @@ extern "C" {
 #include <cstring>
 #include <cstdarg>
 
- // to convert from EUC-JP to UTF-8
-#include <iconv.h>
-#define ICONV_BUFSIZE 4096
-char *to_utf(char *src);
-
 #define PROC_DIRECTORY "/proc/"
 #define CASE_SENSITIVE    1
 #define CASE_INSENSITIVE  0
@@ -197,12 +192,13 @@ protected:
 		
 		// engine
 		void Onb_update( wxCommandEvent& event );
-		void Onc_engdriver( wxCommandEvent& event );
 		void Ons_englevel(wxScrollEvent& event);
 		void Oncb_engdefault(wxCommandEvent& event);
 		void Onsp_engthreshold(wxSpinEvent& event);
 		void Onsp_engzero(wxSpinEvent& event);
-		void Oncb_engnostrip(wxCommandEvent& event);
+		//void Oncb_engnostrip(wxCommandEvent& event);
+		void Onb_spectrum( wxCommandEvent& event );
+		void calculatespectrum();
 		void Oncb_engzmean(wxCommandEvent& event);
 		void Onc_enggprune(wxCommandEvent& event);
 		void Onc_engiwcd1(wxCommandEvent& event);
@@ -254,16 +250,18 @@ protected:
 		bool listv2c(wxString v2c);
 		bool getv2c(wxString v2c);
 		bool downloadv2c(wxString server, wxString tgz);
-		bool gunzipv2c(wxString v2c);
+		bool gunzipv2c(wxString v2c, wxString fn);
 		void importsuccess();
 		//void Onb_v2cimportfp( wxCommandEvent& event );
 		//void Onb_v2cimportpf( wxUpdateUIEvent& event );
 		
 		wxArrayString appurl;
 		wxArrayString appurlkey;
+		wxArrayString appurlname;
 		wxArrayString appurlhtml;
 		wxArrayString shortcuturl;
 		wxArrayString shortcuturlkey;
+		wxArrayString shortcuturlname;
 		wxArrayString shortcuturlhtml;
 		
 		// preference

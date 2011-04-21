@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Nov 18 2010)
+// C++ code generated with wxFormBuilder (version Apr 11 2011)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -117,7 +117,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	p_recognition->SetSizer( bSizer3 );
 	p_recognition->Layout();
 	bSizer3->Fit( p_recognition );
-	m_nb->AddPage( p_recognition, _("Recognition"), false );
+	m_nb->AddPage( p_recognition, _("Recognition"), true );
 	p_V2C = new wxPanel( m_nb, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer34;
 	bSizer34 = new wxBoxSizer( wxVERTICAL );
@@ -422,21 +422,6 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	bSizer25->Add( m_staticText24, 0, wxALL, 5 );
 	
-	wxBoxSizer* bSizer28;
-	bSizer28 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_staticText27 = new wxStaticText( p_engine, wxID_ANY, _("Driver:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText27->Wrap( -1 );
-	bSizer28->Add( m_staticText27, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-	
-	wxString c_engdriverChoices[] = { _("Alsa") };
-	int c_engdriverNChoices = sizeof( c_engdriverChoices ) / sizeof( wxString );
-	c_engdriver = new wxChoice( p_engine, wxID_ANY, wxDefaultPosition, wxDefaultSize, c_engdriverNChoices, c_engdriverChoices, 0 );
-	c_engdriver->SetSelection( 0 );
-	bSizer28->Add( c_engdriver, 1, wxALL, 5 );
-	
-	bSizer25->Add( bSizer28, 0, wxEXPAND, 5 );
-	
 	wxBoxSizer* bSizer29;
 	bSizer29 = new wxBoxSizer( wxHORIZONTAL );
 	
@@ -472,11 +457,14 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	cb_engzmean = new wxCheckBox( p_engine, wxID_ANY, _("ZMean"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer30->Add( cb_engzmean, 0, wxALL, 5 );
 	
-	bSizer29->Add( bSizer30, 1, wxEXPAND, 5 );
+	bSizer29->Add( bSizer30, 0, wxEXPAND, 5 );
 	
 	bSizer25->Add( bSizer29, 1, wxEXPAND, 5 );
 	
-	bSizer24->Add( bSizer25, 0, 0, 5 );
+	b_spectrum = new wxButton( p_engine, wxID_ANY, _("Calculate Spectrum"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer25->Add( b_spectrum, 0, wxALL|wxEXPAND, 5 );
+	
+	bSizer24->Add( bSizer25, 0, wxEXPAND, 5 );
 	
 	m_staticline9 = new wxStaticLine( p_engine, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer24->Add( m_staticline9, 0, wxEXPAND | wxALL, 5 );
@@ -588,7 +576,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	wxBoxSizer* bSizer321;
 	bSizer321 = new wxBoxSizer( wxHORIZONTAL );
 	
-	wxString c_languageChoices[] = { _("English [VoxForge]"), _("Japanese [Julius]") };
+	wxString c_languageChoices[] = { _("English 14k [VoxForge]"), _("Japanese 20k [Julius]"), _("Japanese 60k [Julius]") };
 	int c_languageNChoices = sizeof( c_languageChoices ) / sizeof( wxString );
 	c_language = new wxChoice( p_language, wxID_ANY, wxDefaultPosition, wxDefaultSize, c_languageNChoices, c_languageChoices, 0 );
 	c_language->SetSelection( 0 );
@@ -659,13 +647,16 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	pb_v2capplication->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onpb_v2capplication ), NULL, this );
 	pc_v2capplication->Connect( wxEVT_UPDATE_UI, wxUpdateUIEventHandler( MainFrameBase::Onpc_v2capplication ), NULL, this );
 	pb_v2capplicationedit->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_v2capplicationedit ), NULL, this );
+	html_v2capplication->Connect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( MainFrameBase::OnLink ), NULL, this );
 	pb_v2cshortcut->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onpb_v2cshortcut ), NULL, this );
 	pc_v2cshortcut->Connect( wxEVT_UPDATE_UI, wxUpdateUIEventHandler( MainFrameBase::Onpc_v2cshortcut ), NULL, this );
 	pb_v2cshortcutedit->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onpb_v2cshortcutedit ), NULL, this );
+	html_v2cshortcut->Connect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( MainFrameBase::OnLink ), NULL, this );
 	pc_v2cimportapp->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onpc_v2cimportapp ), NULL, this );
 	b_v2cimportapp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_v2cimportapp ), NULL, this );
 	pc_v2cimportshortcut->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onpc_v2cimportshortcut ), NULL, this );
 	b_v2cimportshortcut->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_v2cimportshortcut ), NULL, this );
+	html_import->Connect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( MainFrameBase::OnLink ), NULL, this );
 	rb_v2cmethod->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( MainFrameBase::Onrb_v2cmethod ), NULL, this );
 	cb_v2cmonitor->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_v2cmonitor ), NULL, this );
 	cb_v2clauncher->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_v2clauncher ), NULL, this );
@@ -680,13 +671,13 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	c_notstyle->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_notification ), NULL, this );
 	sp_notdelay->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	cb_notpretrig->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
-	c_engdriver->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_engdriver ), NULL, this );
 	s_englevel->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MainFrameBase::Ons_englevel ), NULL, this );
 	cb_engdefault->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_engdefault ), NULL, this );
 	sp_engthreshold->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engthreshold ), NULL, this );
 	sp_engzero->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engzero ), NULL, this );
 	cb_engnostrip->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_engnostrip ), NULL, this );
 	cb_engzmean->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_engzmean ), NULL, this );
+	b_spectrum->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_spectrum ), NULL, this );
 	c_enggprune->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_enggprune ), NULL, this );
 	c_engiwcd1->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_engiwcd1 ), NULL, this );
 	sp_engiwcd1->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engiwcd1 ), NULL, this );
@@ -695,6 +686,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	tc_engpenalty->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Ontc_engpenalty ), NULL, this );
 	b_restartjulius->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_restartjulius ), NULL, this );
 	b_languagedownload->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_languagedownload ), NULL, this );
+	html_language->Connect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( MainFrameBase::OnLink ), NULL, this );
 	html_help->Connect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( MainFrameBase::OnLink ), NULL, this );
 }
 
@@ -713,13 +705,16 @@ MainFrameBase::~MainFrameBase()
 	pb_v2capplication->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onpb_v2capplication ), NULL, this );
 	pc_v2capplication->Disconnect( wxEVT_UPDATE_UI, wxUpdateUIEventHandler( MainFrameBase::Onpc_v2capplication ), NULL, this );
 	pb_v2capplicationedit->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_v2capplicationedit ), NULL, this );
+	html_v2capplication->Disconnect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( MainFrameBase::OnLink ), NULL, this );
 	pb_v2cshortcut->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onpb_v2cshortcut ), NULL, this );
 	pc_v2cshortcut->Disconnect( wxEVT_UPDATE_UI, wxUpdateUIEventHandler( MainFrameBase::Onpc_v2cshortcut ), NULL, this );
 	pb_v2cshortcutedit->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onpb_v2cshortcutedit ), NULL, this );
+	html_v2cshortcut->Disconnect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( MainFrameBase::OnLink ), NULL, this );
 	pc_v2cimportapp->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onpc_v2cimportapp ), NULL, this );
 	b_v2cimportapp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_v2cimportapp ), NULL, this );
 	pc_v2cimportshortcut->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onpc_v2cimportshortcut ), NULL, this );
 	b_v2cimportshortcut->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_v2cimportshortcut ), NULL, this );
+	html_import->Disconnect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( MainFrameBase::OnLink ), NULL, this );
 	rb_v2cmethod->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( MainFrameBase::Onrb_v2cmethod ), NULL, this );
 	cb_v2cmonitor->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_v2cmonitor ), NULL, this );
 	cb_v2clauncher->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_v2clauncher ), NULL, this );
@@ -734,13 +729,13 @@ MainFrameBase::~MainFrameBase()
 	c_notstyle->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_notification ), NULL, this );
 	sp_notdelay->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	cb_notpretrig->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
-	c_engdriver->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_engdriver ), NULL, this );
 	s_englevel->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MainFrameBase::Ons_englevel ), NULL, this );
 	cb_engdefault->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_engdefault ), NULL, this );
 	sp_engthreshold->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engthreshold ), NULL, this );
 	sp_engzero->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engzero ), NULL, this );
 	cb_engnostrip->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_engnostrip ), NULL, this );
 	cb_engzmean->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_engzmean ), NULL, this );
+	b_spectrum->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_spectrum ), NULL, this );
 	c_enggprune->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_enggprune ), NULL, this );
 	c_engiwcd1->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_engiwcd1 ), NULL, this );
 	sp_engiwcd1->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engiwcd1 ), NULL, this );
@@ -749,6 +744,7 @@ MainFrameBase::~MainFrameBase()
 	tc_engpenalty->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Ontc_engpenalty ), NULL, this );
 	b_restartjulius->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_restartjulius ), NULL, this );
 	b_languagedownload->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_languagedownload ), NULL, this );
+	html_language->Disconnect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( MainFrameBase::OnLink ), NULL, this );
 	html_help->Disconnect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( MainFrameBase::OnLink ), NULL, this );
 	
 }

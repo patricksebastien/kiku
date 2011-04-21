@@ -2,10 +2,10 @@
 ## Auto Generated makefile by CodeLite IDE
 ## any manual changes will be erased      
 ##
-## Debug
+## Release_-_Alsa
 ProjectName            :=kiku
-ConfigurationName      :=Debug
-IntermediateDirectory  :=./Debug
+ConfigurationName      :=Release_-_Alsa
+IntermediateDirectory  :=./Release-Alsa
 OutDir                 := $(IntermediateDirectory)
 WorkspacePath          := "/home/psc/11h11/code/kiku"
 ProjectPath            := "/home/psc/11h11/code/kiku/kiku"
@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=psc
-Date                   :=11-04-04
+Date                   :=11-04-21
 CodeLitePath           :="/home/psc/.codelite"
 LinkerName             :=g++
 ArchiveTool            :=ar rcus
@@ -31,18 +31,19 @@ SourceSwitch           :=-c
 CompilerName           :=g++
 C_CompilerName         :=gcc
 OutputFile             :=$(IntermediateDirectory)/$(ProjectName)
-Preprocessors          :=$(PreprocessorSwitch)__WX__ -DDEBUG 
+Preprocessors          :=$(PreprocessorSwitch)__WX__ 
 ObjectSwitch           :=-o 
 ArchiveOutputSwitch    := 
 PreprocessOnlySwitch   :=-E 
+ObjectsFileList        :="/home/psc/11h11/code/kiku/kiku/kiku.txt"
 MakeDirCommand         :=mkdir -p
-CmpOptions             := -g $(shell /home/psc/src/wx291svn/bin/wx-config --cxxflags) $(shell /home/psc/11h11/oreilles/juliuscvs/bin/libjulius-config --cflags) $(shell /home/psc/11h11/oreilles/juliuscvs/bin/libsent-config --cflags) $(shell /usr/bin/xosd-config --cflags) $(shell pkg-config --cflags libnotify) $(Preprocessors)
+CmpOptions             := -O2 $(shell /home/psc/src/wx291svn/bin/wx-config --cxxflags) $(shell /home/psc/11h11/code/julius/alsa/bin/libjulius-config --cflags) $(shell /home/psc/11h11/code/julius/alsa/bin/libsent-config --cflags) $(shell /usr/bin/xosd-config --cflags) $(shell pkg-config --cflags libnotify) $(Preprocessors)
 C_CmpOptions           :=  $(Preprocessors)
-LinkOptions            :=  $(shell /home/psc/src/wx291svn/bin/wx-config --libs) $(shell /home/psc/11h11/oreilles/juliuscvs/bin/libjulius-config --libs) $(shell /home/psc/11h11/oreilles/juliuscvs/bin/libsent-config --libs) $(shell /usr/bin/xosd-config --libs) $(shell pkg-config --libs libnotify)
-IncludePath            :=  "$(IncludeSwitch)." 
+LinkOptions            :=  -s $(shell /home/psc/src/wx291svn/bin/wx-config --libs) $(shell /home/psc/11h11/code/julius/alsa/bin/libjulius-config --libs) $(shell /home/psc/11h11/code/julius/alsa/bin/libsent-config --libs) $(shell /usr/bin/xosd-config --libs) $(shell pkg-config --libs libnotify)
+IncludePath            :=  $(IncludeSwitch). 
 RcIncludePath          :=
-Libs                   :=$(LibrarySwitch)xdo $(LibrarySwitch)Xtst $(LibrarySwitch)m $(LibrarySwitch)rt $(LibrarySwitch)X11 $(LibrarySwitch)Xtst 
-LibPath                := "$(LibraryPathSwitch)." 
+Libs                   :=$(LibrarySwitch)xdo $(LibrarySwitch)Xtst 
+LibPath                := $(LibraryPathSwitch). 
 
 
 ##
@@ -61,8 +62,11 @@ $(OutputFile): makeDirStep $(Objects)
 	@$(MakeDirCommand) $(@D)
 	$(LinkerName) $(OutputSwitch)$(OutputFile) $(Objects) $(LibPath) $(Libs) $(LinkOptions)
 
+objects_file:
+	@echo $(Objects) > $(ObjectsFileList)
+
 makeDirStep:
-	@test -d ./Debug || $(MakeDirCommand) ./Debug
+	@test -d ./Release-Alsa || $(MakeDirCommand) ./Release-Alsa
 
 PreBuild:
 

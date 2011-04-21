@@ -403,11 +403,6 @@ bool Julius::stop_recognition()
 	return 1;
 }
 
-bool Julius::update_grammar()
-{
-	return 1;
-}
-
 void Julius::pause_recognition()
 {
     j_request_terminate(recog);

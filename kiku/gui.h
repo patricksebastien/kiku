@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Nov 18 2010)
+// C++ code generated with wxFormBuilder (version Apr 11 2011)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -119,8 +119,6 @@ class MainFrameBase : public wxFrame
 		wxCheckBox* cb_notpretrig;
 		wxPanel* p_engine;
 		wxStaticText* m_staticText24;
-		wxStaticText* m_staticText27;
-		wxChoice* c_engdriver;
 		wxSlider* s_englevel;
 		wxGauge* g_englevel;
 		wxCheckBox* cb_engdefault;
@@ -130,6 +128,7 @@ class MainFrameBase : public wxFrame
 		wxSpinCtrl* sp_engzero;
 		wxCheckBox* cb_engnostrip;
 		wxCheckBox* cb_engzmean;
+		wxButton* b_spectrum;
 		wxStaticLine* m_staticline9;
 		wxStaticText* m_staticText25;
 		wxStaticText* m_staticText31;
@@ -171,6 +170,7 @@ class MainFrameBase : public wxFrame
 		virtual void Onpb_v2capplication( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onpc_v2capplication( wxUpdateUIEvent& event ) { event.Skip(); }
 		virtual void Onb_v2capplicationedit( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnLink( wxHtmlLinkEvent& event ) { event.Skip(); }
 		virtual void Onpb_v2cshortcut( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onpc_v2cshortcut( wxUpdateUIEvent& event ) { event.Skip(); }
 		virtual void Onpb_v2cshortcutedit( wxCommandEvent& event ) { event.Skip(); }
@@ -183,13 +183,13 @@ class MainFrameBase : public wxFrame
 		virtual void Oncb_v2clauncher( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Oncb_dict( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onc_notification( wxCommandEvent& event ) { event.Skip(); }
-		virtual void Onc_engdriver( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Ons_englevel( wxScrollEvent& event ) { event.Skip(); }
 		virtual void Oncb_engdefault( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onsp_engthreshold( wxSpinEvent& event ) { event.Skip(); }
 		virtual void Onsp_engzero( wxSpinEvent& event ) { event.Skip(); }
 		virtual void Oncb_engnostrip( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Oncb_engzmean( wxCommandEvent& event ) { event.Skip(); }
+		virtual void Onb_spectrum( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onc_enggprune( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onc_engiwcd1( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onsp_engiwcd1( wxSpinEvent& event ) { event.Skip(); }
@@ -198,7 +198,6 @@ class MainFrameBase : public wxFrame
 		virtual void Ontc_engpenalty( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onb_restartjulius( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onb_languagedownload( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnLink( wxHtmlLinkEvent& event ) { event.Skip(); }
 		
 	
 	public:

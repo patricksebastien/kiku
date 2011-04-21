@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=kiku
+Comment=Voice recognition to control the OS
+Exec=kiku
+Icon=/usr/share/kiku/images/kiku.png
+Terminal=false
+Type=Application
+Categories=Accessibility;
+StartupNotify=true

@@ -5,88 +5,22 @@
   <TabInfoArray Name="TabInfoArray">
     <TabInfo>
       <wxString Value="/home/psc/11h11/code/kiku/kiku/main.cpp" Name="FileName"/>
-      <int Value="138" Name="FirstVisibleLine"/>
-      <int Value="142" Name="CurrentLine"/>
+      <int Value="567" Name="FirstVisibleLine"/>
+      <int Value="572" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>
     <TabInfo>
       <wxString Value="/home/psc/11h11/code/kiku/kiku/main.h" Name="FileName"/>
-      <int Value="82" Name="FirstVisibleLine"/>
-      <int Value="96" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/psc/11h11/code/kiku/kiku/julius.cpp" Name="FileName"/>
-      <int Value="329" Name="FirstVisibleLine"/>
-      <int Value="343" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/psc/11h11/code/kiku/kiku/julius.h" Name="FileName"/>
-      <int Value="35" Name="FirstVisibleLine"/>
-      <int Value="49" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/psc/11h11/code/kiku/kiku/notes.txt" Name="FileName"/>
       <int Value="0" Name="FirstVisibleLine"/>
-      <int Value="8" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/psc/11h11/code/kiku/kiku/language.cpp" Name="FileName"/>
-      <int Value="13" Name="FirstVisibleLine"/>
-      <int Value="20" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/psc/11h11/code/kiku/kiku/v2capplication.cpp" Name="FileName"/>
-      <int Value="295" Name="FirstVisibleLine"/>
-      <int Value="306" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/psc/11h11/code/kiku/kiku/v2ceditor.cpp" Name="FileName"/>
-      <int Value="348" Name="FirstVisibleLine"/>
-      <int Value="362" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/psc/11h11/code/kiku/kiku/web.h" Name="FileName"/>
-      <int Value="2" Name="FirstVisibleLine"/>
-      <int Value="16" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/psc/11h11/code/kiku/kiku/gui.h" Name="FileName"/>
-      <int Value="102" Name="FirstVisibleLine"/>
-      <int Value="103" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/psc/11h11/code/kiku/kiku/gui.cpp" Name="FileName"/>
-      <int Value="141" Name="FirstVisibleLine"/>
-      <int Value="146" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/psc/11h11/code/kiku/kiku/web.cpp" Name="FileName"/>
-      <int Value="61" Name="FirstVisibleLine"/>
-      <int Value="75" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/psc/11h11/code/kiku/kiku/v2ceditor.h" Name="FileName"/>
-      <int Value="4" Name="FirstVisibleLine"/>
-      <int Value="5" Name="CurrentLine"/>
+      <int Value="11" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>
   </TabInfoArray>
   <SerializedObject Name="m_breakpoints">
-    <long Value="2" Name="Count"/>
+    <long Value="3" Name="Count"/>
     <SerializedObject Name="Breakpoint0">
       <wxString Value="/home/psc/11h11/code/kiku/kiku/main.cpp" Name="file"/>
-      <int Value="1343" Name="lineno"/>
+      <int Value="1326" Name="lineno"/>
       <wxString Value="" Name="function_name"/>
       <wxString Value="" Name="memory_address"/>
       <int Value="1" Name="bp_type"/>
@@ -102,7 +36,23 @@
     </SerializedObject>
     <SerializedObject Name="Breakpoint1">
       <wxString Value="/home/psc/11h11/code/kiku/kiku/main.cpp" Name="file"/>
-      <int Value="2313" Name="lineno"/>
+      <int Value="1419" Name="lineno"/>
+      <wxString Value="" Name="function_name"/>
+      <wxString Value="" Name="memory_address"/>
+      <int Value="1" Name="bp_type"/>
+      <int Value="0" Name="watchpoint_type"/>
+      <wxString Value="" Name="watchpt_data"/>
+      <CData Name="commandlist"/>
+      <bool Value="0" Name="regex"/>
+      <bool Value="0" Name="is_temp"/>
+      <bool Value="1" Name="is_enabled"/>
+      <int Value="0" Name="ignore_number"/>
+      <wxString Value="" Name="conditions"/>
+      <int Value="0" Name="origin"/>
+    </SerializedObject>
+    <SerializedObject Name="Breakpoint2">
+      <wxString Value="/home/psc/11h11/code/kiku/kiku/main.cpp" Name="file"/>
+      <int Value="2393" Name="lineno"/>
       <wxString Value="" Name="function_name"/>
       <wxString Value="" Name="memory_address"/>
       <int Value="1" Name="bp_type"/>

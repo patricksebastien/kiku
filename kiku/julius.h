@@ -43,7 +43,6 @@ class Julius {
 		void pause_recognition();
 		void resume_recognition();
 		bool stop_recognition();
-		bool update_grammar();
 
 	private:
 		MainFrame *mf_pHandler;

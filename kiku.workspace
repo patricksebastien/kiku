@@ -3,20 +3,31 @@
   <Project Name="kiku" Path="kiku/kiku.project" Active="Yes"/>
   <Project Name="plugin" Path="plugin/plugin.project" Active="No"/>
   <Project Name="bin2c" Path="bin2c/bin2c.project" Active="No"/>
+  <Project Name="pulseaudio" Path="pulseaudio/pulseaudio.project" Active="No"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Debug" Selected="yes">
-      <Project Name="kiku" ConfigName="Debug"/>
-      <Project Name="plugin" ConfigName="Debug"/>
-      <Project Name="bin2c" ConfigName="Debug"/>
-      <Project Name="libxdo" ConfigName="Debug"/>
-      <Project Name="libxdo" ConfigName="Debug"/>
-    </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release" Selected="no">
-      <Project Name="kiku" ConfigName="Release"/>
+    <WorkspaceConfiguration Name="Release - Alsa" Selected="yes">
+      <Project Name="pulseaudio" ConfigName="Release"/>
       <Project Name="plugin" ConfigName="Release"/>
+      <Project Name="kiku" ConfigName="Release - Alsa"/>
       <Project Name="bin2c" ConfigName="Release"/>
-      <Project Name="libxdo" ConfigName="Release"/>
-      <Project Name="libxdo" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release - PulseAudio" Selected="no">
+      <Project Name="pulseaudio" ConfigName="Release"/>
+      <Project Name="plugin" ConfigName="Release"/>
+      <Project Name="kiku" ConfigName="Release - PulseAudio"/>
+      <Project Name="bin2c" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Debug - Alsa" Selected="no">
+      <Project Name="pulseaudio" ConfigName="Debug"/>
+      <Project Name="plugin" ConfigName="Debug"/>
+      <Project Name="kiku" ConfigName="Debug - Alsa"/>
+      <Project Name="bin2c" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Debug - PulseAudio" Selected="no">
+      <Project Name="pulseaudio" ConfigName="Debug"/>
+      <Project Name="plugin" ConfigName="Debug"/>
+      <Project Name="kiku" ConfigName="Debug - PulseAudio"/>
+      <Project Name="bin2c" ConfigName="Debug"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>

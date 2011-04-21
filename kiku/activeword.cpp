@@ -102,10 +102,13 @@ void ActiveWord::fetchactions()
     for (unsigned int i = 0; i < trigger.GetCount(); i++ )
     {
 		if(v2c.Item(i) == "launcher") {
-			listctrl_launcher->InsertItem(0, ""); // bad
-			listctrl_launcher->SetItem(0, 0, command.Item(i).Lower());
-			listctrl_launcher->SetItem(0, 1, pretrigger.Item(i).Lower());
-			listctrl_launcher->SetItem(0, 2, trigger.Item(i).Lower());
+			
+			if(command.Item(i).Lower() != "null") {
+				listctrl_launcher->InsertItem(0, ""); // bad
+				listctrl_launcher->SetItem(0, 0, command.Item(i).Lower());
+				listctrl_launcher->SetItem(0, 1, pretrigger.Item(i).Lower());
+				listctrl_launcher->SetItem(0, 2, trigger.Item(i).Lower());
+			}
 		}
     }
     listctrl_launcher->Show();
