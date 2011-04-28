@@ -27,6 +27,9 @@
 #include <wx/image.h>
 #include <wx/imagpng.h>
 
+// libpd
+#include "../common/z_libpd.h"
+
 // xdotool
 extern "C" {
 	#include "xdo.h"
@@ -92,6 +95,7 @@ extern "C" {
 
 #define PROCESSTIMER_ID 10000
 #define RESETICONTIMER_ID 10001
+#define UNPAUSETIMER_ID 10002
 
 #define POLLING 2000 // monitor process
 #define PRETRIGTIME 10000 // how long to hold for the action word
@@ -135,7 +139,10 @@ class MainFrame : public MainFrameBase
         void onJuliusReady(wxCommandEvent& event);
         void onJuliusScore(wxCommandEvent& event);
         void onJuliusWatch(wxCommandEvent& event);
-        void onJuliusLevelMeter(wxCommandEvent& event);
+        //void onJuliusLevelMeter(wxCommandEvent& event);
+		
+		// libpd
+		void libpd_prvu(wxCommandEvent& event);
 		
 		// web
 		Web *m_pWebThread;
@@ -170,7 +177,7 @@ class MainFrame : public MainFrameBase
 		void OnQuit();
 		
 protected:
-		
+
 		// xdotool
 		xdo_t *xdo;
 		Window xdotoolwindow;
@@ -192,7 +199,7 @@ protected:
 		
 		// engine
 		void Onb_update( wxCommandEvent& event );
-		void Ons_englevel(wxScrollEvent& event);
+		//void Ons_englevel(wxScrollEvent& event);
 		void Oncb_engdefault(wxCommandEvent& event);
 		void Onsp_engthreshold(wxSpinEvent& event);
 		void Onsp_engzero(wxSpinEvent& event);
@@ -206,6 +213,13 @@ protected:
 		void Onsp_engtmix(wxSpinEvent& event);
 		void Onsp_engbeam(wxSpinEvent& event);
 		void Ontc_engpenalty(wxCommandEvent& event);
+		
+		// audio (libpd)
+		void Onc_driver(wxCommandEvent& event);
+		void Ons_volume(wxScrollEvent& event);
+		void Ons_lp(wxScrollEvent& event);
+		void Ons_hp(wxScrollEvent& event);
+		void Onc_filter(wxCommandEvent& event);
 		
 		// web
 		void startwebthread(wxString what);
@@ -270,14 +284,14 @@ protected:
 		void createpreference();
 		void Onm_prefupdate( wxCommandEvent& event );
 
-		// pause
+		// pause - unpause
 		void Oncb_pause( wxCommandEvent& event );
 		void autopause();
 		wxStopWatch ap_timer;
-        wxStopWatch aup_timer;
+		//wxStopWatch aup_timer;
+		//bool aup_timer_started;
+		//bool aup_timer_ispaused;
 		bool aup_userpause;
-		bool aup_timer_started;
-		bool aup_timer_ispaused;
 		
 		// work
 		void searchandexecute(wxString word);
@@ -299,6 +313,10 @@ protected:
 		// timer for reset icon
 		wxTimer *reseticonm_timer;
 		void OnResetIconTimer(wxTimerEvent& event);
+		
+		// timer for unpause
+		wxTimer *unpausem_timer;
+		void OnUnpauseTimer(wxTimerEvent& event);
 		
 		// unknown word
 		bool unknown;
@@ -352,11 +370,11 @@ const int PRONUN_ID = 100002;
 const int READY_ID = 100003;
 const int SCORE_ID = 100004;
 const int WATCH_ID = 100005;
-const int LEVELMETER_ID = 100006;
+//const int LEVELMETER_ID = 100006;
 const int WEB_ID = 100007;
 const int LDUP_ID = 100008;
 const int LDEND_ID = 100009;
-
+const int LIBPDPRVU_ID = 100010;
 
 
 // thread

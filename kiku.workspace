@@ -1,33 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CodeLite_Workspace Name="kiku" Database="./kiku.tags">
   <Project Name="kiku" Path="kiku/kiku.project" Active="Yes"/>
-  <Project Name="plugin" Path="plugin/plugin.project" Active="No"/>
   <Project Name="bin2c" Path="bin2c/bin2c.project" Active="No"/>
-  <Project Name="pulseaudio" Path="pulseaudio/pulseaudio.project" Active="No"/>
+  <Project Name="alsa" Path="plugin/alsa/alsa.project" Active="No"/>
+  <Project Name="pa" Path="plugin/pulseaudio/pa.project" Active="No"/>
+  <Project Name="pamonitor" Path="plugin/pulseaudiomon/pamonitor.project" Active="No"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Release - Alsa" Selected="yes">
-      <Project Name="pulseaudio" ConfigName="Release"/>
-      <Project Name="plugin" ConfigName="Release"/>
-      <Project Name="kiku" ConfigName="Release - Alsa"/>
+    <WorkspaceConfiguration Name="Release" Selected="yes">
+      <Project Name="pamonitor" ConfigName="Release"/>
+      <Project Name="pa" ConfigName="Release"/>
+      <Project Name="kiku" ConfigName="Release"/>
       <Project Name="bin2c" ConfigName="Release"/>
+      <Project Name="alsa" ConfigName="Release"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release - PulseAudio" Selected="no">
-      <Project Name="pulseaudio" ConfigName="Release"/>
-      <Project Name="plugin" ConfigName="Release"/>
-      <Project Name="kiku" ConfigName="Release - PulseAudio"/>
-      <Project Name="bin2c" ConfigName="Release"/>
-    </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Debug - Alsa" Selected="no">
-      <Project Name="pulseaudio" ConfigName="Debug"/>
-      <Project Name="plugin" ConfigName="Debug"/>
-      <Project Name="kiku" ConfigName="Debug - Alsa"/>
+    <WorkspaceConfiguration Name="Debug" Selected="no">
+      <Project Name="pamonitor" ConfigName="Debug"/>
+      <Project Name="pa" ConfigName="Debug"/>
+      <Project Name="kiku" ConfigName="Debug"/>
       <Project Name="bin2c" ConfigName="Debug"/>
-    </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Debug - PulseAudio" Selected="no">
-      <Project Name="pulseaudio" ConfigName="Debug"/>
-      <Project Name="plugin" ConfigName="Debug"/>
-      <Project Name="kiku" ConfigName="Debug - PulseAudio"/>
-      <Project Name="bin2c" ConfigName="Debug"/>
+      <Project Name="alsa" ConfigName="Debug"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>

@@ -56,6 +56,7 @@ void callback_engine_pause_func(Recog *recog, void *dummy)
     usleep(1);
 }
 
+/*
 void levelmeter(Recog *recog, SP16 *buf, int len, void *dummy)
 {
 	float d;
@@ -65,16 +66,15 @@ void levelmeter(Recog *recog, SP16 *buf, int len, void *dummy)
     for(i=0;i<len;i++) {
         if (level < buf[i]) level = buf[i];
     }
-	
-	// TODO should we use log or not?
-    //d = log((float)(level+1)) / 10.3971466; /* 10.3971466 = log(32767) */
-    //d = log((float)(level+1)) * 1000;
-    d = level;
+
+    d = log((float)(level+1)) / 10.3971466;
+	d = d * 32767.0;
 
     wxCommandEvent event( wxEVT_COMMAND_TEXT_UPDATED, LEVELMETER_ID );
-    event.SetInt(d);
+    event.SetInt((int)d);
     wxGetApp().AddPendingEvent( event );
 }
+*/
 
 void put_hypo_phoneme(WORD_ID *seq, int n, WORD_INFO *winfo)
 {
@@ -297,8 +297,14 @@ void output_result(Recog *recog, void *dummy)
 
 bool Julius::start_recognition()
 {
-	//openLogFile();
-	jlog_set_output(NULL);
+	#ifdef DEBUG
+		openLogFile();
+	#endif
+	
+	#ifndef DEBUG
+		jlog_set_output(NULL);
+	#endif
+	
 	loadConfigFile();
 	addCallbacks();
 	
@@ -308,9 +314,10 @@ bool Julius::start_recognition()
 	}
 
 	//will output julius info to log
-	//j_recog_info(recog);
-    //fflush(srm_log_fp);
-	
+	#ifdef DEBUG
+		j_recog_info(recog);
+		fflush(srm_log_fp);
+	#endif
 
 	switch(j_open_stream(recog, NULL)) {
 		case 0:
@@ -329,7 +336,8 @@ bool Julius::start_recognition()
 	int ret = j_recognize_stream(recog);
 
 	if (ret == -1) {
-		fprintf(stderr, "error j_recognize_stream");
+		// when use a plugin it complain but works... so commented
+		//fprintf(stderr, "error j_recognize_stream");
 		return false;
 	}
 	#ifdef DEBUG
@@ -340,8 +348,11 @@ bool Julius::start_recognition()
 	j_recog_free(recog);
     recog = NULL;
     jconf = NULL;
-	//fclose(srm_log_fp);
-	//srm_log_fp = NULL;
+	
+	#ifdef DEBUG
+		fclose(srm_log_fp);
+		srm_log_fp = NULL;
+	#endif
 
 	return true;
 }
@@ -349,7 +360,7 @@ bool Julius::start_recognition()
 void Julius::openLogFile()
 {
 	srm_log_fp = fopen("log.txt", "w");
-	jlog_set_output(srm_log_fp);
+	//jlog_set_output(srm_log_fp);
 }
 
 bool Julius::loadConfigFile()
@@ -366,6 +377,9 @@ bool Julius::loadConfigFile()
 
 	recog = j_create_instance_from_jconf(jconf);
 	if (recog == NULL) {
+		wxStandardPaths stdpath;
+		wxRemoveFile(stdpath.GetUserDataDir()+"/language/julius.conf");
+		wxRemoveFile(stdpath.GetUserDataDir()+"/language/dictionary");
 		fprintf(stderr, "error in j_create_instance_from_jconf\n");
 		return false;
 	}
@@ -381,7 +395,7 @@ void Julius::addCallbacks()
 	::callback_add(recog, CALLBACK_EVENT_SPEECH_STOP, status_recstop, NULL);
 	::callback_add(recog, CALLBACK_RESULT, output_result, NULL);
     ::callback_add(recog, CALLBACK_PAUSE_FUNCTION, callback_engine_pause_func, NULL);    
-    ::callback_add_adin(recog, CALLBACK_ADIN_CAPTURED, levelmeter, NULL);
+    //::callback_add_adin(recog, CALLBACK_ADIN_CAPTURED, levelmeter, NULL);
 	
     /*
 	::callback_add(recog, CALLBACK_EVENT_RECOGNITION_BEGIN, status_recognition_begin, NULL);

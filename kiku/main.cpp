@@ -2,9 +2,6 @@
  * Author: Patrick Sébastien
  * http://www.workinprogress.ca/kiku
  * 
- * icon kiku too big
- * pulseaudio slow
- * 
  * // WXWIDGETS
  * webupdate not always calling (wxthread with wxsocket problem)
  * ./src/unix/utilsunx.cpp
@@ -20,6 +17,9 @@
  * 
  * // IF REQUESTED
  * single word or grammar mode checkbox (http://julius.sourceforge.jp/en_index.php?q=en_grammar.html)
+ * alsa plugin stripped invalid sample = libpd is causing the problem
+ * automatic unpause using volume threshold will be fix if no more julius threading problem (no meter when pause)
+ * embed mkss, mkhmmbin...
  * 
  * // NOTE
  * when updating this application #define VERSION "x" & update make_deb version
@@ -72,6 +72,20 @@ bool paused;
 bool haveupdate;
 wxString updateurl;
 
+
+////////////////////////////////////////////////////////////////////////////////
+// callback 
+////////////////////////////////////////////////////////////////////////////////
+void rfloat(const char *s, float myd) {
+	wxString pdsend(s, wxConvUTF8);
+	if(pdsend == "prvu") {
+		wxCommandEvent event( wxEVT_COMMAND_TEXT_UPDATED, LIBPDPRVU_ID );
+		event.SetInt((int)myd);
+		wxGetApp().AddPendingEvent( event );
+	}
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // application class implementation 
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,6 +105,7 @@ bool MainApp::OnInit()
 	kiku->SetIcon(icontb);
 	
 	wxStandardPaths stdpath;
+
 	if(!wxFileExists(stdpath.GetUserDataDir()+"/language/julius.conf")) {
 		kiku->Show();
 	} else {
@@ -103,9 +118,13 @@ bool MainApp::OnInit()
 	Bind(wxEVT_COMMAND_TEXT_UPDATED, &MainFrame::onJuliusScore, kiku, SCORE_ID);
 	Bind(wxEVT_COMMAND_TEXT_UPDATED, &MainFrame::onJuliusReady, kiku, READY_ID);
 	Bind(wxEVT_COMMAND_TEXT_UPDATED, &MainFrame::onJuliusWatch, kiku, WATCH_ID);
-	Bind(wxEVT_COMMAND_TEXT_UPDATED, &MainFrame::onJuliusLevelMeter, kiku, LEVELMETER_ID);
+	//Bind(wxEVT_COMMAND_TEXT_UPDATED, &MainFrame::onJuliusLevelMeter, kiku, LEVELMETER_ID);
+	
 	// web thread
 	Bind(wxEVT_COMMAND_TEXT_UPDATED, &MainFrame::OnWeb, kiku, WEB_ID);
+	
+	// libpd callback function
+	Bind(wxEVT_COMMAND_TEXT_UPDATED, &MainFrame::libpd_prvu, kiku, LIBPDPRVU_ID);
 	
 	#if wxUSE_FS_INET && wxUSE_STREAMS && wxUSE_SOCKETS
 		wxFileSystem::AddHandler(new wxInternetFSHandler);
@@ -114,16 +133,34 @@ bool MainApp::OnInit()
 	return true;
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 // main application frame implementation 
 ////////////////////////////////////////////////////////////////////////////////
 BEGIN_EVENT_TABLE(MainFrame,wxFrame)
     EVT_TIMER(PROCESSTIMER_ID, MainFrame::OnMonitorTimer) // monitor process name to match v2a
 	EVT_TIMER(RESETICONTIMER_ID, MainFrame::OnResetIconTimer) // reset the original icon
+	EVT_TIMER(UNPAUSETIMER_ID, MainFrame::OnUnpauseTimer) // reset the original icon
 END_EVENT_TABLE()
 
 MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 {	
+	// libpd
+	libpd_init();
+	libpd_bind("prvu");
+	libpd_floathook = (t_libpd_floathook) rfloat;
+	
+	// input channel, output channel, sr, one tick per buffer
+	libpd_init_audio(1, 1, 16000, 4); // TODO
+	
+	// compute audio    [; pd dsp 1(
+	libpd_start_message();
+	libpd_add_float(1.0f);
+	libpd_finish_message("pd", "dsp");
+
+	// open patch
+	libpd_openfile("kiku.pd", "/usr/lib/kiku");
+	
 	// xdotool
 	xdo = xdo_new(getenv("DISPLAY"));
 	xdotoolwindow = 0;
@@ -173,8 +210,8 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	paused = false;
 	// autopause
 	nbmistake = 0;
-	aup_timer_started = false;
-	aup_timer_ispaused = true;
+	//aup_timer_started = false;
+	//aup_timer_ispaused = true;
 	aup_userpause = false;
 	// web update
 	webupdateicon = false;
@@ -186,6 +223,9 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	
 	// reseticon timer
 	reseticonm_timer = new wxTimer(this, RESETICONTIMER_ID);
+	
+	// unpause timer
+	unpausem_timer = new wxTimer(this, UNPAUSETIMER_ID);
 
 	// flags
 	actionwaiting = false;
@@ -233,12 +273,13 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 		p_V2C->Enable(0);
 		p_configutation->Enable(0);
 		p_engine->Enable(0);
+		p_audio->Enable(0);
 		
 		// statusbar
-		sb->SetStatusText("Welcome to kiku!", 0);
+		sb->SetStatusText("welcome to kiku!", 0);
 		
 		// go to notebook language
-		m_nb->SetSelection(4);
+		m_nb->SetSelection(5);
 	
 	} else {
 		// fetch preference.conf
@@ -258,6 +299,64 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	}
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Libpd
+////////////////////////////////////////////////////////////////////////////////
+void MainFrame::libpd_prvu(wxCommandEvent& event) {
+	g_englevel->SetValue(event.GetInt());
+	st_db->SetLabel(wxString::Format("%idB", event.GetInt()));
+}
+
+void MainFrame::Onc_driver(wxCommandEvent& event)
+{
+	writejuliusconf("driver");
+	if(m_Julius && juliusisready) {
+		juliusgentlyexit();
+		startjuliusthread();
+	}
+}
+
+void MainFrame::Ons_volume(wxScrollEvent& event)
+{
+	st_volume->SetLabel(wxString::Format("%i%%", event.GetInt()));
+	libpd_float("volume", event.GetInt());
+	writepreference();
+}
+
+void MainFrame::Onc_filter(wxCommandEvent& event)
+{
+	if(event.GetString() == "None") {
+		s_lp->Enable(0);
+		s_hp->Enable(0);
+		libpd_float("filter", 0);
+	} else if(event.GetString() == "1-order") {
+		s_lp->Enable(1);
+		s_hp->Enable(1);
+		libpd_float("filter", 1);
+	} else if(event.GetString() == "2-order (butterworth)") {
+		s_lp->Enable(1);
+		s_hp->Enable(1);
+		libpd_float("filter", 2);
+	}
+	writepreference();
+}
+
+void MainFrame::Ons_lp(wxScrollEvent& event)
+{
+	st_lp->SetLabel(wxString::Format("%i hertz", event.GetInt()));
+	libpd_float("lp", event.GetInt());
+	writepreference();
+}
+
+void MainFrame::Ons_hp(wxScrollEvent& event)
+{
+	st_hp->SetLabel(wxString::Format("%i hertz", event.GetInt()));
+	libpd_float("hp", event.GetInt());
+	writepreference();
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // Icons
 ////////////////////////////////////////////////////////////////////////////////
@@ -273,10 +372,10 @@ void MainFrame::LoadPngIcon(const unsigned char *embedded_png, int length, int i
 void MainFrame::Onm_nb( wxNotebookEvent& event )
 {
 	unsigned int nb_current_page = m_nb->GetSelection();
-	if(nb_current_page == 5) {
+	if(nb_current_page == 6) {
 		// load help
 		html_help->LoadPage("http://www.workinprogress.ca/KIKU/help/help.html");
-	} else if(nb_current_page == 4) {
+	} else if(nb_current_page == 5) {
 		if(!wxFileExists(GetCurrentWorkingDirectory()+"/language/julius.conf")) {
 			// load html help language / installed
 			html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_install.html");
@@ -1573,16 +1672,16 @@ bool MainFrame::languagedownload() {
 		myFile.Write("-iwsp\n");
 		myFile.Write("-iwsppenalty -70.0\n");
 		myFile.Write("-multipath\n");
-		myFile.Write("-plugindir /usr/share/kiku/plugins\n");
-		myFile.Write("-input mic\n");
+		myFile.Write("-plugindir /usr/lib/kiku\n");
+		myFile.Write("-input pulseaudio-libpd\n");
 		myFile.Write("-smpFreq 16000\n");
 		myFile.Write("-iwcd1 avg\n");
 		myFile.Write("-tmix 4\n");
 		myFile.Write("-penalty1 10.0\n");
 		myFile.Write("-b 14000\n");
 		myFile.Write("-zmeanframe\n");
-		myFile.Write("#-zc\n");	
-		myFile.Write("#-lv\n");	
+		myFile.Write("-zc 20\n");	
+		myFile.Write("-lv 1700\n");	
 		myFile.Close();
 
 		g_languagedownloading->Pulse();
@@ -1618,6 +1717,7 @@ bool MainFrame::languagedownload() {
 		p_V2C->Enable(1);
 		p_configutation->Enable(1);
 		p_engine->Enable(1);
+		p_audio->Enable(1);
 		
 		// gui stuff
 		st_languagedownloading->Show(0);
@@ -1682,23 +1782,17 @@ void MainFrame::OnCloseFrame(wxCloseEvent& event)
 
 void MainFrame::OnQuit()
 {
+	wxSocketBase::Shutdown();
+	xdo_free(xdo);
+	delete m_taskBarIcon;
+	delete m_timer;
+	delete reseticonm_timer;
+	delete unpausem_timer;
+	webexit();
 	if(m_Julius && juliusisready) {
-		wxSocketBase::Shutdown();
-		xdo_free(xdo);
-		delete m_taskBarIcon;
-		delete m_timer;
-		delete reseticonm_timer;
-		webexit();
 		juliusgentlyexit();
-		Destroy();
-	} else {
-		wxSocketBase::Shutdown();
-		xdo_free(xdo);
-		delete m_taskBarIcon;
-		delete m_timer;
-		delete reseticonm_timer;
-		Destroy();
-	}
+	} 
+	Destroy();
 }
 
 void MainFrame::webexit()
@@ -1754,7 +1848,6 @@ void MainFrame::juliusgentlyexit()
 	#ifdef DEBUG
 		printf("Exiting kiku\n");
 	#endif
-	
 }
 
 /*
@@ -1898,13 +1991,13 @@ void MainFrame::readjuliusconf()
         if(line.Find(wxT("#-lv")) >= 0) {
             cb_engdefault->SetValue(1);
             sp_engthreshold->Enable(0);
-            s_englevel->Enable(0);
-			s_englevel->SetValue(2000);
+            //s_englevel->Enable(0);
+			//s_englevel->SetValue(2000);
 			sp_engzero->SetValue(60);
 			sp_engthreshold->SetValue(2000);
         } else if(line.Find(wxT("-lv")) >= 0) {
             sp_engthreshold->SetValue(regexonlyint(line));
-            s_englevel->SetValue(regexonlyint(line));
+            //s_englevel->SetValue(regexonlyint(line));
         }
 
         if(line.Find(wxT("#-zc")) >= 0) {
@@ -1984,6 +2077,17 @@ void MainFrame::readjuliusconf()
 				tc_engpenalty->ChangeValue(line.Mid(10,4));
             }
         }
+		
+		if(line.Find(wxT("-input")) >= 0) {
+				if(line == "-input pulseaudio-libpd") {
+					c_driver->SetStringSelection("PulseAudio");
+				} else if(line == "-input pulseaudio-libpd-monitor") {
+					c_driver->SetStringSelection("PulseAudio (monitor)");
+				} else if(line == "-input mic") {
+					c_driver->SetStringSelection("PulseAudio");
+				}
+        }
+		
     }
 }
 
@@ -2216,11 +2320,12 @@ void MainFrame::writejuliusconf(wxString opt)
                 juliusconftxt.RemoveLine(juliusconftxt.GetCurrentLine());
                 juliusconftxt.GoToLine(juliusconftxt.GetCurrentLine()-1);
             }
-			if(line.Find("-plugindir") >= 0) {
-                juliusconftxt.RemoveLine(juliusconftxt.GetCurrentLine());
-                juliusconftxt.GoToLine(juliusconftxt.GetCurrentLine()-1);
-            }
         }
+		if(c_driver->GetStringSelection() == "PulseAudio") {
+			juliusconftxt.AddLine("-input pulseaudio-libpd");
+		} else if(c_driver->GetStringSelection() == "PulseAudio (monitor)") {
+			juliusconftxt.AddLine("-input pulseaudio-libpd-monitor");
+		}
 		
     }
 
@@ -2228,27 +2333,30 @@ void MainFrame::writejuliusconf(wxString opt)
     juliusconftxt.Close();
 }
 
+/*
 void MainFrame::Ons_englevel(wxScrollEvent& event)
 {
-    sp_engthreshold->SetValue(event.GetInt());
+	int d = event.GetInt();
+    sp_engthreshold->SetValue(d);
 	writejuliusconf("lv");
 }
+*/
 
 void MainFrame::Oncb_engdefault(wxCommandEvent& event)
 {
     if(cb_engdefault->GetValue()) {
         writejuliusconf("lvauto");
         sp_engthreshold->Enable(0);
-        s_englevel->Enable(0);
+        //s_englevel->Enable(0);
         sp_engzero->Enable(0);
-		s_englevel->SetValue(2000);
+		//s_englevel->SetValue(2000);
 		sp_engzero->SetValue(60);
 		sp_engthreshold->SetValue(2000);
     } else {
         writejuliusconf("lv");
         writejuliusconf("zc");
         sp_engthreshold->Enable(1);
-        s_englevel->Enable(1);
+        //s_englevel->Enable(1);
         sp_engzero->Enable(1);
     }
 }
@@ -2256,7 +2364,7 @@ void MainFrame::Oncb_engdefault(wxCommandEvent& event)
 void MainFrame::Onsp_engthreshold(wxSpinEvent& event)
 {
     writejuliusconf("lv");
-    s_englevel->SetValue(event.GetInt());
+    //s_englevel->SetValue(event.GetInt());
 }
 
 void MainFrame::Onsp_engzero(wxSpinEvent& event)
@@ -2538,15 +2646,13 @@ void MainFrame::onJuliusWatch(wxCommandEvent& event)
     sb->SetStatusText("Duration: "+wxString::Format("%i", event.GetInt())+" ms", 1);
 }
 
+/*
 void MainFrame::onJuliusLevelMeter(wxCommandEvent& event)
 {
 	g_englevel->SetValue(event.GetInt());
-
-    //autounpause
+	//autounpause
     if(cb_pause->GetValue()) {
         if(cb_aptime->GetValue() || cb_apscore->GetValue() || cb_apsp->GetValue()) {
-
-			
             if(event.GetInt() < sp_aupthreshold->GetValue() && !aup_timer_started) {
                 aup_timer_started = true;
                 aup_timer.Start();
@@ -2572,7 +2678,6 @@ void MainFrame::onJuliusLevelMeter(wxCommandEvent& event)
             } else if(event.GetInt() > sp_aupthreshold->GetValue()) {
                 //restart
                 aup_timer.Start();
-
             }
             aup_timer_ispaused = false;
 
@@ -2582,9 +2687,8 @@ void MainFrame::onJuliusLevelMeter(wxCommandEvent& event)
             aup_timer.Pause();
         }
     }
-	
 }
-
+*/
 ////////////////////////////////////////////////////////////////////////////////
 // PAUSE
 ////////////////////////////////////////////////////////////////////////////////
@@ -2676,10 +2780,10 @@ void MainFrame::readpreference()
     if(!cb_apsp->GetValue() && !cb_aptime->GetValue() && !cb_apscore->GetValue()) {
         sp_apmistake->Enable(0);
         sp_apsec->Enable(0);
-        sp_aupthreshold->Enable(0);
+        //sp_aupthreshold->Enable(0);
         sp_aupsec->Enable(0);
     }
-    sp_aupthreshold->SetValue(rootpref["autounpause_threshold"].AsInt());
+    //sp_aupthreshold->SetValue(rootpref["autounpause_threshold"].AsInt());
     sp_aupsec->SetValue(rootpref["autounpause_sec"].AsInt());
 
     if(rootpref["v2c_loading"].AsInt() == 0) {
@@ -2703,6 +2807,27 @@ void MainFrame::readpreference()
         cb_notpretrig->Enable(1);
         sp_notdelay->Enable(1);
     }
+	
+	// libpd
+	c_filter->SetStringSelection(rootpref["libpd_filter"].AsString());
+	libpd_float("filter", c_filter->GetCurrentSelection());
+	
+	s_volume->SetValue(rootpref["libpd_volume"].AsInt());
+	st_volume->SetLabel(wxString::Format("%i%%", rootpref["libpd_volume"].AsInt()));
+	libpd_float("volume", rootpref["libpd_volume"].AsInt());
+	
+	s_lp->SetValue(rootpref["libpd_lp"].AsInt());
+	st_lp->SetLabel(wxString::Format("%i hertz", rootpref["libpd_lp"].AsInt()));
+	libpd_float("lp", rootpref["libpd_lp"].AsInt());
+	
+	s_hp->SetValue(rootpref["libpd_hp"].AsInt());
+	st_hp->SetLabel(wxString::Format("%i hertz", rootpref["libpd_hp"].AsInt()));
+	libpd_float("hp", rootpref["libpd_hp"].AsInt());
+	
+	if(c_filter->GetStringSelection() == "None") {
+		s_lp->Enable(0);
+		s_hp->Enable(0);
+	}
 }
 
 void MainFrame::writepreference()
@@ -2714,12 +2839,12 @@ void MainFrame::writepreference()
 		sp_apmistake->Enable(0);
 		sp_apsec->Enable(0);
 		sp_aupsec->Enable(0);
-		sp_aupthreshold->Enable(0);
+		//sp_aupthreshold->Enable(0);
 	} else {
 		sp_apmistake->Enable(1);
 		sp_apsec->Enable(1);
 		sp_aupsec->Enable(1);
-		sp_aupthreshold->Enable(1);
+		//sp_aupthreshold->Enable(1);
 	}
 
 	// limit logic
@@ -2746,6 +2871,8 @@ void MainFrame::writepreference()
     preference["threshold"] = threshold;
     preference["minimum"] = sp_minlength->GetValue();
     preference["maximum"] = sp_maxlength->GetValue();
+	
+	
 
 	preference["dictionary"] = cb_dict->GetValue();
 	
@@ -2758,7 +2885,7 @@ void MainFrame::writepreference()
     preference["autopause_score"] = cb_apscore->GetValue();
     preference["autopause_time"] = cb_aptime->GetValue();
     preference["autopause_sp"] = cb_apsp->GetValue();
-    preference["autounpause_threshold"] = sp_aupthreshold->GetValue();
+    //preference["autounpause_threshold"] = sp_aupthreshold->GetValue();
     preference["autounpause_sec"] = sp_aupsec->GetValue();
 	
     int v2copt;
@@ -2770,7 +2897,13 @@ void MainFrame::writepreference()
     preference["v2c_loading"] = v2copt;
     preference["v2c_monitor"] = cb_v2cmonitor->GetValue();
     preference["v2c_apps"] = cb_v2clauncher->GetValue();
-
+	
+	// libpd
+	preference["libpd_volume"] = s_volume->GetValue();
+	preference["libpd_filter"] = c_filter->GetStringSelection();
+	preference["libpd_lp"] = s_lp->GetValue();
+	preference["libpd_hp"] = s_hp->GetValue();
+	
     wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_WRITE_COMMENTS );
     wxString  jsonText;
     writer.Write( preference, jsonText );
@@ -2791,16 +2924,20 @@ void MainFrame::createpreference()
     preference["notificationdelay"] = 1;
     preference["notificationtrig"] = false;
     preference["autopause_mistake"] = 6;
-    preference["autopause_sec"] = 15;
+    preference["autopause_sec"] = 10;
     preference["autopause_score"] = true;
     preference["autopause_time"] = true;
     preference["autopause_sp"] = true;
     preference["autounpause_threshold"] = 1999;
-    preference["autounpause_sec"] = 5;
+    preference["autounpause_sec"] = 10;
 	preference["dictionary"] = true;
     preference["v2c_loading"] = 1;
     preference["v2c_monitor"] = true;
     preference["v2c_apps"] = true;
+	preference["libpd_filter"] = _T("2-order (butterworth)");
+    preference["libpd_volume"] = 100;
+    preference["libpd_lp"] = 11500;
+    preference["libpd_hp"] = 200;
     wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_WRITE_COMMENTS );
     wxString  jsonText;
     writer.Write( preference, jsonText );
@@ -2861,28 +2998,33 @@ void MainFrame::OnResetIconTimer(wxTimerEvent& event)
 	}
 }
 
+void MainFrame::OnUnpauseTimer(wxTimerEvent& event)
+{
+	pauser(false);
+	unpausem_timer->Stop();
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // AUTOPAUSE
 ////////////////////////////////////////////////////////////////////////////////
 void MainFrame::autopause()
 {
     nbmistake++;
-	sb->SetLabel(wxString::Format("%i",nbmistake));
     if(nbmistake == 1) {
         //start timer
         ap_timer.Start();
     }
     if(ceil(ap_timer.Time() / 1000) > sp_apsec->GetValue()) {
         nbmistake = 0;
-    } else {
-        if(nbmistake == sp_apmistake->GetValue()) {
-			pauser(1);
-			aup_userpause = false;
-            nbmistake = 0;
-            //restart unpause timer
-            aup_timer.Start();
-        }
-    }
+    } else if(nbmistake == sp_apmistake->GetValue()) {
+		pauser(1);
+		aup_userpause = false;
+		nbmistake = 0;
+		//restart unpause timer
+		//aup_timer.Start();
+		unpausem_timer->Start(sp_aupsec->GetValue() * 1000);
+	}
+    
 }
 
 ////////////////////////////////////////////////////////////////////////////////

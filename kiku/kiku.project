@@ -57,6 +57,10 @@
     <File Name="gui_v2ceditor.fbp"/>
     <File Name="gui_activeword.fbp"/>
   </VirtualDirectory>
+  <Dependencies Name="Debug - Alsa"/>
+  <Dependencies Name="Debug - PulseAudio"/>
+  <Dependencies Name="Release - Alsa"/>
+  <Dependencies Name="Release - PulseAudio"/>
   <Settings Type="Executable">
     <GlobalSettings>
       <Compiler Options="" C_Options="">
@@ -67,47 +71,11 @@
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>
-    <Configuration Name="Debug - Alsa" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g;$(shell /home/psc/src/wx291svn/bin/wx-config --cxxflags);$(shell /home/psc/11h11/code/julius/alsa/bin/libjulius-config --cflags);$(shell /home/psc/11h11/code/julius/alsa/bin/libsent-config --cflags);$(shell /usr/bin/xosd-config --cflags);$(shell pkg-config --cflags libnotify)" C_Options="" Required="yes" PreCompiledHeader="">
-        <Preprocessor Value="__WX__ -DDEBUG"/>
-      </Compiler>
-      <Linker Options="$(shell /home/psc/src/wx291svn/bin/wx-config --libs);$(shell /home/psc/11h11/code/julius/alsa/bin/libjulius-config --libs);$(shell /home/psc/11h11/code/julius/alsa/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs);$(shell pkg-config --libs libnotify)" Required="yes">
-        <Library Value="xdo.a"/>
-        <Library Value="Xtst"/>
-        <Library Value="m"/>
-        <Library Value="rt"/>
-        <Library Value="X11"/>
-        <Library Value="Xtst"/>
-      </Linker>
-      <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug-Alsa" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="no"/>
-      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
-      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
-        <PostConnectCommands/>
-        <StartupCommands/>
-      </Debugger>
-      <PreBuild/>
-      <PostBuild/>
-      <CustomBuild Enabled="no">
-        <RebuildCommand/>
-        <CleanCommand/>
-        <BuildCommand/>
-        <PreprocessFileCommand/>
-        <SingleFileCommand/>
-        <MakefileGenerationCommand/>
-        <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory/>
-      </CustomBuild>
-      <AdditionalRules>
-        <CustomPostBuild/>
-        <CustomPreBuild/>
-      </AdditionalRules>
-    </Configuration>
-    <Configuration Name="Debug - PulseAudio" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g;$(shell /home/psc/src/wx291svn/bin/wx-config --cxxflags);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libjulius-config --cflags);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libsent-config --cflags);$(shell /usr/bin/xosd-config --cflags);$(shell pkg-config --cflags libnotify)" C_Options="" Required="yes" PreCompiledHeader="">
         <Preprocessor Value="__WX__ -DDEBUG"/>
       </Compiler>
-      <Linker Options="$(shell /home/psc/src/wx291svn/bin/wx-config --libs);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libjulius-config --libs);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs);$(shell pkg-config --libs libnotify)" Required="yes">
+      <Linker Options="$(shell /home/psc/src/wx291svn/bin/wx-config --libs);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libjulius-config --libs);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs);$(shell pkg-config --libs libnotify);-Wl,-export-dynamic -Wl,-whole-archive ../common/libpd.a -Wl,-no-whole-archive" Required="yes">
         <Library Value="xdo.a"/>
         <Library Value="Xtst"/>
         <Library Value="m"/>
@@ -116,7 +84,7 @@
         <Library Value="Xtst"/>
       </Linker>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug-PulseAudio" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="no"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
@@ -139,48 +107,16 @@
         <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
-    <Configuration Name="Release - Alsa" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-O2;$(shell /home/psc/src/wx291svn/bin/wx-config --cxxflags);$(shell /home/psc/11h11/code/julius/alsa/bin/libjulius-config --cflags);$(shell /home/psc/11h11/code/julius/alsa/bin/libsent-config --cflags);$(shell /usr/bin/xosd-config --cflags);$(shell pkg-config --cflags libnotify)" C_Options="" Required="yes" PreCompiledHeader="">
-        <Preprocessor Value="__WX__"/>
-      </Compiler>
-      <Linker Options="-s;$(shell /home/psc/src/wx291svn/bin/wx-config --libs);$(shell /home/psc/11h11/code/julius/alsa/bin/libjulius-config --libs);$(shell /home/psc/11h11/code/julius/alsa/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs);$(shell pkg-config --libs libnotify)" Required="yes">
-        <Library Value="xdo.a"/>
-        <Library Value="Xtst"/>
-      </Linker>
-      <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release-Alsa" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="no"/>
-      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
-      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
-        <PostConnectCommands/>
-        <StartupCommands/>
-      </Debugger>
-      <PreBuild/>
-      <PostBuild/>
-      <CustomBuild Enabled="no">
-        <RebuildCommand/>
-        <CleanCommand/>
-        <BuildCommand/>
-        <PreprocessFileCommand/>
-        <SingleFileCommand/>
-        <MakefileGenerationCommand/>
-        <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory/>
-      </CustomBuild>
-      <AdditionalRules>
-        <CustomPostBuild/>
-        <CustomPreBuild/>
-      </AdditionalRules>
-    </Configuration>
-    <Configuration Name="Release - PulseAudio" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-O2;$(shell /home/psc/src/wx291svn/bin/wx-config --cxxflags);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libjulius-config --cflags);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libsent-config --cflags);$(shell /usr/bin/xosd-config --cflags);$(shell pkg-config --cflags libnotify)" C_Options="" Required="yes" PreCompiledHeader="">
         <Preprocessor Value="__WX__"/>
       </Compiler>
-      <Linker Options="-s;$(shell /home/psc/src/wx291svn/bin/wx-config --libs);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libjulius-config --libs);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs);$(shell pkg-config --libs libnotify)" Required="yes">
+      <Linker Options="-s;$(shell /home/psc/src/wx291svn/bin/wx-config --libs);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libjulius-config --libs);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs);$(shell pkg-config --libs libnotify);-Wl,-export-dynamic -Wl,-whole-archive ../common/libpd.a -Wl,-no-whole-archive" Required="yes">
         <Library Value="xdo.a"/>
         <Library Value="Xtst"/>
       </Linker>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release-PulseAudio" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="no"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>

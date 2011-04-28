@@ -31,8 +31,8 @@
 #include <wx/notebook.h>
 #include <wx/radiobox.h>
 #include <wx/statline.h>
-#include <wx/slider.h>
 #include <wx/gauge.h>
+#include <wx/slider.h>
 #include <wx/statusbr.h>
 #include <wx/frame.h>
 
@@ -105,9 +105,6 @@ class MainFrameBase : public wxFrame
 		wxCheckBox* cb_aptime;
 		wxCheckBox* cb_apsp;
 		wxStaticText* m_staticText17;
-		wxStaticText* m_staticText18;
-		wxSpinCtrl* sp_aupthreshold;
-		wxStaticText* m_staticText19;
 		wxSpinCtrl* sp_aupsec;
 		wxStaticText* m_staticText20;
 		wxStaticLine* m_staticline21;
@@ -119,8 +116,6 @@ class MainFrameBase : public wxFrame
 		wxCheckBox* cb_notpretrig;
 		wxPanel* p_engine;
 		wxStaticText* m_staticText24;
-		wxSlider* s_englevel;
-		wxGauge* g_englevel;
 		wxCheckBox* cb_engdefault;
 		wxStaticText* m_staticText29;
 		wxSpinCtrl* sp_engthreshold;
@@ -128,7 +123,6 @@ class MainFrameBase : public wxFrame
 		wxSpinCtrl* sp_engzero;
 		wxCheckBox* cb_engnostrip;
 		wxCheckBox* cb_engzmean;
-		wxButton* b_spectrum;
 		wxStaticLine* m_staticline9;
 		wxStaticText* m_staticText25;
 		wxStaticText* m_staticText31;
@@ -146,6 +140,28 @@ class MainFrameBase : public wxFrame
 		wxTextCtrl* tc_engpenalty;
 		
 		wxButton* b_restartjulius;
+		wxPanel* p_audio;
+		wxStaticText* m_staticText351;
+		wxChoice* c_driver;
+		wxStaticText* m_staticText42;
+		wxGauge* g_englevel;
+		wxStaticText* st_db;
+		wxStaticLine* m_staticline7;
+		wxStaticText* m_staticText36;
+		wxStaticText* st_volume;
+		wxSlider* s_volume;
+		
+		wxStaticText* m_staticText43;
+		wxChoice* c_filter;
+		wxStaticText* m_staticText40;
+		wxStaticText* st_lp;
+		wxSlider* s_lp;
+		wxStaticText* m_staticText401;
+		wxStaticText* st_hp;
+		wxSlider* s_hp;
+		wxStaticLine* m_staticline91;
+		wxStaticText* m_staticText37;
+		wxButton* b_spectrum1;
 		wxPanel* p_language;
 		wxStaticText* st_language_select;
 		wxChoice* c_language;
@@ -183,13 +199,11 @@ class MainFrameBase : public wxFrame
 		virtual void Oncb_v2clauncher( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Oncb_dict( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onc_notification( wxCommandEvent& event ) { event.Skip(); }
-		virtual void Ons_englevel( wxScrollEvent& event ) { event.Skip(); }
 		virtual void Oncb_engdefault( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onsp_engthreshold( wxSpinEvent& event ) { event.Skip(); }
 		virtual void Onsp_engzero( wxSpinEvent& event ) { event.Skip(); }
 		virtual void Oncb_engnostrip( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Oncb_engzmean( wxCommandEvent& event ) { event.Skip(); }
-		virtual void Onb_spectrum( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onc_enggprune( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onc_engiwcd1( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onsp_engiwcd1( wxSpinEvent& event ) { event.Skip(); }
@@ -197,6 +211,12 @@ class MainFrameBase : public wxFrame
 		virtual void Onsp_engbeam( wxSpinEvent& event ) { event.Skip(); }
 		virtual void Ontc_engpenalty( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onb_restartjulius( wxCommandEvent& event ) { event.Skip(); }
+		virtual void Onc_driver( wxCommandEvent& event ) { event.Skip(); }
+		virtual void Ons_volume( wxScrollEvent& event ) { event.Skip(); }
+		virtual void Onc_filter( wxCommandEvent& event ) { event.Skip(); }
+		virtual void Ons_lp( wxScrollEvent& event ) { event.Skip(); }
+		virtual void Ons_hp( wxScrollEvent& event ) { event.Skip(); }
+		virtual void Onb_spectrum( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onb_languagedownload( wxCommandEvent& event ) { event.Skip(); }
 		
 	

@@ -11,6 +11,7 @@
 #include <wx/filename.h>
 #include <wx/file.h>
 #include <wx/wfstream.h>
+#include <wx/stdpaths.h>
 
 #include <wx/dir.h>
 #include <wx/stdpaths.h>
@@ -30,7 +31,7 @@ void status_recstop(Recog *recog, void *dummy);
 void output_result(Recog *recog, void *dummy);
 void status_recognition_begin(Recog *recog, void *dummy);
 void status_recognition_end(Recog *recog, void *dummy);
-void levelmeter(Recog *recog, SP16 *buf, int len, void *dummy);
+//void levelmeter(Recog *recog, SP16 *buf, int len, void *dummy);
 
 // forward declaration
 class MainFrame;

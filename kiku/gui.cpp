@@ -201,7 +201,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer40 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxArrayString pc_v2cimportappChoices;
-	pc_v2cimportapp = new wxChoice( p_v2cimport, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2cimportappChoices, wxCB_SORT );
+	pc_v2cimportapp = new wxChoice( p_v2cimport, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2cimportappChoices, 0 );
 	pc_v2cimportapp->SetSelection( 0 );
 	bSizer40->Add( pc_v2cimportapp, 1, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxLEFT, 5 );
 	
@@ -218,7 +218,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer401 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxArrayString pc_v2cimportshortcutChoices;
-	pc_v2cimportshortcut = new wxChoice( p_v2cimport, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2cimportshortcutChoices, wxCB_SORT );
+	pc_v2cimportshortcut = new wxChoice( p_v2cimport, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2cimportshortcutChoices, 0 );
 	pc_v2cimportshortcut->SetSelection( 0 );
 	bSizer401->Add( pc_v2cimportshortcut, 1, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxLEFT, 5 );
 	
@@ -331,24 +331,8 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	bSizer11->Add( m_staticText17, 0, wxALL, 5 );
 	
-	wxBoxSizer* bSizer20;
-	bSizer20 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_staticText18 = new wxStaticText( p_configutation, wxID_ANY, _("Threshold  <"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText18->Wrap( -1 );
-	bSizer20->Add( m_staticText18, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-	
-	sp_aupthreshold = new wxSpinCtrl( p_configutation, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 32767, 0 );
-	bSizer20->Add( sp_aupthreshold, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	bSizer11->Add( bSizer20, 0, wxEXPAND, 5 );
-	
 	wxBoxSizer* bSizer22;
 	bSizer22 = new wxBoxSizer( wxHORIZONTAL );
-	
-	m_staticText19 = new wxStaticText( p_configutation, wxID_ANY, _("for"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText19->Wrap( -1 );
-	bSizer22->Add( m_staticText19, 1, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	sp_aupsec = new wxSpinCtrl( p_configutation, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), wxSP_ARROW_KEYS, 2, 300, 0 );
 	bSizer22->Add( sp_aupsec, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
@@ -416,7 +400,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	wxBoxSizer* bSizer25;
 	bSizer25 = new wxBoxSizer( wxVERTICAL );
 	
-	m_staticText24 = new wxStaticText( p_engine, wxID_ANY, _("Audio:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText24 = new wxStaticText( p_engine, wxID_ANY, _("Detection:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText24->Wrap( -1 );
 	m_staticText24->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
 	
@@ -424,12 +408,6 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	wxBoxSizer* bSizer29;
 	bSizer29 = new wxBoxSizer( wxHORIZONTAL );
-	
-	s_englevel = new wxSlider( p_engine, wxID_ANY, 50, 0, 32767, wxDefaultPosition, wxDefaultSize, wxSL_INVERSE|wxSL_VERTICAL );
-	bSizer29->Add( s_englevel, 0, wxALL|wxEXPAND, 5 );
-	
-	g_englevel = new wxGauge( p_engine, wxID_ANY, 32767, wxDefaultPosition, wxDefaultSize, wxGA_VERTICAL );
-	bSizer29->Add( g_englevel, 0, wxALL|wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer30;
 	bSizer30 = new wxBoxSizer( wxVERTICAL );
@@ -461,10 +439,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	bSizer25->Add( bSizer29, 1, wxEXPAND, 5 );
 	
-	b_spectrum = new wxButton( p_engine, wxID_ANY, _("Calculate Spectrum"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer25->Add( b_spectrum, 0, wxALL|wxEXPAND, 5 );
-	
-	bSizer24->Add( bSizer25, 0, wxEXPAND, 5 );
+	bSizer24->Add( bSizer25, 1, wxEXPAND, 5 );
 	
 	m_staticline9 = new wxStaticLine( p_engine, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer24->Add( m_staticline9, 0, wxEXPAND | wxALL, 5 );
@@ -520,7 +495,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	sp_engtmix = new wxSpinCtrl( p_engine, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0 );
 	bSizer26->Add( sp_engtmix, 0, wxBOTTOM|wxLEFT|wxRIGHT, 5 );
 	
-	bSizer24->Add( bSizer26, 0, 0, 5 );
+	bSizer24->Add( bSizer26, 1, 0, 5 );
 	
 	m_staticline10 = new wxStaticLine( p_engine, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
 	bSizer24->Add( m_staticline10, 0, wxEXPAND | wxALL, 5 );
@@ -560,6 +535,134 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	p_engine->Layout();
 	bSizer24->Fit( p_engine );
 	m_nb->AddPage( p_engine, _("Engine"), false );
+	p_audio = new wxPanel( m_nb, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer402;
+	bSizer402 = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxBoxSizer* bSizer41;
+	bSizer41 = new wxBoxSizer( wxVERTICAL );
+	
+	m_staticText351 = new wxStaticText( p_audio, wxID_ANY, _("Driver:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText351->Wrap( -1 );
+	m_staticText351->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
+	bSizer41->Add( m_staticText351, 0, wxALL, 5 );
+	
+	wxString c_driverChoices[] = { _("PulseAudio"), _("PulseAudio (monitor)") };
+	int c_driverNChoices = sizeof( c_driverChoices ) / sizeof( wxString );
+	c_driver = new wxChoice( p_audio, wxID_ANY, wxDefaultPosition, wxDefaultSize, c_driverNChoices, c_driverChoices, 0 );
+	c_driver->SetSelection( 0 );
+	bSizer41->Add( c_driver, 0, wxALL, 5 );
+	
+	m_staticText42 = new wxStaticText( p_audio, wxID_ANY, _("Audio Meter:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText42->Wrap( -1 );
+	m_staticText42->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
+	bSizer41->Add( m_staticText42, 0, wxALL, 5 );
+	
+	wxBoxSizer* bSizer45;
+	bSizer45 = new wxBoxSizer( wxHORIZONTAL );
+	
+	g_englevel = new wxGauge( p_audio, wxID_ANY, 100, wxDefaultPosition, wxSize( 100,-1 ), wxGA_VERTICAL );
+	bSizer45->Add( g_englevel, 1, wxALL|wxEXPAND, 5 );
+	
+	st_db = new wxStaticText( p_audio, wxID_ANY, _("40 dB"), wxDefaultPosition, wxDefaultSize, 0 );
+	st_db->Wrap( -1 );
+	bSizer45->Add( st_db, 0, wxALL, 5 );
+	
+	bSizer41->Add( bSizer45, 1, 0, 5 );
+	
+	bSizer402->Add( bSizer41, 0, wxEXPAND, 5 );
+	
+	m_staticline7 = new wxStaticLine( p_audio, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+	bSizer402->Add( m_staticline7, 0, wxEXPAND | wxALL, 5 );
+	
+	wxBoxSizer* bSizer42;
+	bSizer42 = new wxBoxSizer( wxVERTICAL );
+	
+	m_staticText36 = new wxStaticText( p_audio, wxID_ANY, _("Volume:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText36->Wrap( -1 );
+	m_staticText36->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
+	bSizer42->Add( m_staticText36, 0, wxALL, 5 );
+	
+	st_volume = new wxStaticText( p_audio, wxID_ANY, _("100%"), wxDefaultPosition, wxDefaultSize, 0 );
+	st_volume->Wrap( -1 );
+	bSizer42->Add( st_volume, 0, wxALIGN_CENTER_HORIZONTAL|wxTOP|wxRIGHT|wxLEFT, 5 );
+	
+	s_volume = new wxSlider( p_audio, wxID_ANY, 100, 0, 200, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	bSizer42->Add( s_volume, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+	
+	
+	bSizer42->Add( 0, 0, 0, wxTOP|wxBOTTOM, 5 );
+	
+	m_staticText43 = new wxStaticText( p_audio, wxID_ANY, _("Filter:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText43->Wrap( -1 );
+	m_staticText43->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
+	bSizer42->Add( m_staticText43, 0, wxALL, 5 );
+	
+	wxString c_filterChoices[] = { _("None"), _("1-order"), _("2-order (butterworth)") };
+	int c_filterNChoices = sizeof( c_filterChoices ) / sizeof( wxString );
+	c_filter = new wxChoice( p_audio, wxID_ANY, wxDefaultPosition, wxDefaultSize, c_filterNChoices, c_filterChoices, 0 );
+	c_filter->SetSelection( 0 );
+	bSizer42->Add( c_filter, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
+	wxBoxSizer* bSizer44;
+	bSizer44 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText40 = new wxStaticText( p_audio, wxID_ANY, _("Low pass:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText40->Wrap( -1 );
+	bSizer44->Add( m_staticText40, 0, wxALL, 5 );
+	
+	st_lp = new wxStaticText( p_audio, wxID_ANY, _("300 hertz"), wxDefaultPosition, wxDefaultSize, 0 );
+	st_lp->Wrap( -1 );
+	bSizer44->Add( st_lp, 0, wxALL, 5 );
+	
+	bSizer42->Add( bSizer44, 0, 0, 5 );
+	
+	s_lp = new wxSlider( p_audio, wxID_ANY, 50, 3000, 20000, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	bSizer42->Add( s_lp, 0, wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer441;
+	bSizer441 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText401 = new wxStaticText( p_audio, wxID_ANY, _("High pass:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText401->Wrap( -1 );
+	bSizer441->Add( m_staticText401, 0, wxALL, 5 );
+	
+	st_hp = new wxStaticText( p_audio, wxID_ANY, _("300 hertz"), wxDefaultPosition, wxDefaultSize, 0 );
+	st_hp->Wrap( -1 );
+	bSizer441->Add( st_hp, 0, wxALL, 5 );
+	
+	bSizer42->Add( bSizer441, 0, 0, 5 );
+	
+	s_hp = new wxSlider( p_audio, wxID_ANY, 50, 5, 2999, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	bSizer42->Add( s_hp, 0, wxALL|wxEXPAND, 5 );
+	
+	bSizer402->Add( bSizer42, 1, wxEXPAND, 5 );
+	
+	m_staticline91 = new wxStaticLine( p_audio, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+	bSizer402->Add( m_staticline91, 0, wxEXPAND | wxALL, 5 );
+	
+	wxBoxSizer* bSizer43;
+	bSizer43 = new wxBoxSizer( wxVERTICAL );
+	
+	m_staticText37 = new wxStaticText( p_audio, wxID_ANY, _("Noise:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText37->Wrap( -1 );
+	m_staticText37->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
+	bSizer43->Add( m_staticText37, 0, wxALL, 5 );
+	
+	b_spectrum1 = new wxButton( p_audio, wxID_ANY, _("Calculate Spectrum"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer43->Add( b_spectrum1, 0, wxALL, 5 );
+	
+	bSizer402->Add( bSizer43, 0, wxEXPAND, 5 );
+	
+	p_audio->SetSizer( bSizer402 );
+	p_audio->Layout();
+	bSizer402->Fit( p_audio );
+	m_nb->AddPage( p_audio, _("Audio"), false );
 	p_language = new wxPanel( m_nb, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer291;
 	bSizer291 = new wxBoxSizer( wxHORIZONTAL );
@@ -666,18 +769,15 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	cb_apscore->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	cb_aptime->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	cb_apsp->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
-	sp_aupthreshold->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	sp_aupsec->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	c_notstyle->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_notification ), NULL, this );
 	sp_notdelay->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	cb_notpretrig->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
-	s_englevel->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MainFrameBase::Ons_englevel ), NULL, this );
 	cb_engdefault->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_engdefault ), NULL, this );
 	sp_engthreshold->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engthreshold ), NULL, this );
 	sp_engzero->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engzero ), NULL, this );
 	cb_engnostrip->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_engnostrip ), NULL, this );
 	cb_engzmean->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_engzmean ), NULL, this );
-	b_spectrum->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_spectrum ), NULL, this );
 	c_enggprune->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_enggprune ), NULL, this );
 	c_engiwcd1->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_engiwcd1 ), NULL, this );
 	sp_engiwcd1->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engiwcd1 ), NULL, this );
@@ -685,6 +785,36 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	sp_engbeam->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engbeam ), NULL, this );
 	tc_engpenalty->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Ontc_engpenalty ), NULL, this );
 	b_restartjulius->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_restartjulius ), NULL, this );
+	c_driver->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_driver ), NULL, this );
+	s_volume->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	s_volume->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	s_volume->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	s_volume->Connect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	s_volume->Connect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	s_volume->Connect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	s_volume->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	s_volume->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	s_volume->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	c_filter->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_filter ), NULL, this );
+	s_lp->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_lp->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_lp->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_lp->Connect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_lp->Connect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_lp->Connect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_lp->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_lp->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_lp->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_hp->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	s_hp->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	s_hp->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	s_hp->Connect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	s_hp->Connect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	s_hp->Connect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	s_hp->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	s_hp->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	s_hp->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	b_spectrum1->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_spectrum ), NULL, this );
 	b_languagedownload->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_languagedownload ), NULL, this );
 	html_language->Connect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( MainFrameBase::OnLink ), NULL, this );
 	html_help->Connect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( MainFrameBase::OnLink ), NULL, this );
@@ -724,18 +854,15 @@ MainFrameBase::~MainFrameBase()
 	cb_apscore->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	cb_aptime->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	cb_apsp->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
-	sp_aupthreshold->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	sp_aupsec->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	c_notstyle->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_notification ), NULL, this );
 	sp_notdelay->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	cb_notpretrig->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
-	s_englevel->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MainFrameBase::Ons_englevel ), NULL, this );
 	cb_engdefault->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_engdefault ), NULL, this );
 	sp_engthreshold->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engthreshold ), NULL, this );
 	sp_engzero->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engzero ), NULL, this );
 	cb_engnostrip->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_engnostrip ), NULL, this );
 	cb_engzmean->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_engzmean ), NULL, this );
-	b_spectrum->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_spectrum ), NULL, this );
 	c_enggprune->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_enggprune ), NULL, this );
 	c_engiwcd1->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_engiwcd1 ), NULL, this );
 	sp_engiwcd1->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engiwcd1 ), NULL, this );
@@ -743,6 +870,36 @@ MainFrameBase::~MainFrameBase()
 	sp_engbeam->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engbeam ), NULL, this );
 	tc_engpenalty->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Ontc_engpenalty ), NULL, this );
 	b_restartjulius->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_restartjulius ), NULL, this );
+	c_driver->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_driver ), NULL, this );
+	s_volume->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	s_volume->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	s_volume->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	s_volume->Disconnect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	s_volume->Disconnect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	s_volume->Disconnect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	s_volume->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	s_volume->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	s_volume->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MainFrameBase::Ons_volume ), NULL, this );
+	c_filter->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_filter ), NULL, this );
+	s_lp->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_lp->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_lp->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_lp->Disconnect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_lp->Disconnect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_lp->Disconnect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_lp->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_lp->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_lp->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MainFrameBase::Ons_lp ), NULL, this );
+	s_hp->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	s_hp->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	s_hp->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	s_hp->Disconnect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	s_hp->Disconnect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	s_hp->Disconnect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	s_hp->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	s_hp->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	s_hp->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MainFrameBase::Ons_hp ), NULL, this );
+	b_spectrum1->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_spectrum ), NULL, this );
 	b_languagedownload->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_languagedownload ), NULL, this );
 	html_language->Disconnect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( MainFrameBase::OnLink ), NULL, this );
 	html_help->Disconnect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( MainFrameBase::OnLink ), NULL, this );

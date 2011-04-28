@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Nov 18 2010)
+// C++ code generated with wxFormBuilder (version Apr 11 2011)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -44,7 +44,7 @@ gui_activeword::gui_activeword( wxWindow* parent, wxWindowID id, const wxString&
 	m_panel1->SetSizer( bSizer2 );
 	m_panel1->Layout();
 	bSizer2->Fit( m_panel1 );
-	m_notebook1->AddPage( m_panel1, _("Application"), false );
+	m_notebook1->AddPage( m_panel1, _("Application"), true );
 	m_panel2 = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
@@ -58,7 +58,7 @@ gui_activeword::gui_activeword( wxWindow* parent, wxWindowID id, const wxString&
 	m_panel2->SetSizer( bSizer3 );
 	m_panel2->Layout();
 	bSizer3->Fit( m_panel2 );
-	m_notebook1->AddPage( m_panel2, _("Shortcut"), true );
+	m_notebook1->AddPage( m_panel2, _("Shortcut"), false );
 	
 	mainSizer->Add( m_notebook1, 1, wxEXPAND | wxALL, 5 );
 	
