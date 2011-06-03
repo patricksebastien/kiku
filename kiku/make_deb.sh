@@ -62,7 +62,7 @@ Architecture: ${arch}
 Essential: no
 Depends: libx11-6, libc6, libgcc1, libstdc++6, libpulse0, zlib1g, libexpat1, libtiff4, libjpeg62, libpng12-0, libsm6, libxxf86vm1, libglib2.0-0, libfontconfig1, libfreetype6, libpango1.0-0, libcairo2, libgtk2.0-0, libatk1.0-0, libxosd2, libxext6, libxinerama1, libnotify1, libdbus-glib-1-2, libdbus-1-3, libxtst6
 Installed-Size: ${inst_size}
-Maintainer: Patrick Sebastien [kiku@11h11.com]
+Maintainer: Patrick Sebastien <kiku@11h11.com>
 Description: Voice recognition
      Kiku is a voice recognition software to control your OS.
 
@@ -137,9 +137,9 @@ mkdir -p fakeroot/DEBIAN/
 mkdir -p fakeroot/${PREFIX}/bin/
 
 cp ./Release/${EXE_NAME} fakeroot/${PREFIX}/bin/kiku
-cp /home/psc/11h11/code/julius/pulseaudio/bin/mkss fakeroot/${PREFIX}/bin/kiku_mkss 
-cp /home/psc/11h11/code/julius/pulseaudio/bin/mkbinhmm fakeroot/${PREFIX}/bin/kiku_mkbinhmm 
-cp /home/psc/11h11/code/julius/pulseaudio/bin/mkbinhmmlist fakeroot/${PREFIX}/bin/kiku_mkbinhmmlist 
+cp /home/psc/src/juliuscvs/bin/mkss fakeroot/${PREFIX}/bin/kiku_mkss 
+cp /home/psc/src/juliuscvs/bin/mkbinhmm fakeroot/${PREFIX}/bin/kiku_mkbinhmm 
+cp /home/psc/src/juliuscvs/bin/mkbinhmmlist fakeroot/${PREFIX}/bin/kiku_mkbinhmmlist 
 
 mkdir -p fakeroot/${PREFIX}/share/kiku
 mkdir -p fakeroot/${PREFIX}/share/kiku/images

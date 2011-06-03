@@ -341,7 +341,7 @@ bool Julius::start_recognition()
 		return false;
 	}
 	#ifdef DEBUG
-		wxPuts("out of j_recognize_stream()");
+		wxPuts("-- out of j_recognize_stream() --");
 	#endif
 	
 	// clean

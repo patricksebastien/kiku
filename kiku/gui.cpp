@@ -548,7 +548,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	bSizer41->Add( m_staticText351, 0, wxALL, 5 );
 	
-	wxString c_driverChoices[] = { _("PulseAudio"), _("PulseAudio (monitor)") };
+	wxString c_driverChoices[] = { _("PulseAudio"), _("PulseAudio (monitor)"), _("Alsa") };
 	int c_driverNChoices = sizeof( c_driverChoices ) / sizeof( wxString );
 	c_driver = new wxChoice( p_audio, wxID_ANY, wxDefaultPosition, wxDefaultSize, c_driverNChoices, c_driverChoices, 0 );
 	c_driver->SetSelection( 0 );

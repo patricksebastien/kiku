@@ -61,6 +61,8 @@
   <Dependencies Name="Debug - PulseAudio"/>
   <Dependencies Name="Release - Alsa"/>
   <Dependencies Name="Release - PulseAudio"/>
+  <Dependencies Name="Debug"/>
+  <Dependencies Name="Release"/>
   <Settings Type="Executable">
     <GlobalSettings>
       <Compiler Options="" C_Options="">
@@ -72,10 +74,10 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g;$(shell /home/psc/src/wx291svn/bin/wx-config --cxxflags);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libjulius-config --cflags);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libsent-config --cflags);$(shell /usr/bin/xosd-config --cflags);$(shell pkg-config --cflags libnotify)" C_Options="" Required="yes" PreCompiledHeader="">
+      <Compiler Options="-g;$(shell /home/psc/src/wx291svndebug/bin/wx-config --cxxflags);$(shell /home/psc/11h11/code/julius/julius/bin/libjulius-config --cflags);$(shell /home/psc/11h11/code/julius/julius/bin/libsent-config --cflags);$(shell /usr/bin/xosd-config --cflags);$(shell pkg-config --cflags libnotify);$(shell pkg-config gconf-2.0 --cflags)" C_Options="" Required="yes" PreCompiledHeader="">
         <Preprocessor Value="__WX__ -DDEBUG"/>
       </Compiler>
-      <Linker Options="$(shell /home/psc/src/wx291svn/bin/wx-config --libs);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libjulius-config --libs);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs);$(shell pkg-config --libs libnotify);-Wl,-export-dynamic -Wl,-whole-archive ../common/libpd.a -Wl,-no-whole-archive" Required="yes">
+      <Linker Options="$(shell /home/psc/src/wx291svndebug/bin/wx-config --libs);$(shell /home/psc/11h11/code/julius/julius/bin/libjulius-config --libs);$(shell /home/psc/11h11/code/julius/julius/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs);$(shell pkg-config --libs libnotify);$(shell pkg-config gconf-2.0 --libs);-Wl,-export-dynamic -Wl,-whole-archive ../common/libpd.a -Wl,-no-whole-archive" Required="yes">
         <Library Value="xdo.a"/>
         <Library Value="Xtst"/>
         <Library Value="m"/>
@@ -108,10 +110,10 @@
       </AdditionalRules>
     </Configuration>
     <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-O2;$(shell /home/psc/src/wx291svn/bin/wx-config --cxxflags);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libjulius-config --cflags);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libsent-config --cflags);$(shell /usr/bin/xosd-config --cflags);$(shell pkg-config --cflags libnotify)" C_Options="" Required="yes" PreCompiledHeader="">
+      <Compiler Options="-O2;$(shell /home/psc/src/wx291svnrelease/bin/wx-config --cxxflags);$(shell /home/psc/src/juliuscvs/bin/libjulius-config --cflags);$(shell /home/psc/src/juliuscvs/bin/libsent-config --cflags);$(shell /usr/bin/xosd-config --cflags);$(shell pkg-config --cflags libnotify);$(shell pkg-config gconf-2.0 --cflags)" C_Options="" Required="yes" PreCompiledHeader="">
         <Preprocessor Value="__WX__"/>
       </Compiler>
-      <Linker Options="-s;$(shell /home/psc/src/wx291svn/bin/wx-config --libs);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libjulius-config --libs);$(shell /home/psc/11h11/code/julius/pulseaudio/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs);$(shell pkg-config --libs libnotify);-Wl,-export-dynamic -Wl,-whole-archive ../common/libpd.a -Wl,-no-whole-archive" Required="yes">
+      <Linker Options="-s;$(shell /home/psc/src/wx291svnrelease/bin/wx-config --libs);$(shell /home/psc/src/juliuscvs/bin/libjulius-config --libs);$(shell /home/psc/src/juliuscvs/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs);$(shell pkg-config --libs libnotify);$(shell pkg-config gconf-2.0 --libs);-Wl,-export-dynamic -Wl,-whole-archive ../common/libpd.a -Wl,-no-whole-archive" Required="yes">
         <Library Value="xdo.a"/>
         <Library Value="Xtst"/>
       </Linker>

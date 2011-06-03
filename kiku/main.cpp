@@ -2,12 +2,25 @@
  * Author: Patrick Sébastien
  * http://www.workinprogress.ca/kiku
  * 
+ * add new command to gnome (create folder)
+ * 1700 - 20 but not default for julius ?
+ * 
+ * // COMPILE
+ * wxWidgets (svn) - patch wxwidgets *1 | ./configure --prefix=/home/psc/src/wx291svnrelease --enable-unicode --disable-shared --without-gnomeprint --without-gtkprint
+ * xdotool (svn) - make static | cp *.o (but xdotool.o) | ar rcs libxdo.a *.o | cp libxdo.a | http://groups.google.com/group/xdotool-users/browse_thread/thread/12e55aa73df456a9/62274a738b214d75?lnk=gst&q=static#62274a738b214d75 | http://groups.google.com/group/xdotool-users/browse_thread/thread/95d36fd1da9b7c14
+ * julius (svn) - ./configure --prefix=/home/psc/src/juliuscvs --with-mictype=pulseaudio --enable-setup=standard --enable-factor2 --enable-wpair --enable-wpair-nlimit --without-sndfile (--disable-pthread)
+ * libpd - git clone git://gitorious.org/pdlib/libpd.git | make libs/libpd.so | mkdir staticlib | cp libpd_wrapper/ *.o pure-data/src/ *.o staticlib/ | ar rcs libpd.a *.o | cp libpd.a & ./libpd_wrapper/z_libpd.h & ./pure-data/src/m_pd.h
+ * open project in CodeLite (IDE) | change linker and compiler settings (path)
+ * 
+ * // JULIUS
+ * Score pruning (-bs) is implemented at the 1st pass search for faster decoding. It can be used in conjunction with the conventional rank pruning (-b).
+ * 
  * // WXWIDGETS
  * webupdate not always calling (wxthread with wxsocket problem)
- * ./src/unix/utilsunx.cpp
+ * ./src/unix/utilsunx.cpp <- *1
  * //data->exitcode = DoWaitForChild(data->pid, WNOHANG);
  * data->exitcode = DoWaitForChild(data->pid);
- * genereic/notifmsgg.cpp
+ * genereic/notifmsgg.cpp <- *1
  * m_dialog->ShowWithoutActivating();
  * 
  * // CLEAN
@@ -24,12 +37,12 @@
  * // NOTE
  * when updating this application #define VERSION "x" & update make_deb version
  * each time touch gui: 145 & 178 (pc_v2capplication / pc_v2cshortcut) = wxCB_SORT
- * 
- * // FOLLOW-UP
- * http://groups.google.com/group/xdotool-users/browse_thread/thread/95d36fd1da9b7c14
  *********************************************************************/
 
 #include "main.h"
+
+// gnome
+#include <gconf/gconf-client.h>
 
 // icons
 #include "icon_ready.h"
@@ -57,6 +70,7 @@ wxArrayString process; // processname
 wxArrayString v2c; // shortcut, application, launcher
 wxArrayString juliusformat_word; // dict of the language
 wxArrayString juliusformat_pronoun; // dict of the language
+wxString actionwaitingpretrigger;
 
 pidrahash pidra;
 pidcounthash pidcount;
@@ -69,6 +83,7 @@ wxString finaldictprevious; // is there any change to the dictionary
 bool juliusisready;
 bool v2clauncher;
 bool paused;
+bool listening;
 bool haveupdate;
 wxString updateurl;
 
@@ -208,6 +223,7 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	// global state
 	juliusisready = false;
 	paused = false;
+	listening = true;
 	// autopause
 	nbmistake = 0;
 	//aup_timer_started = false;
@@ -297,6 +313,33 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 		// start julius thread (infinite loop)
 		startjuliusthread();
 	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Gnome
+////////////////////////////////////////////////////////////////////////////////
+void MainFrame::gnome_cr(const gchar * command, const gchar * defaultApp)
+{
+    gchar * default_app;
+    GConfClient *client;
+    client = gconf_client_get_default ();
+    if(command!=NULL)
+    {
+        default_app = gconf_client_get_string (client, command, NULL);
+	if (default_app != NULL)
+        {
+            g_spawn_command_line_async(default_app, NULL);
+        }
+        else
+	{
+            g_spawn_command_line_async (defaultApp, NULL);
+        }
+    }
+    else
+    {
+        g_spawn_command_line_async (defaultApp, NULL);
+    }
 }
 
 
@@ -1680,8 +1723,8 @@ bool MainFrame::languagedownload() {
 		myFile.Write("-penalty1 10.0\n");
 		myFile.Write("-b 14000\n");
 		myFile.Write("-zmeanframe\n");
-		myFile.Write("-zc 20\n");	
-		myFile.Write("-lv 1700\n");	
+		myFile.Write("#-zc\n");	
+		myFile.Write("#-lv\n");	
 		myFile.Close();
 
 		g_languagedownloading->Pulse();
@@ -2471,54 +2514,66 @@ void MainFrame::onJuliusPronun(wxCommandEvent& event)
     }
 	// visual feedback 
 	if(event.GetString() != "silB" && event.GetString() != "silE" && event.GetString() != "sp" && event.GetString() != "sil") {
-        tcro_pronun->AppendText(event.GetString());
+        if(listening) {
+			tcro_pronun->AppendText(event.GetString());
+		}
     }
 }
 
 void MainFrame::onJuliusSentence(wxCommandEvent& event)
 {
+	wxString checktype;
 	bool process = true;
 	
-	// silence check
-	if(event.GetString() == "") {
-		tcro_word->SetDefaultStyle(wxTextAttr(*wxRED));
-		// autopause based on SP
-		if(cb_apsp->GetValue()) {
-            autopause();
-        }
-		process = false;
-    }
+	// do not autopause if listening stop
+	if(listening) {
+		// silence check
+		if(event.GetString() == "") {
+			tcro_word->SetDefaultStyle(wxTextAttr(*wxRED));
+			// autopause based on SP
+			if(cb_apsp->GetValue()) {
+				autopause();
+			}
+			process = false;
+		}
 
-	// score threshold check
-	tc_scorethres->GetValue().ToDouble(&threshold);
-	if(score < threshold) {
-		tcro_word->SetDefaultStyle(wxTextAttr(*wxRED));
-        // autopause based on score
-        if(cb_apscore->GetValue()) {
-            autopause();
-        }
-		process = false;
-	}
-		
-	// time duration check
-	if(duration < sp_minlength->GetValue() || duration > sp_maxlength->GetValue()) {
-		tcro_word->SetDefaultStyle(wxTextAttr(*wxRED));
-		// autopause based on score
-        if(cb_aptime->GetValue()) {
-            autopause();
-        }
-		process = false;
+		// score threshold check
+		tc_scorethres->GetValue().ToDouble(&threshold);
+		if(score < threshold) {
+			tcro_word->SetDefaultStyle(wxTextAttr(*wxRED));
+			// autopause based on score
+			if(cb_apscore->GetValue()) {
+				autopause();
+			}
+			process = false;
+		}
+			
+		// time duration check
+		if(duration < sp_minlength->GetValue() || duration > sp_maxlength->GetValue()) {
+			tcro_word->SetDefaultStyle(wxTextAttr(*wxRED));
+			// autopause based on score
+			if(cb_aptime->GetValue()) {
+				autopause();
+			}
+			process = false;
+		}
 	}
 	
 	// ok process the word
-    if(process) {
+	if(process) {
+		
 		tcro_word->SetDefaultStyle(wxTextAttr(*wxBLACK));
 		
-        // this word is a trigger
-        if(actionwaiting) {
+		// this word is a trigger
+		if(actionwaiting) {
+			int pos = trigger.Index(event.GetString().Upper());
+			// if case that no application using this word
+			if(pos != wxNOT_FOUND) {
+				checktype = type.Item(pos);
+			}
 			// for the tb icon
-            searchandexecute(event.GetString().Upper());
-        } else {
+			searchandexecute(event.GetString().Upper());
+		} else {
 			// exception first time test (give => donation)
 			if(b_languagedownload->GetLabel() == "Download") {
 				if(c_language->GetStringSelection() == "English 14k [VoxForge]") {
@@ -2538,21 +2593,27 @@ void MainFrame::onJuliusSentence(wxCommandEvent& event)
 					}
 				}
 			}			
-            // search word in pretrigger
-            triggering = pretrigger.Index(event.GetString().Upper());
-            if(triggering != wxNOT_FOUND) {
+			// search word in pretrigger
+			triggering = pretrigger.Index(event.GetString().Upper());
+			if(triggering != wxNOT_FOUND) {
+				checktype = type.Item(triggering);
 				// notification pretrig enable
 				if(cb_notpretrig->GetValue()) {
 					Eye(event.GetString().Upper());
 				}
 				actionwaiting = true;
+				actionwaitingpretrigger = event.GetString().Upper();
+				
 				reseticonm_timer->Start(PRETRIGTIME);
-				sb->SetStatusText("Waiting for action word", 2);
-            } else {
+				if(listening) {
+					sb->SetStatusText("Waiting for action word", 2);
+				}
+			} else {
 				// this word cannot be directly said (needs a pretrigger)
 				int pos = trigger.Index(event.GetString().Upper());
 				// if case that no application using this word
 				if(pos != wxNOT_FOUND) {
+					checktype = type.Item(pos);
 					if(pretrigger.Item(pos) == "") {
 						// for the tb icon
 						recognized = true;
@@ -2563,28 +2624,37 @@ void MainFrame::onJuliusSentence(wxCommandEvent& event)
 						reseticonm_timer->Start(1000);
 					}
 				}
-            }
-        }
-    } else {
+			}
+		}
+	} else {
 		// last sentence was unknown (reflect in the taskbar icon - using timer)
 		if(!actionwaiting) {
 			unknown = true;
 			reseticonm_timer->Start(1000);
 		}
 	}
-	
-	// visual feedback
-	wxString vf;
-	vf = event.GetString() == "" || event.GetString() == "、" ? "SP" : event.GetString();
-    tcro_word->AppendText(vf);
-    tcro_word->AppendText("\n");
+	if(listening || checktype == "kiku") {
+		// visual feedback
+		wxString vf;
+		vf = event.GetString() == "" || event.GetString() == "、" ? "SP" : event.GetString();
+		tcro_word->AppendText(vf);
+		tcro_word->AppendText("\n");
+		
+		if(!listening && checktype == "kiku") {
+			tcro_score->AppendText("\n");
+			tcro_pronun->AppendText("\n");
+		}
+	}
 }
+
 
 void MainFrame::onJuliusScore(wxCommandEvent& event)
 {
-    tcro_score->AppendText(event.GetString());
-    tcro_score->AppendText("\n");
-    event.GetString().ToDouble(&score);
+	if(listening) {
+		tcro_score->AppendText(event.GetString());
+		tcro_score->AppendText("\n");
+		event.GetString().ToDouble(&score);
+	}
 }
 
 void MainFrame::onJuliusReady(wxCommandEvent& event)
@@ -2622,6 +2692,7 @@ void MainFrame::onJuliusReady(wxCommandEvent& event)
 				}
 				needpretrig = false;
 			} else {
+				sb->SetStatusText("", 2);
 				if(webupdateicon) {
 					icontb.CopyFromBitmap( *iconpng[1] );
 					if (!m_taskBarIcon->SetIcon( icontb )) {
@@ -2699,6 +2770,7 @@ void MainFrame::Oncb_pause(wxCommandEvent& event)
 
 void MainFrame::pauser(bool state)
 {
+	
     if(state && juliusisready) {
 		aup_userpause = true;
 		cb_pause->SetValue(1);
@@ -2706,11 +2778,17 @@ void MainFrame::pauser(bool state)
 		if (!m_taskBarIcon->SetIcon( icontb )) {
 			wxMessageBox(wxT("Could not set icon."));
 		}
-        m_Julius->pause_recognition();
+		if(listening) {
+			m_Julius->pause_recognition();
+		}
         paused = true;
 		sb->SetStatusText("Paused.");
     } else {
 		cb_pause->SetValue(0);
+		listening = true;
+        m_Julius->resume_recognition();
+        paused = false;
+		sb->SetStatusText("You can now speak.");
 		if(webupdateicon) {
 			icontb.CopyFromBitmap( *iconpng[1] );
 			if (!m_taskBarIcon->SetIcon( icontb )) {
@@ -2722,10 +2800,8 @@ void MainFrame::pauser(bool state)
 				wxMessageBox(wxT("Could not set icon."));
 			}
 		}
-        m_Julius->resume_recognition();
-        paused = false;
-		sb->SetStatusText("You can now speak.");
     }	
+	sb->SetStatusText("", 2);
 	
 }
 
@@ -3035,12 +3111,23 @@ void MainFrame::searchandexecute(wxString word)
     long pid;
     actionning = trigger.Index(word);
 
-    // found this word in action
+    // found this word in trigger
     if(actionning != wxNOT_FOUND) {
 		
-        // if this word doesn't need a trigger execute the command
-        if(pretrigger.Item(actionning) == "" || actionwaiting) {
-			
+		bool go = false;
+		
+		// check if this trigger is for the actual pretrigger
+		if(actionwaiting) {
+			wxPuts(pretrigger.Item(actionning));
+			if(actionwaitingpretrigger == pretrigger.Item(actionning)) {
+				go = true;
+			}
+		} else {
+			go = true;
+		}
+		
+		//if(pretrigger.Item(actionning) == "" || actionwaiting) {
+		if(go) {
 			pid = Hand(type.Item(actionning), command.Item(actionning));
 			Eye(noti.Item(actionning));
 			
@@ -3066,9 +3153,8 @@ void MainFrame::searchandexecute(wxString word)
 				reseticonm_timer->Start(1000);
 				sb->SetStatusText("", 2);
 			}
-		actionwaiting = false;
-            
-        }
+			actionwaiting = false;
+		}
     }
 }
 
@@ -3119,7 +3205,7 @@ void MainFrame::Eye(wxString txt)
 
 long MainFrame::Hand(wxString type, wxString cmd)
 {
-        if(type == "shell") { // launcher
+        if(type == "shell" && listening) { // launcher
 			#ifdef DEBUG
 				wxPuts(type + " : " + cmd);
 			#endif
@@ -3131,8 +3217,8 @@ long MainFrame::Hand(wxString type, wxString cmd)
                 delete proc;
             }
             return m_pidLast;
-        } else if(type == "xdotool") { // xdotool			
-			// tokenize |:|
+        } else if(type == "xdotool" && listening) { // xdotool			
+			// tokenize |
 			wxArrayString acmd = wxStringTokenize(cmd, "|");
 			for (size_t i=0; i < acmd.GetCount(); i++) {
 				if(acmd[i].Trim().Trim(false) != "") {
@@ -3181,7 +3267,40 @@ long MainFrame::Hand(wxString type, wxString cmd)
 					*/
 				}
 			}
-        }
+        } else if(type == "gnome" && listening) { // gnome
+			// tokenize |
+			wxArrayString acmd = wxStringTokenize(cmd, "|");
+			wxString command;
+			wxString defaultapp;
+			if(acmd[0].Trim().Trim(false) != "") {
+				command = acmd[0].Trim().Trim(false);
+			} else {
+				command = "";
+			}
+			if(acmd.GetCount() > 1) {
+				if(acmd[1].Trim().Trim(false) != "") {
+					defaultapp = acmd[1].Trim().Trim(false);
+				} else {
+					defaultapp = "";
+				}
+			} else {
+				defaultapp = "";
+			}
+			gnome_cr(command, defaultapp);
+			
+		} else if(type == "kiku") { // kiku internal command
+			if(cmd == "pause") {
+				listening = false;
+				pauser(true);
+			} else if(cmd == "unpause") {
+				pauser(false);
+				sb->SetStatusText("You can now speak.");
+			} else if(cmd == "activeword") {
+				Dob_activeword();
+			} else if(cmd == "quit") {
+				OnQuit();
+			}
+		}
 	return -1;
 }
 

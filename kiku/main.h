@@ -178,6 +178,9 @@ class MainFrame : public MainFrameBase
 		
 protected:
 
+		// gnome
+		void gnome_cr(const gchar * command, const gchar * defaultApp);
+		
 		// xdotool
 		xdo_t *xdo;
 		Window xdotoolwindow;

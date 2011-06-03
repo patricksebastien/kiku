@@ -105,6 +105,7 @@ adin_read(SP16 * buf, int sampnum)
 	
 	SP16 inbuf[bufsize];
 	
+	
 	if (pa_simple_read(r, inbuf, bufsize, &errorpa) < 0) {
 		printf("Error: adin_pulseaudio: pa_simple_read() failed: %s\n", pa_strerror(errorpa));
 		return (-2);
@@ -119,7 +120,7 @@ adin_read(SP16 * buf, int sampnum)
 boolean
 adin_close()
 {
-	if(r) { 
+	if(r) {
 		pa_simple_free(r);
 		r = NULL;
 	}

@@ -6,8 +6,8 @@ SHELL=/bin/sh
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $<
 
 CC=gcc
-CFLAGS=-shared `/home/psc/11h11/code/julius/pulseaudio/bin/libsent-config --cflags` `/home/psc/11h11/code/julius/pulseaudio/bin/libjulius-config --cflags`
-LDFLAGS=`/home/psc/11h11/code/julius/pulseaudio/bin/libjulius-config --libs` `/home/psc/11h11/code/julius/pulseaudio/bin/libsent-config --libs` -Wl,--export-dynamic -Wl,--whole-archive ../../common/libpd.a -Wl,--no-whole-archive
+CFLAGS=-shared `/home/psc/src/juliuscvs/bin/libsent-config --cflags` `/home/psc/src/juliuscvs/bin/libjulius-config --cflags`
+LDFLAGS=`/home/psc/src/juliuscvs/bin/libjulius-config --libs` `/home/psc/src/juliuscvs/bin/libsent-config --libs` -Wl,--export-dynamic -Wl,--whole-archive ../../common/libpd.a -Wl,--no-whole-archive
 
 all: adin_pulseaudiolibpdmon.jpi
 

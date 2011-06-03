@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CodeLite_Workspace Name="kiku" Database="./kiku.tags">
   <Project Name="kiku" Path="kiku/kiku.project" Active="Yes"/>
-  <Project Name="bin2c" Path="bin2c/bin2c.project" Active="No"/>
   <Project Name="alsa" Path="plugin/alsa/alsa.project" Active="No"/>
   <Project Name="pa" Path="plugin/pulseaudio/pa.project" Active="No"/>
   <Project Name="pamonitor" Path="plugin/pulseaudiomon/pamonitor.project" Active="No"/>
+  <Project Name="pafullapi" Path="plugin/pulseaudiofullapi/pafullapi.project" Active="No"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Release" Selected="yes">
       <Project Name="pamonitor" ConfigName="Release"/>
@@ -12,6 +12,7 @@
       <Project Name="kiku" ConfigName="Release"/>
       <Project Name="bin2c" ConfigName="Release"/>
       <Project Name="alsa" ConfigName="Release"/>
+      <Project Name="pafullapi" ConfigName="Release"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="Debug" Selected="no">
       <Project Name="pamonitor" ConfigName="Debug"/>
@@ -19,6 +20,7 @@
       <Project Name="kiku" ConfigName="Debug"/>
       <Project Name="bin2c" ConfigName="Debug"/>
       <Project Name="alsa" ConfigName="Debug"/>
+      <Project Name="pafullapi" ConfigName="Debug"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>
