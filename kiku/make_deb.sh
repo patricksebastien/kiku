@@ -153,12 +153,22 @@ chmod -x ../plugin/pulseaudiomon/adin_pulseaudiolibpdmon.jpi
 cp ../plugin/pulseaudio/adin_pulseaudiolibpd.jpi fakeroot/${PREFIX}/lib/kiku
 cp ../plugin/pulseaudiomon/adin_pulseaudiolibpdmon.jpi fakeroot/${PREFIX}/lib/kiku
 cp ../plugin/patch/filter/kiku.pd fakeroot/${PREFIX}/lib/kiku
-cp ../plugin/patch/filter/limiter~.pd_linux fakeroot/${PREFIX}/lib/kiku
-cp ../plugin/patch/filter/z~.pd_linux fakeroot/${PREFIX}/lib/kiku
-cp ../plugin/patch/filter/biquadseries~.pd_linux fakeroot/${PREFIX}/lib/kiku
-cp ../plugin/patch/filter/demultiplex~.pd_linux fakeroot/${PREFIX}/lib/kiku
-cp ../plugin/patch/filter/filter~.pd_linux fakeroot/${PREFIX}/lib/kiku
-cp ../plugin/patch/filter/prvu~.pd_linux fakeroot/${PREFIX}/lib/kiku
+
+if [ $arch = "i386" ]; then
+    cp ../plugin/patch/filter/i386/limiter~.pd_linux fakeroot/${PREFIX}/lib/kiku
+	cp ../plugin/patch/filter/i386/z~.pd_linux fakeroot/${PREFIX}/lib/kiku
+	cp ../plugin/patch/filter/i386/biquadseries~.pd_linux fakeroot/${PREFIX}/lib/kiku
+	cp ../plugin/patch/filter/i386/demultiplex~.pd_linux fakeroot/${PREFIX}/lib/kiku
+	cp ../plugin/patch/filter/i386/filter~.pd_linux fakeroot/${PREFIX}/lib/kiku
+	cp ../plugin/patch/filter/i386/prvu~.pd_linux fakeroot/${PREFIX}/lib/kiku
+elif [ $arch = "amd64" ]; then
+    cp ../plugin/patch/filter/amd64/limiter~.pd_linux fakeroot/${PREFIX}/lib/kiku
+	cp ../plugin/patch/filter/amd64/z~.pd_linux fakeroot/${PREFIX}/lib/kiku
+	cp ../plugin/patch/filter/amd64/biquadseries~.pd_linux fakeroot/${PREFIX}/lib/kiku
+	cp ../plugin/patch/filter/amd64/demultiplex~.pd_linux fakeroot/${PREFIX}/lib/kiku
+	cp ../plugin/patch/filter/amd64/filter~.pd_linux fakeroot/${PREFIX}/lib/kiku
+	cp ../plugin/patch/filter/amd64/prvu~.pd_linux fakeroot/${PREFIX}/lib/kiku
+fi
 
 cp -pr kiku.png fakeroot/${PREFIX}/share/kiku/images/
 cp -pr AUTHORS fakeroot/${PREFIX}/share/kiku/
@@ -182,4 +192,3 @@ generateMenuFile
 chmod +x fakeroot/${PREFIX}/bin/kiku
 
 fakeroot dpkg -b fakeroot/ ./
-mv kiku_0.1-0_i386.deb kiku_0.1_i386.deb

@@ -3,13 +3,14 @@
  * http://www.workinprogress.ca/kiku
  * 
  * add new command to gnome (create folder)
- * 1700 - 20 but not default for julius ?
+ * Warning: strip: sample 0-255 is invalid, stripped (julius-simple reporting)
  * 
  * // COMPILE
- * wxWidgets (svn) - patch wxwidgets *1 | ./configure --prefix=/home/psc/src/wx291svnrelease --enable-unicode --disable-shared --without-gnomeprint --without-gtkprint
- * xdotool (svn) - make static | cp *.o (but xdotool.o) | ar rcs libxdo.a *.o | cp libxdo.a | http://groups.google.com/group/xdotool-users/browse_thread/thread/12e55aa73df456a9/62274a738b214d75?lnk=gst&q=static#62274a738b214d75 | http://groups.google.com/group/xdotool-users/browse_thread/thread/95d36fd1da9b7c14
+ * wxWidgets (svn) - patch *1 | ./configure --prefix=/home/psc/src/wx291svnrelease --enable-unicode --disable-shared --without-gnomeprint --without-gtkprint
+ * xdotool (svn) - patch: http://groups.google.com/group/xdotool-users/browse_thread/thread/12e55aa73df456a9/62274a738b214d75?lnk=gst&q=static#62274a738b214d75 | http://groups.google.com/group/xdotool-users/browse_thread/thread/95d36fd1da9b7c14 | make static | cp *.o (but xdotool.o) | ar rcs libxdo.a *.o | cp libxdo.a
  * julius (svn) - ./configure --prefix=/home/psc/src/juliuscvs --with-mictype=pulseaudio --enable-setup=standard --enable-factor2 --enable-wpair --enable-wpair-nlimit --without-sndfile (--disable-pthread)
  * libpd - git clone git://gitorious.org/pdlib/libpd.git | make libs/libpd.so | mkdir staticlib | cp libpd_wrapper/ *.o pure-data/src/ *.o staticlib/ | ar rcs libpd.a *.o | cp libpd.a & ./libpd_wrapper/z_libpd.h & ./pure-data/src/m_pd.h
+ * wxjson (include) - if new: jsonval.cpp in wxJSONValue::Item() //wxLogTrace( traceMask, _T("(%s) actual object: %s"), __PRETTY_FUNCTION__, GetInfo().c_str()); (for 64bit)
  * open project in CodeLite (IDE) | change linker and compiler settings (path)
  * 
  * // JULIUS
@@ -17,10 +18,10 @@
  * 
  * // WXWIDGETS
  * webupdate not always calling (wxthread with wxsocket problem)
- * ./src/unix/utilsunx.cpp <- *1
+ * ./src/unix/utilsunx.cpp <- patch *1
  * //data->exitcode = DoWaitForChild(data->pid, WNOHANG);
  * data->exitcode = DoWaitForChild(data->pid);
- * genereic/notifmsgg.cpp <- *1
+ * genereic/notifmsgg.cpp <- patch *1
  * m_dialog->ShowWithoutActivating();
  * 
  * // CLEAN

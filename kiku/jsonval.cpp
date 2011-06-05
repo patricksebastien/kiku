@@ -1815,7 +1815,7 @@ wxJSONValue&
 wxJSONValue::Item( const wxString& key )
 {
     wxLogTrace( traceMask, _T("(%s) searched key=\'%s\'"), __PRETTY_FUNCTION__, key.c_str());
-    wxLogTrace( traceMask, _T("(%s) actual object: %s"), __PRETTY_FUNCTION__, GetInfo().c_str());
+    //wxLogTrace( traceMask, _T("(%s) actual object: %s"), __PRETTY_FUNCTION__, GetInfo().c_str());
 
     wxJSONRefData* data = COW();
     wxJSON_ASSERT( data );
