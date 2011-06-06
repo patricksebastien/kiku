@@ -2,9 +2,6 @@
  * Author: Patrick Sébastien
  * http://www.workinprogress.ca/kiku
  * 
- * add new command to gnome (create folder)
- * Warning: strip: sample 0-255 is invalid, stripped (julius-simple reporting)
- * 
  * // COMPILE
  * wxWidgets (svn) - patch *1 | ./configure --prefix=/home/psc/src/wx291svnrelease --enable-unicode --disable-shared --without-gnomeprint --without-gtkprint
  * xdotool (svn) - patch: http://groups.google.com/group/xdotool-users/browse_thread/thread/12e55aa73df456a9/62274a738b214d75?lnk=gst&q=static#62274a738b214d75 | http://groups.google.com/group/xdotool-users/browse_thread/thread/95d36fd1da9b7c14 | make static | cp *.o (but xdotool.o) | ar rcs libxdo.a *.o | cp libxdo.a
@@ -167,7 +164,7 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	libpd_floathook = (t_libpd_floathook) rfloat;
 	
 	// input channel, output channel, sr, one tick per buffer
-	libpd_init_audio(1, 1, 16000, 4); // TODO
+	libpd_init_audio(1, 1, 16000, 4); // if users report glitch: check tick per buffer
 	
 	// compute audio    [; pd dsp 1(
 	libpd_start_message();
@@ -3119,7 +3116,7 @@ void MainFrame::searchandexecute(wxString word)
 		
 		// check if this trigger is for the actual pretrigger
 		if(actionwaiting) {
-			wxPuts(pretrigger.Item(actionning));
+
 			if(actionwaitingpretrigger == pretrigger.Item(actionning)) {
 				go = true;
 			}

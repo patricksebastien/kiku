@@ -21,15 +21,18 @@ gui_v2ceditor::gui_v2ceditor( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	wxFlexGridSizer* fgSizer1;
 	fgSizer1 = new wxFlexGridSizer( 5, 2, 0, 0 );
-	fgSizer1->SetFlexibleDirection( wxBOTH );
+	fgSizer1->AddGrowableCol( 1 );
+	fgSizer1->SetFlexibleDirection( wxHORIZONTAL );
 	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	m_staticText6 = new wxStaticText( this, wxID_ANY, _("Notification:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText6->Wrap( -1 );
 	fgSizer1->Add( m_staticText6, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	tc_notification = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 300,-1 ), 0 );
-	fgSizer1->Add( tc_notification, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	tc_notification = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	tc_notification->SetMinSize( wxSize( 300,-1 ) );
+	
+	fgSizer1->Add( tc_notification, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 	
 	m_staticText7 = new wxStaticText( this, wxID_ANY, _("Pre-trig:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText7->Wrap( -1 );
@@ -60,9 +63,11 @@ gui_v2ceditor::gui_v2ceditor( wxWindow* parent, wxWindowID id, const wxString& t
 	int c_typeNChoices = sizeof( c_typeChoices ) / sizeof( wxString );
 	c_type = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, c_typeNChoices, c_typeChoices, 0 );
 	c_type->SetSelection( 0 );
+	c_type->SetMinSize( wxSize( 300,-1 ) );
+	
 	fgSizer1->Add( c_type, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 	
-	bSizer3->Add( fgSizer1, 1, wxEXPAND|wxALL, 5 );
+	bSizer3->Add( fgSizer1, 1, wxALL|wxEXPAND, 5 );
 	
 	
 	bSizer3->Add( 0, 0, 0, 0, 5 );

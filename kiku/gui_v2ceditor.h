@@ -58,7 +58,7 @@ class gui_v2ceditor : public wxDialog
 	
 	public:
 		
-		gui_v2ceditor( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("V2C editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 640,285 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		gui_v2ceditor( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("V2C editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 640,300 ), long style = wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER ); 
 		~gui_v2ceditor();
 	
 };

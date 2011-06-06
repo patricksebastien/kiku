@@ -68,8 +68,8 @@
             <property name="resize">Resizable</property>
             <property name="row"></property>
             <property name="show">1</property>
-            <property name="size">640,285</property>
-            <property name="style">wxDEFAULT_DIALOG_STYLE</property>
+            <property name="size">640,300</property>
+            <property name="style">wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER</property>
             <property name="subclass"></property>
             <property name="title">V2C editor</property>
             <property name="toolbar_pane">0</property>
@@ -133,12 +133,12 @@
                         <property name="permission">none</property>
                         <object class="sizeritem" expanded="1">
                             <property name="border">5</property>
-                            <property name="flag">wxEXPAND|wxALL</property>
+                            <property name="flag">wxALL|wxEXPAND</property>
                             <property name="proportion">1</property>
                             <object class="wxFlexGridSizer" expanded="1">
                                 <property name="cols">2</property>
-                                <property name="flexible_direction">wxBOTH</property>
-                                <property name="growablecols"></property>
+                                <property name="flexible_direction">wxHORIZONTAL</property>
+                                <property name="growablecols">1</property>
                                 <property name="growablerows"></property>
                                 <property name="hgap">0</property>
                                 <property name="minimum_size"></property>
@@ -236,7 +236,7 @@
                                 </object>
                                 <object class="sizeritem" expanded="0">
                                     <property name="border">5</property>
-                                    <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
+                                    <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND</property>
                                     <property name="proportion">1</property>
                                     <object class="wxTextCtrl" expanded="0">
                                         <property name="BottomDockable">1</property>
@@ -270,7 +270,7 @@
                                         <property name="maxlength">0</property>
                                         <property name="min_size"></property>
                                         <property name="minimize_button">0</property>
-                                        <property name="minimum_size"></property>
+                                        <property name="minimum_size">300,-1</property>
                                         <property name="moveable">1</property>
                                         <property name="name">tc_notification</property>
                                         <property name="pane_border">1</property>
@@ -283,7 +283,7 @@
                                         <property name="resize">Resizable</property>
                                         <property name="row"></property>
                                         <property name="show">1</property>
-                                        <property name="size">300,-1</property>
+                                        <property name="size">-1,-1</property>
                                         <property name="style"></property>
                                         <property name="subclass"></property>
                                         <property name="toolbar_pane">0</property>
@@ -982,7 +982,7 @@
                                         <property name="maximum_size"></property>
                                         <property name="min_size"></property>
                                         <property name="minimize_button">0</property>
-                                        <property name="minimum_size"></property>
+                                        <property name="minimum_size">300,-1</property>
                                         <property name="moveable">1</property>
                                         <property name="name">c_type</property>
                                         <property name="pane_border">1</property>
