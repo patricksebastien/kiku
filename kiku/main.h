@@ -30,6 +30,9 @@
 // libpd
 #include "../common/z_libpd.h"
 
+// liblo
+#include "lo/lo.h"
+
 // xdotool
 extern "C" {
 	#include "xdo.h"
@@ -186,6 +189,10 @@ protected:
 		Window xdotoolwindow;
 		useconds_t xdotooldelay;
 		
+		// liblo
+		lo_address osc;
+		
+		
 		// notbook
 		void Onm_nb( wxNotebookEvent& event );
 		void Onm_nbv2c( wxNotebookEvent& event );
@@ -216,6 +223,10 @@ protected:
 		void Onsp_engtmix(wxSpinEvent& event);
 		void Onsp_engbeam(wxSpinEvent& event);
 		void Ontc_engpenalty(wxCommandEvent& event);
+		
+		// liblo
+		void Oncb_oscenable( wxCommandEvent& event );
+		void EnableOSC();
 		
 		// audio (libpd)
 		void Onc_driver(wxCommandEvent& event);

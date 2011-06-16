@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 11 2011)
+// C++ code generated with wxFormBuilder (version Jun  6 2011)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -114,6 +114,15 @@ class MainFrameBase : public wxFrame
 		wxStaticText* m_staticText13;
 		wxSpinCtrl* sp_notdelay;
 		wxCheckBox* cb_notpretrig;
+		wxStaticText* m_staticText44;
+		wxCheckBox* cb_oscenable;
+		wxStaticText* m_staticText45;
+		wxTextCtrl* tc_oschost;
+		wxStaticText* m_staticText1311;
+		wxSpinCtrl* sp_oscport;
+		wxStaticText* m_staticText131;
+		wxChoice* c_oscprotocol;
+		wxCheckBox* cb_oscrecognition;
 		wxPanel* p_engine;
 		wxStaticText* m_staticText24;
 		wxCheckBox* cb_engdefault;
@@ -199,6 +208,7 @@ class MainFrameBase : public wxFrame
 		virtual void Oncb_v2clauncher( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Oncb_dict( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onc_notification( wxCommandEvent& event ) { event.Skip(); }
+		virtual void Oncb_oscenable( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Oncb_engdefault( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onsp_engthreshold( wxSpinEvent& event ) { event.Skip(); }
 		virtual void Onsp_engzero( wxSpinEvent& event ) { event.Skip(); }
@@ -222,7 +232,7 @@ class MainFrameBase : public wxFrame
 	
 	public:
 		
-		MainFrameBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("kiku"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,400 ), long style = wxCAPTION|wxCLOSE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER|wxSYSTEM_MENU|wxTAB_TRAVERSAL );
+		MainFrameBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("kiku"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,420 ), long style = wxCAPTION|wxCLOSE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER|wxSYSTEM_MENU|wxTAB_TRAVERSAL );
 		
 		~MainFrameBase();
 	

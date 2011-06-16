@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 11 2011)
+// C++ code generated with wxFormBuilder (version Jun  6 2011)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -59,7 +59,7 @@ gui_v2ceditor::gui_v2ceditor( wxWindow* parent, wxWindowID id, const wxString& t
 	m_staticText10->Wrap( -1 );
 	fgSizer1->Add( m_staticText10, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	wxString c_typeChoices[] = { _("xdotool"), _("shell"), _("gnome"), _("kiku") };
+	wxString c_typeChoices[] = { _("xdotool"), _("shell"), _("gnome"), _("kiku"), _("open sound control") };
 	int c_typeNChoices = sizeof( c_typeChoices ) / sizeof( wxString );
 	c_type = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, c_typeNChoices, c_typeChoices, 0 );
 	c_type->SetSelection( 0 );

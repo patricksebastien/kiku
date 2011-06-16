@@ -2,24 +2,13 @@
  * Author: Patrick Sébastien
  * http://www.workinprogress.ca/kiku
  * 
- * // COMPILE
- * wxWidgets (svn) - patch *1 | ./configure --prefix=/home/psc/src/wx291svnrelease --enable-unicode --disable-shared --without-gnomeprint --without-gtkprint
- * xdotool (svn) - patch: http://groups.google.com/group/xdotool-users/browse_thread/thread/12e55aa73df456a9/62274a738b214d75?lnk=gst&q=static#62274a738b214d75 | http://groups.google.com/group/xdotool-users/browse_thread/thread/95d36fd1da9b7c14 | make static | cp *.o (but xdotool.o) | ar rcs libxdo.a *.o | cp libxdo.a
- * julius (svn) - ./configure --prefix=/home/psc/src/juliuscvs --with-mictype=pulseaudio --enable-setup=standard --enable-factor2 --enable-wpair --enable-wpair-nlimit --without-sndfile (--disable-pthread)
- * libpd - git clone git://gitorious.org/pdlib/libpd.git | make libs/libpd.so | mkdir staticlib | cp libpd_wrapper/ *.o pure-data/src/ *.o staticlib/ | ar rcs libpd.a *.o | cp libpd.a & ./libpd_wrapper/z_libpd.h & ./pure-data/src/m_pd.h
- * wxjson (include) - if new: jsonval.cpp in wxJSONValue::Item() //wxLogTrace( traceMask, _T("(%s) actual object: %s"), __PRETTY_FUNCTION__, GetInfo().c_str()); (for 64bit)
- * open project in CodeLite (IDE) | change linker and compiler settings (path)
- * 
- * // JULIUS
- * Score pruning (-bs) is implemented at the 1st pass search for faster decoding. It can be used in conjunction with the conventional rank pruning (-b).
+ * 0.2
+ * added portaudio support (alsa, jack)
+ * added liblo (open sound control)
+ * fix for threshold integer
  * 
  * // WXWIDGETS
  * webupdate not always calling (wxthread with wxsocket problem)
- * ./src/unix/utilsunx.cpp <- patch *1
- * //data->exitcode = DoWaitForChild(data->pid, WNOHANG);
- * data->exitcode = DoWaitForChild(data->pid);
- * genereic/notifmsgg.cpp <- patch *1
- * m_dialog->ShowWithoutActivating();
  * 
  * // CLEAN
  * cleanup removeat and insertat
@@ -35,6 +24,7 @@
  * // NOTE
  * when updating this application #define VERSION "x" & update make_deb version
  * each time touch gui: 145 & 178 (pc_v2capplication / pc_v2cshortcut) = wxCB_SORT
+ * wxjson (include) - if new: jsonval.cpp in wxJSONValue::Item() //wxLogTrace( traceMask, _T("(%s) actual object: %s"), __PRETTY_FUNCTION__, GetInfo().c_str()); (fix bug in 64bit)
  *********************************************************************/
 
 #include "main.h"
@@ -157,7 +147,7 @@ BEGIN_EVENT_TABLE(MainFrame,wxFrame)
 END_EVENT_TABLE()
 
 MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
-{	
+{		
 	// libpd
 	libpd_init();
 	libpd_bind("prvu");
@@ -252,6 +242,7 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	g_languagedownloading->Hide();
 	
 	// eye
+	notify_init("kiku");
     osd = xosd_create(2);
     if (!osd) {
         wxMessageBox("Error creating XOSD notification, please report this bug: kiku@11h11.com");
@@ -294,6 +285,7 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 		
 		// go to notebook language
 		m_nb->SetSelection(5);
+		
 	
 	} else {
 		// fetch preference.conf
@@ -302,6 +294,11 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 		// web update
 		haveupdate = false; // for tb
 		startwebthread("/KIKU/packages.txt");
+		
+		// liblo
+		if(cb_oscenable->GetValue()) {
+			EnableOSC();
+		}
 
 		// load v2c
 		V2cApplicationLoad(); // fill the V2C panel
@@ -1809,6 +1806,48 @@ void MainFrame::languagedownloaderexit()
 }
 */
 
+
+
+////////////////////////////////////////////////////////////////////////////////
+// LIBLO
+////////////////////////////////////////////////////////////////////////////////
+void MainFrame::EnableOSC() {
+	wxString host, port;
+	int protocol;
+	host = tc_oschost->GetValue();
+	port = wxString::Format("%i",sp_oscport->GetValue());
+	if(c_oscprotocol->GetStringSelection() == "UDP") {
+		protocol = LO_UDP;
+	} else if(c_oscprotocol->GetStringSelection() == "TCP") {
+		protocol = LO_TCP;
+	} else if(c_oscprotocol->GetStringSelection() == "UNIX") {
+		protocol = LO_UNIX;
+	} else {
+		protocol = LO_UDP;
+	}
+	osc = lo_address_new_with_proto(protocol, host.mb_str(), port.mb_str());
+}
+
+void MainFrame::Oncb_oscenable(wxCommandEvent& event)
+{
+	if(cb_oscenable->GetValue()) {
+		EnableOSC();
+        sp_oscport->Enable(1);
+		c_oscprotocol->Enable(1);
+		tc_oschost->Enable(1);
+		cb_oscrecognition->Enable(1);
+	} else {
+		lo_address_free(osc);
+		sp_oscport->Enable(0);
+		c_oscprotocol->Enable(0);
+		tc_oschost->Enable(0);
+		cb_oscrecognition->Enable(0);
+	}
+	writepreference();
+}
+
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // QUITTING
 ////////////////////////////////////////////////////////////////////////////////
@@ -1825,6 +1864,7 @@ void MainFrame::OnQuit()
 {
 	wxSocketBase::Shutdown();
 	xdo_free(xdo);
+	lo_address_free(osc);
 	delete m_taskBarIcon;
 	delete m_timer;
 	delete reseticonm_timer;
@@ -2643,6 +2683,22 @@ void MainFrame::onJuliusSentence(wxCommandEvent& event)
 			tcro_pronun->AppendText("\n");
 		}
 	}
+	
+	// liblo - send recognition result via open sound control
+	if(cb_oscrecognition->GetValue()) {
+		lo_bundle osc_bundle = lo_bundle_new(LO_TT_IMMEDIATE);
+		lo_message msg = lo_message_new();
+		lo_message_add_int32(msg, duration);
+		lo_message_add_float(msg, threshold);
+		lo_message_add_string(msg, event.GetString());
+		lo_bundle_add_message(osc_bundle, "/kiku", msg);
+		if(lo_send_bundle(osc, osc_bundle) == -1) {
+			wxMessageBox(wxString::Format("Problem with Open Sound Control:\n%s", lo_address_errstr(osc)));
+		}
+		lo_message_free(msg);
+		lo_bundle_free(osc_bundle);
+	}
+
 }
 
 
@@ -2835,8 +2891,17 @@ void MainFrame::readpreference()
 		c_language->Show(0);
 		b_languagedownload->Show(0);
 	}
-
-    tc_scorethres->ChangeValue(wxString::Format("%f",rootpref["threshold"].AsDouble()));
+	
+	if(rootpref["threshold"].IsInt()) {
+		if(rootpref["threshold"].AsInt() <= 0) {
+			tc_scorethres->ChangeValue("0.000000");
+		} else if(rootpref["threshold"].AsInt() >= 1) {
+			tc_scorethres->ChangeValue("1.000000");
+		}
+	} else {
+		tc_scorethres->ChangeValue(wxString::Format("%f",rootpref["threshold"].AsDouble()));
+	}
+    
     sp_minlength->SetValue(rootpref["minimum"].AsInt());
     sp_maxlength->SetValue(rootpref["maximum"].AsInt());
 
@@ -2901,6 +2966,20 @@ void MainFrame::readpreference()
 	if(c_filter->GetStringSelection() == "None") {
 		s_lp->Enable(0);
 		s_hp->Enable(0);
+	}
+	
+	// liblo
+	cb_oscenable->SetValue(rootpref["osc_enable"].AsBool());
+	tc_oschost->ChangeValue(rootpref["osc_host"].AsString());
+	sp_oscport->SetValue(rootpref["osc_port"].AsInt());
+	c_oscprotocol->SetStringSelection(rootpref["osc_protocol"].AsString());
+	cb_oscrecognition->SetValue(rootpref["osc_recognition"].AsBool());
+	
+	if(!cb_oscenable->GetValue()) {
+		sp_oscport->Enable(0);
+		c_oscprotocol->Enable(0);
+		tc_oschost->Enable(0);
+		cb_oscrecognition->Enable(0);
 	}
 }
 
@@ -2978,6 +3057,13 @@ void MainFrame::writepreference()
 	preference["libpd_lp"] = s_lp->GetValue();
 	preference["libpd_hp"] = s_hp->GetValue();
 	
+	// liblo
+	preference["osc_enable"] = cb_oscenable->GetValue();
+	preference["osc_host"] = tc_oschost->GetValue();
+	preference["osc_port"] = sp_oscport->GetValue();
+	preference["osc_protocol"] = c_oscprotocol->GetStringSelection();
+	preference["osc_recognition"] = cb_oscrecognition->GetValue();
+	
     wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_WRITE_COMMENTS );
     wxString  jsonText;
     writer.Write( preference, jsonText );
@@ -3012,6 +3098,12 @@ void MainFrame::createpreference()
     preference["libpd_volume"] = 100;
     preference["libpd_lp"] = 11500;
     preference["libpd_hp"] = 200;
+	preference["osc_enable"] = false;
+	preference["osc_host"] = _T("localhost");
+	preference["osc_port"] = 9997;
+	preference["osc_protocol"] = _T("UDP");
+	preference["osc_recognition"] = false;
+	
     wxJSONWriter writer( wxJSONWRITER_STYLED | wxJSONWRITER_WRITE_COMMENTS );
     wxString  jsonText;
     writer.Write( preference, jsonText );
@@ -3164,7 +3256,6 @@ void MainFrame::Eye(wxString txt)
 			hey.SetMessage(txt);
 			hey.Show(sp_notdelay->GetValue());
 		} else if(c_notstyle->GetStringSelection() == "Notify") {
-			notify_init("kiku");
 			nn = notify_notification_new("kiku", txt, NULL, NULL);
 			notify_notification_set_timeout(nn, sp_notdelay->GetValue());
 			if (!notify_notification_show(nn, NULL))
@@ -3297,6 +3388,64 @@ long MainFrame::Hand(wxString type, wxString cmd)
 				Dob_activeword();
 			} else if(cmd == "quit") {
 				OnQuit();
+			}
+		} else if(type == "open sound control") { // liblo
+		
+		
+			if(!cb_oscenable->GetValue()) {
+				
+				wxMessageBox("Open Sound Control is not enabled (see Configuration tab)");
+				
+			} else {
+				
+				// tokenize (space)
+				wxArrayString acmd = wxStringTokenize(cmd, " ");
+				if(acmd.GetCount() == 1) {
+					
+					if (lo_send(osc, acmd[0].Trim().Trim(false), NULL) == -1) {
+						wxMessageBox(wxString::Format("Problem with Open Sound Control:\n%s", lo_address_errstr(osc)));
+					}
+					
+				} else if(acmd.GetCount() > 1) {
+					
+					
+					lo_bundle osc_bundle = lo_bundle_new(LO_TT_IMMEDIATE);
+					lo_message msg = lo_message_new();
+						
+					for (size_t i=1; i < acmd.GetCount(); i++) {
+						
+						// check for integer
+						wxString isint(acmd[i].Trim().Trim(false));
+						long valuei;
+						// check for float
+						wxString isfloat(acmd[i].Trim().Trim(false));
+						double valuef;
+						
+						if(isint.ToLong(&valuei)) {
+							lo_message_add_int32(msg, valuei);
+						} else if(isfloat.ToDouble(&valuef)) {
+							lo_message_add_float(msg, valuef);
+						} else {
+							if(acmd[i].Trim().Trim(false) == "TRUE") {
+								lo_message_add_true(msg);
+							} else if(acmd[i].Trim().Trim(false) == "FALSE") {
+								lo_message_add_false(msg);
+							} else {
+								lo_message_add_string(msg, acmd[i].Trim().Trim(false));
+							}
+						}
+
+					}
+					
+					lo_bundle_add_message(osc_bundle, acmd[0].Trim().Trim(false), msg);
+					if(lo_send_bundle(osc, osc_bundle) == -1) {
+						wxMessageBox(wxString::Format("Problem with Open Sound Control:\n%s", lo_address_errstr(osc)));
+					}
+					
+					lo_message_free(msg);
+					lo_bundle_free(osc_bundle);
+					
+				}
 			}
 		}
 	return -1;

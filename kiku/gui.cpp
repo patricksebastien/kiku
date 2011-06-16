@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 11 2011)
+// C++ code generated with wxFormBuilder (version Jun  6 2011)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -11,7 +11,7 @@
 
 MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
-	this->SetSizeHints( wxSize( 600,400 ), wxDefaultSize );
+	this->SetSizeHints( wxSize( 600,420 ), wxDefaultSize );
 	
 	wxBoxSizer* mainSizer;
 	mainSizer = new wxBoxSizer( wxVERTICAL );
@@ -140,7 +140,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer371 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxArrayString pc_v2capplicationChoices;
-	pc_v2capplication = new wxChoice( p_v2capplication, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2capplicationChoices, wxCB_SORT );
+	pc_v2capplication = new wxChoice( p_v2capplication, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2capplicationChoices, 0 );
 	pc_v2capplication->SetSelection( 0 );
 	bSizer371->Add( pc_v2capplication, 1, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxLEFT, 5 );
 	
@@ -173,7 +173,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer372 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxArrayString pc_v2cshortcutChoices;
-	pc_v2cshortcut = new wxChoice( p_v2cshortcut, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2cshortcutChoices, wxCB_SORT );
+	pc_v2cshortcut = new wxChoice( p_v2cshortcut, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2cshortcutChoices, 0 );
 	pc_v2cshortcut->SetSelection( 0 );
 	bSizer372->Add( pc_v2cshortcut, 1, wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -377,15 +377,62 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_staticText13 = new wxStaticText( p_configutation, wxID_ANY, _("Delay:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText13->Wrap( -1 );
-	bSizer16->Add( m_staticText13, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	bSizer16->Add( m_staticText13, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	sp_notdelay = new wxSpinCtrl( p_configutation, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 78,-1 ), wxSP_ARROW_KEYS, 1, 10, 0 );
-	bSizer16->Add( sp_notdelay, 0, wxALL, 5 );
+	bSizer16->Add( sp_notdelay, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
 	bSizer12->Add( bSizer16, 0, wxRIGHT, 5 );
 	
-	cb_notpretrig = new wxCheckBox( p_configutation, wxID_ANY, _("Show pretrigger"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
-	bSizer12->Add( cb_notpretrig, 0, wxALL, 5 );
+	cb_notpretrig = new wxCheckBox( p_configutation, wxID_ANY, _("Show pretrigger:"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	cb_notpretrig->SetValue(true); 
+	bSizer12->Add( cb_notpretrig, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
+	m_staticText44 = new wxStaticText( p_configutation, wxID_ANY, _("OpenSoundControl:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText44->Wrap( -1 );
+	m_staticText44->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
+	bSizer12->Add( m_staticText44, 0, wxALL, 5 );
+	
+	cb_oscenable = new wxCheckBox( p_configutation, wxID_ANY, _("Enable client"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer12->Add( cb_oscenable, 0, wxALL, 5 );
+	
+	m_staticText45 = new wxStaticText( p_configutation, wxID_ANY, _("Host:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText45->Wrap( -1 );
+	bSizer12->Add( m_staticText45, 0, wxRIGHT|wxLEFT, 5 );
+	
+	tc_oschost = new wxTextCtrl( p_configutation, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer12->Add( tc_oschost, 0, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
+	wxBoxSizer* bSizer1611;
+	bSizer1611 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText1311 = new wxStaticText( p_configutation, wxID_ANY, _("Port:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText1311->Wrap( -1 );
+	bSizer1611->Add( m_staticText1311, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
+	sp_oscport = new wxSpinCtrl( p_configutation, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 78,-1 ), wxSP_ARROW_KEYS, 1, 999999, 0 );
+	bSizer1611->Add( sp_oscport, 1, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
+	bSizer12->Add( bSizer1611, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer161;
+	bSizer161 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText131 = new wxStaticText( p_configutation, wxID_ANY, _("Protocol:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText131->Wrap( -1 );
+	bSizer161->Add( m_staticText131, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
+	
+	wxString c_oscprotocolChoices[] = { _("UDP"), _("TCP"), _("UNIX") };
+	int c_oscprotocolNChoices = sizeof( c_oscprotocolChoices ) / sizeof( wxString );
+	c_oscprotocol = new wxChoice( p_configutation, wxID_ANY, wxDefaultPosition, wxDefaultSize, c_oscprotocolNChoices, c_oscprotocolChoices, 0 );
+	c_oscprotocol->SetSelection( 0 );
+	bSizer161->Add( c_oscprotocol, 1, wxRIGHT|wxLEFT|wxEXPAND, 5 );
+	
+	bSizer12->Add( bSizer161, 1, wxEXPAND, 5 );
+	
+	cb_oscrecognition = new wxCheckBox( p_configutation, wxID_ANY, _("Send recognition"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer12->Add( cb_oscrecognition, 0, wxALL, 5 );
 	
 	bSizer91->Add( bSizer12, 0, 0, 5 );
 	
@@ -548,7 +595,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	bSizer41->Add( m_staticText351, 0, wxALL, 5 );
 	
-	wxString c_driverChoices[] = { _("PulseAudio"), _("PulseAudio (monitor)"), _("Alsa") };
+	wxString c_driverChoices[] = { _("PulseAudio"), _("PulseAudio (monitor)") };
 	int c_driverNChoices = sizeof( c_driverChoices ) / sizeof( wxString );
 	c_driver = new wxChoice( p_audio, wxID_ANY, wxDefaultPosition, wxDefaultSize, c_driverNChoices, c_driverChoices, 0 );
 	c_driver->SetSelection( 0 );
@@ -773,6 +820,11 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	c_notstyle->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_notification ), NULL, this );
 	sp_notdelay->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	cb_notpretrig->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
+	cb_oscenable->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_oscenable ), NULL, this );
+	tc_oschost->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
+	sp_oscport->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
+	c_oscprotocol->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
+	cb_oscrecognition->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	cb_engdefault->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_engdefault ), NULL, this );
 	sp_engthreshold->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engthreshold ), NULL, this );
 	sp_engzero->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engzero ), NULL, this );
@@ -858,6 +910,11 @@ MainFrameBase::~MainFrameBase()
 	c_notstyle->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_notification ), NULL, this );
 	sp_notdelay->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	cb_notpretrig->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
+	cb_oscenable->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_oscenable ), NULL, this );
+	tc_oschost->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
+	sp_oscport->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
+	c_oscprotocol->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
+	cb_oscrecognition->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Onm_prefupdate ), NULL, this );
 	cb_engdefault->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_engdefault ), NULL, this );
 	sp_engthreshold->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engthreshold ), NULL, this );
 	sp_engzero->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engzero ), NULL, this );

@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=psc
-Date                   :=11-06-06
+Date                   :=11-06-16
 CodeLitePath           :="/home/psc/.codelite"
 LinkerName             :=g++
 ArchiveTool            :=ar rcus
@@ -42,7 +42,7 @@ C_CmpOptions           :=  $(Preprocessors)
 LinkOptions            :=  -s $(shell /home/psc/src/wx291svnrelease/bin/wx-config --libs) $(shell /home/psc/src/juliuscvs/bin/libjulius-config --libs) $(shell /home/psc/src/juliuscvs/bin/libsent-config --libs) $(shell /usr/bin/xosd-config --libs) $(shell pkg-config --libs libnotify) $(shell pkg-config gconf-2.0 --libs) -Wl,-export-dynamic -Wl,-whole-archive ../common/libpd.a -Wl,-no-whole-archive
 IncludePath            :=  $(IncludeSwitch). 
 RcIncludePath          :=
-Libs                   :=$(LibrarySwitch)xdo $(LibrarySwitch)Xtst 
+Libs                   :=$(LibrarySwitch)lo $(LibrarySwitch)xdo $(LibrarySwitch)Xtst 
 LibPath                := $(LibraryPathSwitch). 
 
 

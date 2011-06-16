@@ -5,38 +5,28 @@
   <TabInfoArray Name="TabInfoArray">
     <TabInfo>
       <wxString Value="/home/psc/11h11/code/kiku/kiku/main.cpp" Name="FileName"/>
-      <int Value="0" Name="FirstVisibleLine"/>
-      <int Value="2" Name="CurrentLine"/>
+      <int Value="3400" Name="FirstVisibleLine"/>
+      <int Value="3415" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>
     <TabInfo>
       <wxString Value="/home/psc/11h11/code/kiku/kiku/main.h" Name="FileName"/>
-      <int Value="160" Name="FirstVisibleLine"/>
-      <int Value="181" Name="CurrentLine"/>
+      <int Value="214" Name="FirstVisibleLine"/>
+      <int Value="228" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/psc/11h11/code/kiku/kiku/gui.h" Name="FileName"/>
+      <int Value="190" Name="FirstVisibleLine"/>
+      <int Value="209" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>
   </TabInfoArray>
   <SerializedObject Name="m_breakpoints">
-    <long Value="2" Name="Count"/>
+    <long Value="1" Name="Count"/>
     <SerializedObject Name="Breakpoint0">
       <wxString Value="/home/psc/11h11/code/kiku/kiku/main.cpp" Name="file"/>
-      <int Value="1495" Name="lineno"/>
-      <wxString Value="" Name="function_name"/>
-      <wxString Value="" Name="memory_address"/>
-      <int Value="1" Name="bp_type"/>
-      <int Value="0" Name="watchpoint_type"/>
-      <wxString Value="" Name="watchpt_data"/>
-      <CData Name="commandlist"/>
-      <bool Value="0" Name="regex"/>
-      <bool Value="0" Name="is_temp"/>
-      <bool Value="1" Name="is_enabled"/>
-      <int Value="0" Name="ignore_number"/>
-      <wxString Value="" Name="conditions"/>
-      <int Value="0" Name="origin"/>
-    </SerializedObject>
-    <SerializedObject Name="Breakpoint1">
-      <wxString Value="/home/psc/11h11/code/kiku/kiku/main.cpp" Name="file"/>
-      <int Value="2470" Name="lineno"/>
+      <int Value="2525" Name="lineno"/>
       <wxString Value="" Name="function_name"/>
       <wxString Value="" Name="memory_address"/>
       <int Value="1" Name="bp_type"/>

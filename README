@@ -1,6 +1,106 @@
-kiku (pronounced key cue) is a simple GPL voice recognition software
-using Julius, wxWidgets and VoxForge.
+kiku (pronounced key cue) is a simple GPL voice recognition software.
 
+A binary package (Debian) is available here:
+http://www.workinprogress.ca/kiku/download/
+
+Videos of kiku in action:
+http://www.workinprogress.ca/kiku/video/
+
+------------------------------------------------------------------------
+COMPILATION:
+It's doable, but i wouldn't say it's easy.
+Follow those steps (change the path):
+
+1) Fetch kiku
+mkdir -p ~/src/kiku && cd ~/src/kiku
+git clone https://github.com/patricksebastien/kiku.git 
+
+
+2) Download & Install wxWidgets
+svn checkout http://svn.wxwidgets.org/svn/wx/wxWidgets/trunk wxWidgets
+
+PATCH
+open src/unix/utilsunx.cpp:
+//data->exitcode = DoWaitForChild(data->pid, WNOHANG);
+data->exitcode = DoWaitForChild(data->pid);
+
+./configure --prefix=~/src/wx291svnrelease --enable-unicode --disable-shared --without-gnomeprint --without-gtkprint
+make -j3
+make install
+
+
+3) Download & Install xdotool
+http://www.semicomplete.com/projects/xdotool/
+
+make static
+mkdir staticlib
+cp *.o (not xdotool.o) staticlib
+cd staticlib
+ar rcs libxdo.a *.o
+cp libxdo.a ~/src/kiku/kiku
+
+TEST
+./xdotool.static key Shift+Ctrl+n
+or any keyboard shortcut that is supposed to do something
+if nothing happen, you might need to patch xdotool:
+http://groups.google.com/group/xdotool-users/browse_thread/thread/95d36fd1da9b7c14
+
+
+4) Download & Install Julius
+cvs -z3 -d:pserver:anonymous@cvs.sourceforge.jp:/cvsroot/julius co julius4
+./configure --prefix=~/src/juliuscvs --with-mictype=pulseaudio --enable-setup=standard --enable-factor2 --enable-wpair --enable-wpair-nlimit --without-sndfile --disable-pthread
+make -j3 && make install
+
+
+5) Download & Install libpd
+git clone git://gitorious.org/pdlib/libpd.git
+make libs/libpd.so
+mkdir staticlib
+cp libpd_wrapper/*.o staticlib/
+cp pure-data/src/ *.o staticlib/
+ar rcs libpd.a *.o
+cp libpd.a ~/kiku/common
+cp ./libpd_wrapper/z_libpd.h ~/kiku/common
+cp ./pure-data/src/m_pd.h ~/kiku/common
+
+
+6) Compile kiku
+open project in CodeLite (IDE)
+right click on kiku - Settings... - change Compiler & Linker settings (path)
+Go to Build - Build and run project - report errors on http://www.workinprogress.ca/kiku/forum/
+
+
+7) Compile plugins
+edit Makefile in ~/src/kiku/plugin/pulseaudio (path)
+make
+
+edit Makefile in ~/src/kiku/plugin/pulseaudiomon (path)
+make
+
+
+8) Binary package
+~/src/kiku/kiku/make_deb.sh -u
+install debian package
+
+If you don't want a package:
+sudo mkdir -p /usr/lib/kiku
+cp ~/src/kiku/plugin/pulseaudio/adin_pulseaudiolibpd.jpi /usr/lib/kiku
+cp ~/src/kiku/plugin/pulseaudiomon/adin_pulseaudiolibpdmon.jpi /usr/lib/kiku
+cp ~/src/kiku/plugin/patch/filter/kiku.pd /usr/lib/kiku
+i386:
+cp ~/src/kiku/plugin/patch/filter/i386/*.pd_linux /usr/lib/kiku
+amd64:
+cp ~/src/kiku/plugin/patch/filter/amd64/*.pd_linux /usr/lib/kiku
+
+LAUNCH kiku:
+~/src/kiku/kiku/Release/kiku
+
+
+------------------------------------------------------------------------
+LINKS
 http://julius.sourceforge.jp/en_index.php
 http://www.wxwidgets.org/
+http://www.codelite.org/
+http://gitorious.org/pdlib/pages/Libpd
+http://www.semicomplete.com/projects/xdotool/
 http://www.voxforge.org/
