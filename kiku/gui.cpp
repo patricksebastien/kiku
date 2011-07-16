@@ -117,7 +117,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	p_recognition->SetSizer( bSizer3 );
 	p_recognition->Layout();
 	bSizer3->Fit( p_recognition );
-	m_nb->AddPage( p_recognition, _("Recognition"), false );
+	m_nb->AddPage( p_recognition, _("Recognition"), true );
 	p_V2C = new wxPanel( m_nb, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer34;
 	bSizer34 = new wxBoxSizer( wxVERTICAL );
@@ -294,20 +294,20 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer18 = new wxBoxSizer( wxHORIZONTAL );
 	
 	sp_apmistake = new wxSpinCtrl( p_configutation, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), wxSP_ARROW_KEYS, 2, 50, 0 );
-	bSizer18->Add( sp_apmistake, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer18->Add( sp_apmistake, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
 	m_staticText15 = new wxStaticText( p_configutation, wxID_ANY, _("mistakes in"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText15->Wrap( -1 );
-	bSizer18->Add( m_staticText15, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer18->Add( m_staticText15, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	sp_apsec = new wxSpinCtrl( p_configutation, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 1, 120, 1 );
 	sp_apsec->SetMinSize( wxSize( 60,-1 ) );
 	
-	bSizer18->Add( sp_apsec, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer18->Add( sp_apsec, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5 );
 	
 	m_staticText16 = new wxStaticText( p_configutation, wxID_ANY, _("sec."), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText16->Wrap( -1 );
-	bSizer18->Add( m_staticText16, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	bSizer18->Add( m_staticText16, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
 	bSizer11->Add( bSizer18, 0, 0, 5 );
 	
@@ -335,7 +335,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer22 = new wxBoxSizer( wxHORIZONTAL );
 	
 	sp_aupsec = new wxSpinCtrl( p_configutation, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), wxSP_ARROW_KEYS, 2, 300, 0 );
-	bSizer22->Add( sp_aupsec, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	bSizer22->Add( sp_aupsec, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxLEFT, 5 );
 	
 	m_staticText20 = new wxStaticText( p_configutation, wxID_ANY, _("seconds"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText20->Wrap( -1 );
@@ -388,7 +388,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	cb_notpretrig->SetValue(true); 
 	bSizer12->Add( cb_notpretrig, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
-	m_staticText44 = new wxStaticText( p_configutation, wxID_ANY, _("OpenSoundControl:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText44 = new wxStaticText( p_configutation, wxID_ANY, _("Open Sound Control:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText44->Wrap( -1 );
 	m_staticText44->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
 	
@@ -709,7 +709,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	p_audio->SetSizer( bSizer402 );
 	p_audio->Layout();
 	bSizer402->Fit( p_audio );
-	m_nb->AddPage( p_audio, _("Audio"), true );
+	m_nb->AddPage( p_audio, _("Audio"), false );
 	p_language = new wxPanel( m_nb, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer291;
 	bSizer291 = new wxBoxSizer( wxHORIZONTAL );

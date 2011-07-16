@@ -2638,7 +2638,6 @@ void MainFrame::onJuliusSentence(wxCommandEvent& event)
 			// exception first time test (give => donation)
 			if(b_languagedownload->GetLabel() == "Download") {
 				b_languagedownload->SetLabel("Downloaded");
-				wxMessageBox("dsad");
 				if(c_language->GetStringSelection() == "English 14k [VoxForge]") {
 					if(event.GetString().Upper() == "GIVE") {
 						wxLaunchDefaultBrowser("http://www.workinprogress.ca/kiku/donation/");
