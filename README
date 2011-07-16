@@ -48,7 +48,7 @@ http://groups.google.com/group/xdotool-users/browse_thread/thread/95d36fd1da9b7c
 
 4) Download & Install Julius
 cvs -z3 -d:pserver:anonymous@cvs.sourceforge.jp:/cvsroot/julius co julius4
-./configure --prefix=~/src/juliuscvs --with-mictype=pulseaudio --enable-setup=standard --enable-factor2 --enable-wpair --enable-wpair-nlimit --without-sndfile --disable-pthread
+./configure --prefix=~/src/juliuscvs --with-mictype=alsa --enable-setup=standard --enable-factor2 --enable-wpair --enable-wpair-nlimit --without-sndfile --disable-pthread
 make -j3 && make install
 
 

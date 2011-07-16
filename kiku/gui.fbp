@@ -57,7 +57,7 @@
             <property name="maximum_size"></property>
             <property name="min_size"></property>
             <property name="minimize_button">0</property>
-            <property name="minimum_size">600,420</property>
+            <property name="minimum_size">620,420</property>
             <property name="moveable">1</property>
             <property name="name">MainFrameBase</property>
             <property name="pane_border">1</property>
@@ -69,7 +69,7 @@
             <property name="resize">Resizable</property>
             <property name="row"></property>
             <property name="show">1</property>
-            <property name="size">600,420</property>
+            <property name="size">620,420</property>
             <property name="style">wxCAPTION|wxCLOSE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER|wxSYSTEM_MENU</property>
             <property name="subclass"></property>
             <property name="title">kiku</property>
