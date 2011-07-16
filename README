@@ -12,7 +12,7 @@ It's doable, but i wouldn't say it's easy.
 Follow those steps (change the path):
 
 1) Fetch kiku
-mkdir -p ~/src/kiku && cd ~/src/kiku
+mkdir -p ~/src && cd ~/src
 git clone https://github.com/patricksebastien/kiku.git 
 
 
@@ -34,7 +34,7 @@ http://www.semicomplete.com/projects/xdotool/
 
 make static
 mkdir staticlib
-cp *.o (not xdotool.o) staticlib
+cp *.o staticlib
 cd staticlib
 ar rcs libxdo.a *.o
 cp libxdo.a ~/src/kiku/kiku

@@ -41,6 +41,7 @@ typedef struct context {
 
 int xdotool_main(int argc, char **argv);
 int cmd_exec(context_t *context);
+int cmd_sleep(context_t *context);
 int cmd_behave(context_t *context);
 int cmd_behave_screen_edge(context_t *context);
 int cmd_click(context_t *context);
@@ -49,6 +50,7 @@ int cmd_getmouselocation(context_t *context);
 int cmd_getwindowfocus(context_t *context);
 int cmd_getwindowname(context_t *context);
 int cmd_getwindowpid(context_t *context);
+int cmd_getwindowgeometry(context_t *context);
 int cmd_help(context_t *context);
 int cmd_key(context_t *context);
 int cmd_mousedown(context_t *context);
@@ -79,5 +81,6 @@ int cmd_set_desktop_for_window(context_t *context);
 int cmd_get_desktop_for_window(context_t *context);
 int cmd_set_desktop_viewport(context_t *context);
 int cmd_get_desktop_viewport(context_t *context);
+int cmd_get_display_geometry(context_t *context);
 
 #endif /* _XDOTOOL_H_ */

@@ -54,6 +54,7 @@ class gui_v2ceditor : public wxDialog
 		// Virtual event handlers, overide them in your derived class
 		virtual void Onb_add( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onb_delete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnLink( wxHtmlLinkEvent& event ) { event.Skip(); }
 		
 	
 	public:

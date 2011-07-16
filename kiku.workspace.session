@@ -5,20 +5,8 @@
   <TabInfoArray Name="TabInfoArray">
     <TabInfo>
       <wxString Value="/home/psc/11h11/code/kiku/kiku/main.cpp" Name="FileName"/>
-      <int Value="3400" Name="FirstVisibleLine"/>
-      <int Value="3415" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/psc/11h11/code/kiku/kiku/main.h" Name="FileName"/>
-      <int Value="214" Name="FirstVisibleLine"/>
-      <int Value="228" Name="CurrentLine"/>
-      <wxArrayString Name="Bookmarks"/>
-    </TabInfo>
-    <TabInfo>
-      <wxString Value="/home/psc/11h11/code/kiku/kiku/gui.h" Name="FileName"/>
-      <int Value="190" Name="FirstVisibleLine"/>
-      <int Value="209" Name="CurrentLine"/>
+      <int Value="0" Name="FirstVisibleLine"/>
+      <int Value="12" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>
   </TabInfoArray>
@@ -26,7 +14,7 @@
     <long Value="1" Name="Count"/>
     <SerializedObject Name="Breakpoint0">
       <wxString Value="/home/psc/11h11/code/kiku/kiku/main.cpp" Name="file"/>
-      <int Value="2525" Name="lineno"/>
+      <int Value="2532" Name="lineno"/>
       <wxString Value="" Name="function_name"/>
       <wxString Value="" Name="memory_address"/>
       <int Value="1" Name="bp_type"/>

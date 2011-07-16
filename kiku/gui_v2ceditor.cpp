@@ -103,6 +103,7 @@ gui_v2ceditor::gui_v2ceditor( wxWindow* parent, wxWindowID id, const wxString& t
 	// Connect Events
 	b_add->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( gui_v2ceditor::Onb_add ), NULL, this );
 	b_delete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( gui_v2ceditor::Onb_delete ), NULL, this );
+	html_v2ceditor->Connect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( gui_v2ceditor::OnLink ), NULL, this );
 }
 
 gui_v2ceditor::~gui_v2ceditor()
@@ -110,5 +111,6 @@ gui_v2ceditor::~gui_v2ceditor()
 	// Disconnect Events
 	b_add->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( gui_v2ceditor::Onb_add ), NULL, this );
 	b_delete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( gui_v2ceditor::Onb_delete ), NULL, this );
+	html_v2ceditor->Disconnect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( gui_v2ceditor::OnLink ), NULL, this );
 	
 }

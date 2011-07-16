@@ -3,9 +3,14 @@
  * http://www.workinprogress.ca/kiku
  * 
  * 0.2
- * added portaudio support (alsa, jack)
+ * added alsa support
  * added liblo (open sound control)
+ * added new xdotool command: activate & sleep & keyup & keydown & click
+ * fix KP_* (need to be use with activate)
  * fix for threshold integer
+ * 
+ * 0.1
+ * initial release
  * 
  * // WXWIDGETS
  * webupdate not always calling (wxthread with wxsocket problem)
@@ -20,11 +25,13 @@
  * alsa plugin stripped invalid sample = libpd is causing the problem
  * automatic unpause using volume threshold will be fix if no more julius threading problem (no meter when pause)
  * embed mkss, mkhmmbin...
+ * tts
  * 
  * // NOTE
  * when updating this application #define VERSION "x" & update make_deb version
  * each time touch gui: 145 & 178 (pc_v2capplication / pc_v2cshortcut) = wxCB_SORT
  * wxjson (include) - if new: jsonval.cpp in wxJSONValue::Item() //wxLogTrace( traceMask, _T("(%s) actual object: %s"), __PRETTY_FUNCTION__, GetInfo().c_str()); (fix bug in 64bit)
+ * when updating xdotool - copy *.h to kiku
  *********************************************************************/
 
 #include "main.h"
@@ -75,9 +82,8 @@ bool listening;
 bool haveupdate;
 wxString updateurl;
 
-
 ////////////////////////////////////////////////////////////////////////////////
-// callback 
+// libpd callback 
 ////////////////////////////////////////////////////////////////////////////////
 void rfloat(const char *s, float myd) {
 	wxString pdsend(s, wxConvUTF8);
@@ -349,6 +355,21 @@ void MainFrame::libpd_prvu(wxCommandEvent& event) {
 void MainFrame::Onc_driver(wxCommandEvent& event)
 {
 	writejuliusconf("driver");
+	if(c_driver->GetStringSelection() == "Alsa") {
+		s_volume->Enable(0);
+		c_filter->Enable(0);
+		s_lp->Enable(0);
+		s_hp->Enable(0);
+		g_englevel->Show(0);
+		st_db->Show(0);
+	} else {
+		s_volume->Enable(1);
+		c_filter->Enable(1);
+		s_lp->Enable(1);
+		s_hp->Enable(1);
+		g_englevel->Show(1);
+		st_db->Show(1);
+	}
 	if(m_Julius && juliusisready) {
 		juliusgentlyexit();
 		startjuliusthread();
@@ -2165,7 +2186,7 @@ void MainFrame::readjuliusconf()
 				} else if(line == "-input pulseaudio-libpd-monitor") {
 					c_driver->SetStringSelection("PulseAudio (monitor)");
 				} else if(line == "-input mic") {
-					c_driver->SetStringSelection("PulseAudio");
+					c_driver->SetStringSelection("Alsa");
 				}
         }
 		
@@ -2406,6 +2427,8 @@ void MainFrame::writejuliusconf(wxString opt)
 			juliusconftxt.AddLine("-input pulseaudio-libpd");
 		} else if(c_driver->GetStringSelection() == "PulseAudio (monitor)") {
 			juliusconftxt.AddLine("-input pulseaudio-libpd-monitor");
+		} else if(c_driver->GetStringSelection() == "Alsa") {
+			juliusconftxt.AddLine("-input mic");
 		}
 		
     }
@@ -2614,11 +2637,12 @@ void MainFrame::onJuliusSentence(wxCommandEvent& event)
 		} else {
 			// exception first time test (give => donation)
 			if(b_languagedownload->GetLabel() == "Download") {
+				b_languagedownload->SetLabel("Downloaded");
+				wxMessageBox("dsad");
 				if(c_language->GetStringSelection() == "English 14k [VoxForge]") {
 					if(event.GetString().Upper() == "GIVE") {
 						wxLaunchDefaultBrowser("http://www.workinprogress.ca/kiku/donation/");
 						calculatespectrum();
-						b_languagedownload->SetLabel("Downloaded");
 						html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_v2c.html");
 					}
 				} else {
@@ -2626,7 +2650,6 @@ void MainFrame::onJuliusSentence(wxCommandEvent& event)
 					if(event.GetString().Upper() == "寄付") {
 						wxLaunchDefaultBrowser("http://www.workinprogress.ca/kiku/donation/");
 						calculatespectrum();
-						b_languagedownload->SetLabel("Downloaded");
 						html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_v2c.html");
 					}
 				}
@@ -3279,175 +3302,258 @@ void MainFrame::Eye(wxString txt)
 			char cstring[4024];
 			strncpy(cstring, (const char*)txt.mb_str(wxConvUTF8), 4023);
 			xosd_display(osd, 0, XOSD_string, cstring);
-			/*
-			int code = wxExecute("osd_cat -d 5 -p top -A right -o 30 -c white -O 3 -b percentage --text \""+test+"\" -P 0", output, errors, wxEXEC_ASYNC);
-			if ( code != -1 )
-			{
-				if(!output.IsEmpty()) {
-					cp = output[0];
-				}
-			}
-			*/
 		}
 	}
 }
 
 long MainFrame::Hand(wxString type, wxString cmd)
 {
-        if(type == "shell" && listening) { // launcher
-			#ifdef DEBUG
-				wxPuts(type + " : " + cmd);
-			#endif
-			proc = new Process(this, cmd);
-            m_pidLast = wxExecute(cmd, wxEXEC_ASYNC, proc);
-            if ( !m_pidLast )
-            {
-                wxLogError( _T("Execution of '%s' failed."), cmd.c_str() );
-                delete proc;
-            }
-            return m_pidLast;
-        } else if(type == "xdotool" && listening) { // xdotool			
-			// tokenize |
-			wxArrayString acmd = wxStringTokenize(cmd, "|");
-			for (size_t i=0; i < acmd.GetCount(); i++) {
-				if(acmd[i].Trim().Trim(false) != "") {
-					#ifdef DEBUG
-						wxPuts(type + ": " + acmd[i].Trim().Trim(false));
-					#endif
-					// get the function to call (key, type, ...)
-					wxArrayString xcmd = wxStringTokenize(acmd[i].Trim().Trim(false), " ");
-					if(xcmd[0] == "key") {
-						xdo_keysequence(xdo, xdotoolwindow, (const_cast<char*>((const char*)acmd[i].Trim().Trim(false).Mid(4).mb_str())), xdotooldelay);
-					} else if(xcmd[0] == "type") {
-						xdo_type(xdo, xdotoolwindow, (const_cast<char*>((const char*)acmd[i].Trim().Trim(false).Mid(5).mb_str())), xdotooldelay);
-					} else if(xcmd[0] == "mousemove_relative") {
-						xdo_mousemove_relative (xdo, wxAtoi(xcmd[1]), wxAtoi(xcmd[2]));
-					} else if(xcmd[0] == "mousedown") {
-						int button = 1;
-						if(xcmd.GetCount() > 1) {
-							if(xcmd[1] == "middle") {
-								button = 2;
-							} else if(xcmd[1] == "right") {
-								button = 3;
-							}
-						}
-						xdo_mousedown (xdo, xdotoolwindow, button);
-					} else if(xcmd[0] == "mouseup") {
-						int button = 1;
-						if(xcmd.GetCount() > 1) {
-							if(xcmd[1] == "middle") {
-								button = 2;
-							} else if(xcmd[1] == "right") {
-								button = 3;
-							}
-						}
-						xdo_mouseup (xdo, xdotoolwindow, button);
+	int xdotoolwindowid = xdotoolwindow;
+
+	if(type == "shell" && listening) { // launcher
+		#ifdef DEBUG
+			wxPuts(type + " : " + cmd);
+		#endif
+		proc = new Process(this, cmd);
+		m_pidLast = wxExecute(cmd, wxEXEC_ASYNC, proc);
+		if ( !m_pidLast )
+		{
+			wxLogError( _T("Execution of '%s' failed."), cmd.c_str() );
+			delete proc;
+		}
+		return m_pidLast;
+	} else if(type == "xdotool" && listening) { // xdotool	
+		// tokenize |
+		wxArrayString acmd = wxStringTokenize(cmd, "|");
+		for (size_t i=0; i < acmd.GetCount(); i++) {
+			if(acmd[i].Trim().Trim(false) != "") {
+				#ifdef DEBUG
+					wxPuts(type + ": " + acmd[i].Trim().Trim(false));
+				#endif
+				// get the function to call (key, type, ...)
+				wxArrayString xcmd = wxStringTokenize(acmd[i].Trim().Trim(false), " ");
+				if(xcmd[0] == "activate") {
+					Window *list;
+					int nwindows;
+					int i;
+					xdo_search_t search;
+					memset(&search, 0, sizeof(xdo_search_t));
+					search.max_depth = -1;
+					search.searchmask |= (SEARCH_NAME | SEARCH_CLASS | SEARCH_CLASSNAME);
+					search.winname = xcmd[1];
+					search.winclass = xcmd[1];
+					search.winclassname = xcmd[1];
+					xdo_window_search(xdo, &search, &list, &nwindows);
+					
+					if (nwindows) {
+						xdo_window_activate(xdo, list[0]);
+						xdo_window_wait_for_active(xdo, list[0], 1);
+						xdotoolwindowid = list[0];
 					}
-					/*
+					
+					for (i = 0; i < nwindows; i++) {
+						//xdo_window_activate(xdo, list[i]);
+						//xdo_window_wait_for_active(xdo, list[i], 1);
+						#ifdef DEBUG
+							wxPuts(wxString::Format("found window: %ld", list[i]));
+						#endif
+					}
+					if (nwindows == 0) {
+						#ifdef DEBUG
+							wxPuts("no window found");
+						#endif
+					}
+					if (list != NULL) {
+						free(list);
+					}
+				} else if(xcmd[0] == "sleep") {
+					double duration_usec;
+					duration_usec = atof(xcmd[1]) * (1000000);
+					usleep(duration_usec);	
+				} else if(xcmd[0] == "key") {
+						int usethiswindow;
+						if(xdotoolwindowid) {
+							usethiswindow = xdotoolwindowid;
+						} else {
+							usethiswindow = xdotoolwindow;
+						}
+						//xdo_active_mods_t *active_mods = NULL;
+						//active_mods = xdo_get_active_modifiers(xdo);
+						//xdo_clear_active_modifiers(xdo, usethiswindow, active_mods);
+						xdo_keysequence(xdo, usethiswindow, (const_cast<char*>((const char*)acmd[i].Trim().Trim(false).Mid(4).mb_str())), 6000);
+						//xdo_set_active_modifiers(xdo, usethiswindow, active_mods);
+						//xdo_free_active_modifiers(active_mods);
+				} else if(xcmd[0] == "keydown") {
+						int usethiswindow;
+						if(xdotoolwindowid) {
+							usethiswindow = xdotoolwindowid;
+						} else {
+							usethiswindow = xdotoolwindow;
+						}
+						//xdo_active_mods_t *active_mods = NULL;
+						//active_mods = xdo_get_active_modifiers(xdo);
+						//xdo_clear_active_modifiers(xdo, usethiswindow, active_mods);
+						xdo_keysequence_down(xdo, usethiswindow, (const_cast<char*>((const char*)acmd[i].Trim().Trim(false).Mid(8).mb_str())), 6000);
+						//xdo_set_active_modifiers(xdo, usethiswindow, active_mods);
+						//xdo_free_active_modifiers(active_mods);
+				} else if(xcmd[0] == "keyup") {					
+						int usethiswindow;
+						if(xdotoolwindowid) {
+							usethiswindow = xdotoolwindowid;
+						} else {
+							usethiswindow = xdotoolwindow;
+						}
+						//xdo_active_mods_t *active_mods = NULL;
+						//active_mods = xdo_get_active_modifiers(xdo);
+						//xdo_clear_active_modifiers(xdo, usethiswindow, active_mods);
+						xdo_keysequence_up(xdo, usethiswindow, (const_cast<char*>((const char*)acmd[i].Trim().Trim(false).Mid(6).mb_str())), 6000);
+						//xdo_set_active_modifiers(xdo, usethiswindow, active_mods);
+						//xdo_free_active_modifiers(active_mods);
+				} else if(xcmd[0] == "type") {
+					xdo_type(xdo, xdotoolwindow, (const_cast<char*>((const char*)acmd[i].Trim().Trim(false).Mid(5).mb_str())), xdotooldelay);
+				} else if(xcmd[0] == "mousemove_relative") {
+					xdo_mousemove_relative (xdo, wxAtoi(xcmd[1]), wxAtoi(xcmd[2]));
+				} else if(xcmd[0] == "click") {
+					int button = 1;
+					if(xcmd.GetCount() > 1) {
+						if(xcmd[1] == "middle") {
+							button = 2;
+						} else if(xcmd[1] == "right") {
+							button = 3;
+						}
+					}
+					xdo_click(xdo, xdotoolwindow, button);
+				} else if(xcmd[0] == "mousedown") {
+					int button = 1;
+					if(xcmd.GetCount() > 1) {
+						if(xcmd[1] == "middle") {
+							button = 2;
+						} else if(xcmd[1] == "right") {
+							button = 3;
+						}
+					}
+					xdo_mousedown (xdo, xdotoolwindow, button);
+				} else if(xcmd[0] == "mouseup") {
+					int button = 1;
+					if(xcmd.GetCount() > 1) {
+						if(xcmd[1] == "middle") {
+							button = 2;
+						} else if(xcmd[1] == "right") {
+							button = 3;
+						}
+					}
+					xdo_mouseup (xdo, xdotoolwindow, button);
+				} else if(xcmd[0] == "term") {
+					wxPuts(xcmd[1]);
 					wxString cp;
 					wxArrayString output, errors;
-					int code = wxExecute("xdotool "+acmd[i].Trim().Trim(false), output, errors);
+					int code = wxExecute(xcmd[1]);
 					if ( code != -1 )
 					{
 						if(!output.IsEmpty()) {
 							cp = output[0];
+							wxPuts(cp);
 						}
 					}
-					*/
-				}
-			}
-        } else if(type == "gnome" && listening) { // gnome
-			// tokenize |
-			wxArrayString acmd = wxStringTokenize(cmd, "|");
-			wxString command;
-			wxString defaultapp;
-			if(acmd[0].Trim().Trim(false) != "") {
-				command = acmd[0].Trim().Trim(false);
-			} else {
-				command = "";
-			}
-			if(acmd.GetCount() > 1) {
-				if(acmd[1].Trim().Trim(false) != "") {
-					defaultapp = acmd[1].Trim().Trim(false);
-				} else {
-					defaultapp = "";
-				}
-			} else {
-				defaultapp = "";
-			}
-			gnome_cr(command, defaultapp);
-			
-		} else if(type == "kiku") { // kiku internal command
-			if(cmd == "pause") {
-				listening = false;
-				pauser(true);
-			} else if(cmd == "unpause") {
-				pauser(false);
-				sb->SetStatusText("You can now speak.");
-			} else if(cmd == "activeword") {
-				Dob_activeword();
-			} else if(cmd == "quit") {
-				OnQuit();
-			}
-		} else if(type == "open sound control") { // liblo
-		
-		
-			if(!cb_oscenable->GetValue()) {
-				
-				wxMessageBox("Open Sound Control is not enabled (see Configuration tab)");
-				
-			} else {
-				
-				// tokenize (space)
-				wxArrayString acmd = wxStringTokenize(cmd, " ");
-				if(acmd.GetCount() == 1) {
-					
-					if (lo_send(osc, acmd[0].Trim().Trim(false), NULL) == -1) {
-						wxMessageBox(wxString::Format("Problem with Open Sound Control:\n%s", lo_address_errstr(osc)));
-					}
-					
-				} else if(acmd.GetCount() > 1) {
-					
-					
-					lo_bundle osc_bundle = lo_bundle_new(LO_TT_IMMEDIATE);
-					lo_message msg = lo_message_new();
-						
-					for (size_t i=1; i < acmd.GetCount(); i++) {
-						
-						// check for integer
-						wxString isint(acmd[i].Trim().Trim(false));
-						long valuei;
-						// check for float
-						wxString isfloat(acmd[i].Trim().Trim(false));
-						double valuef;
-						
-						if(isint.ToLong(&valuei)) {
-							lo_message_add_int32(msg, valuei);
-						} else if(isfloat.ToDouble(&valuef)) {
-							lo_message_add_float(msg, valuef);
-						} else {
-							if(acmd[i].Trim().Trim(false) == "TRUE") {
-								lo_message_add_true(msg);
-							} else if(acmd[i].Trim().Trim(false) == "FALSE") {
-								lo_message_add_false(msg);
-							} else {
-								lo_message_add_string(msg, acmd[i].Trim().Trim(false));
-							}
-						}
-
-					}
-					
-					lo_bundle_add_message(osc_bundle, acmd[0].Trim().Trim(false), msg);
-					if(lo_send_bundle(osc, osc_bundle) == -1) {
-						wxMessageBox(wxString::Format("Problem with Open Sound Control:\n%s", lo_address_errstr(osc)));
-					}
-					
-					lo_message_free(msg);
-					lo_bundle_free(osc_bundle);
-					
 				}
 			}
 		}
+	} else if(type == "gnome" && listening) { // gnome
+		// tokenize |
+		wxArrayString acmd = wxStringTokenize(cmd, "|");
+		wxString command;
+		wxString defaultapp;
+		if(acmd[0].Trim().Trim(false) != "") {
+			command = acmd[0].Trim().Trim(false);
+		} else {
+			command = "";
+		}
+		if(acmd.GetCount() > 1) {
+			if(acmd[1].Trim().Trim(false) != "") {
+				defaultapp = acmd[1].Trim().Trim(false);
+			} else {
+				defaultapp = "";
+			}
+		} else {
+			defaultapp = "";
+		}
+		gnome_cr(command, defaultapp);
+		
+	} else if(type == "kiku") { // kiku internal command
+		if(cmd == "pause") {
+			listening = false;
+			pauser(true);
+		} else if(cmd == "unpause") {
+			pauser(false);
+			sb->SetStatusText("You can now speak.");
+		} else if(cmd == "activeword") {
+			Dob_activeword();
+		} else if(cmd == "dictation") {
+			wxLaunchDefaultBrowser("http://www.workinprogress.ca/KIKU/dictation.php");
+			listening = false;
+			pauser(true);
+		} else if(cmd == "quit") {
+			OnQuit();
+		}
+	} else if(type == "open sound control") { // liblo
+	
+	
+		if(!cb_oscenable->GetValue()) {
+			
+			wxMessageBox("Open Sound Control is not enabled (see Configuration tab)");
+			
+		} else {
+			
+			// tokenize (space)
+			wxArrayString acmd = wxStringTokenize(cmd, " ");
+			if(acmd.GetCount() == 1) {
+				
+				if (lo_send(osc, acmd[0].Trim().Trim(false), NULL) == -1) {
+					wxMessageBox(wxString::Format("Problem with Open Sound Control:\n%s", lo_address_errstr(osc)));
+				}
+				
+			} else if(acmd.GetCount() > 1) {
+				
+				
+				lo_bundle osc_bundle = lo_bundle_new(LO_TT_IMMEDIATE);
+				lo_message msg = lo_message_new();
+					
+				for (size_t i=1; i < acmd.GetCount(); i++) {
+					
+					// check for integer
+					wxString isint(acmd[i].Trim().Trim(false));
+					long valuei;
+					// check for float
+					wxString isfloat(acmd[i].Trim().Trim(false));
+					double valuef;
+					
+					if(isint.ToLong(&valuei)) {
+						lo_message_add_int32(msg, valuei);
+					} else if(isfloat.ToDouble(&valuef)) {
+						lo_message_add_float(msg, valuef);
+					} else {
+						if(acmd[i].Trim().Trim(false) == "TRUE") {
+							lo_message_add_true(msg);
+						} else if(acmd[i].Trim().Trim(false) == "FALSE") {
+							lo_message_add_false(msg);
+						} else {
+							lo_message_add_string(msg, acmd[i].Trim().Trim(false));
+						}
+					}
+
+				}
+				
+				lo_bundle_add_message(osc_bundle, acmd[0].Trim().Trim(false), msg);
+				if(lo_send_bundle(osc, osc_bundle) == -1) {
+					wxMessageBox(wxString::Format("Problem with Open Sound Control:\n%s", lo_address_errstr(osc)));
+				}
+				
+				lo_message_free(msg);
+				lo_bundle_free(osc_bundle);
+				
+			}
+		}
+	}
 	return -1;
 }
 

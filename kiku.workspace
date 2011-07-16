@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CodeLite_Workspace Name="kiku" Database="./kiku.tags">
   <Project Name="kiku" Path="kiku/kiku.project" Active="Yes"/>
-  <Project Name="alsa" Path="plugin/alsa/alsa.project" Active="No"/>
   <Project Name="pa" Path="plugin/pulseaudio/pa.project" Active="No"/>
   <Project Name="pamonitor" Path="plugin/pulseaudiomon/pamonitor.project" Active="No"/>
-  <Project Name="pafullapi" Path="plugin/pulseaudiofullapi/pafullapi.project" Active="No"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Release" Selected="yes">
       <Project Name="pamonitor" ConfigName="Release"/>

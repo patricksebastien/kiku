@@ -47,6 +47,8 @@ private:
 		
 		// standard path
 		wxStandardPaths stdpath;
+		
+		void OnLink( wxHtmlLinkEvent& event );
 };
 
 #endif // V2CEDITOR_H

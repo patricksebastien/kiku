@@ -475,3 +475,9 @@ void V2cEditor::Onb_delete(wxCommandEvent& event)
 			
 	Destroy();
 }
+
+void V2cEditor::OnLink(wxHtmlLinkEvent& event) {
+	wxHtmlLinkInfo link;
+	link = event.GetLinkInfo();
+	wxLaunchDefaultBrowser(link.GetHref());
+}

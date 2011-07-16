@@ -117,7 +117,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	p_recognition->SetSizer( bSizer3 );
 	p_recognition->Layout();
 	bSizer3->Fit( p_recognition );
-	m_nb->AddPage( p_recognition, _("Recognition"), true );
+	m_nb->AddPage( p_recognition, _("Recognition"), false );
 	p_V2C = new wxPanel( m_nb, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer34;
 	bSizer34 = new wxBoxSizer( wxVERTICAL );
@@ -140,7 +140,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer371 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxArrayString pc_v2capplicationChoices;
-	pc_v2capplication = new wxChoice( p_v2capplication, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2capplicationChoices, 0 );
+	pc_v2capplication = new wxChoice( p_v2capplication, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2capplicationChoices, wxCB_SORT );
 	pc_v2capplication->SetSelection( 0 );
 	bSizer371->Add( pc_v2capplication, 1, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxLEFT, 5 );
 	
@@ -173,7 +173,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer372 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxArrayString pc_v2cshortcutChoices;
-	pc_v2cshortcut = new wxChoice( p_v2cshortcut, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2cshortcutChoices, 0 );
+	pc_v2cshortcut = new wxChoice( p_v2cshortcut, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2cshortcutChoices, wxCB_SORT );
 	pc_v2cshortcut->SetSelection( 0 );
 	bSizer372->Add( pc_v2cshortcut, 1, wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -595,7 +595,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	bSizer41->Add( m_staticText351, 0, wxALL, 5 );
 	
-	wxString c_driverChoices[] = { _("PulseAudio"), _("PulseAudio (monitor)") };
+	wxString c_driverChoices[] = { _("PulseAudio"), _("PulseAudio (monitor)"), _("Alsa") };
 	int c_driverNChoices = sizeof( c_driverChoices ) / sizeof( wxString );
 	c_driver = new wxChoice( p_audio, wxID_ANY, wxDefaultPosition, wxDefaultSize, c_driverNChoices, c_driverChoices, 0 );
 	c_driver->SetSelection( 0 );
@@ -709,7 +709,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	p_audio->SetSizer( bSizer402 );
 	p_audio->Layout();
 	bSizer402->Fit( p_audio );
-	m_nb->AddPage( p_audio, _("Audio"), false );
+	m_nb->AddPage( p_audio, _("Audio"), true );
 	p_language = new wxPanel( m_nb, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer291;
 	bSizer291 = new wxBoxSizer( wxHORIZONTAL );
