@@ -148,6 +148,7 @@ class MainFrameBase : public wxFrame
 		wxStaticText* m_staticText28;
 		wxTextCtrl* tc_engpenalty;
 		
+		wxStaticText* m_staticText48;
 		wxButton* b_restartjulius;
 		wxPanel* p_audio;
 		wxStaticText* m_staticText351;

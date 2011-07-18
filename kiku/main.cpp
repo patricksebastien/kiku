@@ -2,9 +2,6 @@
  * Author: Patrick Sébastien
  * http://www.workinprogress.ca/kiku
  * 
- * add version somewhere
- * upgrade from 1 to 2 = preferences asbool bug
- * 
  * 0.2
  * added alsa support
  * added liblo (open sound control)
@@ -31,7 +28,7 @@
  * tts
  * 
  * // NOTE
- * when updating this application #define VERSION "x" & update make_deb version
+ * when updating this application #define VERSION "x" & update make_deb version and gui.fbp - engine
  * each time touch gui: 145 & 178 (pc_v2capplication / pc_v2cshortcut) = wxCB_SORT
  * wxjson (include) - if new: jsonval.cpp in wxJSONValue::Item() //wxLogTrace( traceMask, _T("(%s) actual object: %s"), __PRETTY_FUNCTION__, GetInfo().c_str()); (fix bug in 64bit)
  * when updating xdotool - copy *.h to kiku

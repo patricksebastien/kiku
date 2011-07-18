@@ -573,6 +573,10 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	bSizer27->Add( 0, 0, 1, wxEXPAND, 5 );
 	
+	m_staticText48 = new wxStaticText( p_engine, wxID_ANY, _("Version: 0.2"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText48->Wrap( -1 );
+	bSizer27->Add( m_staticText48, 0, wxALIGN_RIGHT|wxTOP|wxRIGHT|wxLEFT, 5 );
+	
 	b_restartjulius = new wxButton( p_engine, wxID_ANY, _("Restart Engine"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer27->Add( b_restartjulius, 0, wxALL|wxALIGN_RIGHT, 5 );
 	
