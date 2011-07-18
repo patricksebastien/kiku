@@ -2,6 +2,9 @@
  * Author: Patrick Sébastien
  * http://www.workinprogress.ca/kiku
  * 
+ * add version somewhere
+ * upgrade from 1 to 2 = preferences asbool bug
+ * 
  * 0.2
  * added alsa support
  * added liblo (open sound control)
@@ -2991,11 +2994,21 @@ void MainFrame::readpreference()
 	}
 	
 	// liblo
-	cb_oscenable->SetValue(rootpref["osc_enable"].AsBool());
-	tc_oschost->ChangeValue(rootpref["osc_host"].AsString());
-	sp_oscport->SetValue(rootpref["osc_port"].AsInt());
-	c_oscprotocol->SetStringSelection(rootpref["osc_protocol"].AsString());
-	cb_oscrecognition->SetValue(rootpref["osc_recognition"].AsBool());
+	// update v1 to v2
+	if(rootpref["osc_enable"].IsNull()) {
+		cb_oscenable->SetValue(0);
+		tc_oschost->ChangeValue("localhost");
+		sp_oscport->SetValue(9997);
+		c_oscprotocol->SetStringSelection("UDP");
+		cb_oscrecognition->SetValue(0);
+		writepreference();
+	} else {
+		cb_oscenable->SetValue(rootpref["osc_enable"].AsBool());
+		tc_oschost->ChangeValue(rootpref["osc_host"].AsString());
+		sp_oscport->SetValue(rootpref["osc_port"].AsInt());
+		c_oscprotocol->SetStringSelection(rootpref["osc_protocol"].AsString());
+		cb_oscrecognition->SetValue(rootpref["osc_recognition"].AsBool());
+	}
 	
 	if(!cb_oscenable->GetValue()) {
 		sp_oscport->Enable(0);
