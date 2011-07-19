@@ -6,7 +6,7 @@
     <TabInfo>
       <wxString Value="/home/psc/11h11/code/kiku/kiku/main.cpp" Name="FileName"/>
       <int Value="0" Name="FirstVisibleLine"/>
-      <int Value="2" Name="CurrentLine"/>
+      <int Value="12" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>
   </TabInfoArray>
@@ -14,7 +14,7 @@
     <long Value="1" Name="Count"/>
     <SerializedObject Name="Breakpoint0">
       <wxString Value="/home/psc/11h11/code/kiku/kiku/main.cpp" Name="file"/>
-      <int Value="2532" Name="lineno"/>
+      <int Value="2533" Name="lineno"/>
       <wxString Value="" Name="function_name"/>
       <wxString Value="" Name="memory_address"/>
       <int Value="1" Name="bp_type"/>
