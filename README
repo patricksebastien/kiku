@@ -24,7 +24,7 @@ open src/unix/utilsunx.cpp:
 //data->exitcode = DoWaitForChild(data->pid, WNOHANG);
 data->exitcode = DoWaitForChild(data->pid);
 
-./configure --prefix=~/src/wx291svnrelease --enable-unicode --disable-shared --without-gnomeprint --without-gtkprint
+./configure --prefix=/home/you/src/wx291svnrelease --enable-unicode --disable-shared --without-gnomeprint --without-gtkprint
 make -j3
 make install
 
@@ -48,7 +48,7 @@ http://groups.google.com/group/xdotool-users/browse_thread/thread/95d36fd1da9b7c
 
 4) Download & Install Julius
 cvs -z3 -d:pserver:anonymous@cvs.sourceforge.jp:/cvsroot/julius co julius4
-./configure --prefix=~/src/juliuscvs --with-mictype=alsa --enable-setup=standard --enable-factor2 --enable-wpair --enable-wpair-nlimit --without-sndfile --disable-pthread
+./configure --prefix=/home/you/src/juliuscvs --with-mictype=alsa --enable-setup=standard --enable-factor2 --enable-wpair --enable-wpair-nlimit --without-sndfile --disable-pthread
 make -j3 && make install
 
 

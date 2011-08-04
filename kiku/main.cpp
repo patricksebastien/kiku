@@ -2,6 +2,13 @@
  * Author: Patrick Sébastien
  * http://www.workinprogress.ca/kiku
  * 
+ * 0.3
+ * fix taskbar message appears you don't support taskbar...
+ * add mousemove
+ * limit the refresh rate of audio meter
+ * download Acoustic Model using cloud.github.com
+ * added new word in English dictionary
+ * 
  * 0.2
  * added alsa support
  * added liblo (open sound control)
@@ -199,16 +206,21 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	LoadPngIcon(recognized_png, sizeof(recognized_png), 7); // recognized word
 	LoadPngIcon(need_png, sizeof(need_png), 8); // word need a pre-trig
 	
+	int tries = 0;
 	// taskbar
-	if ( !wxTaskBarIcon::IsAvailable() )
+	while ( !wxTaskBarIcon::IsAvailable() && tries < 10)
     {
-        wxMessageBox
+		tries++;
+		sleep(1);
+    }
+	if(tries == 10) {
+		wxMessageBox
         (
             "There appears to be no system tray support in your current environment.",
             "Warning",
             wxOK | wxICON_EXCLAMATION
         );
-    }
+	}
     m_taskBarIcon = new MainTaskBarIcon(this);
     icontb.CopyFromBitmap( *iconpng[0] );
 	if (!m_taskBarIcon->SetIcon( icontb )) {
@@ -349,8 +361,13 @@ void MainFrame::gnome_cr(const gchar * command, const gchar * defaultApp)
 // Libpd
 ////////////////////////////////////////////////////////////////////////////////
 void MainFrame::libpd_prvu(wxCommandEvent& event) {
-	g_englevel->SetValue(event.GetInt());
-	st_db->SetLabel(wxString::Format("%idB", event.GetInt()));
+	static int interval = 0;
+	if(interval > 5) {
+		g_englevel->SetValue(event.GetInt());
+		st_db->SetLabel(wxString::Format("%idB", event.GetInt()));
+		interval = 0;
+	}
+	interval++;
 }
 
 void MainFrame::Onc_driver(wxCommandEvent& event)
@@ -1580,14 +1597,18 @@ bool MainFrame::languagedownload() {
 	// where to download the language
 	wxString server, tgz;
 	if(c_language->GetStringSelection() == "English 14k [VoxForge]") {
-		server = "www.repository.voxforge1.org";
-		tgz = "/downloads/Nightly_Builds/current/HTK_AcousticModel-2010-12-16_16kHz_16bit_MFCC_O_D.tgz";
+		//server = "voxforge.com";
+		//tgz = "/downloads/Nightly_Builds/current/HTK_AcousticModel-2010-12-16_16kHz_16bit_MFCC_O_D.tgz";
+		server = "cloud.github.com";
+		tgz = "/downloads/patricksebastien/kiku/EnglishAM14k.tar.gz";
 	} else if(c_language->GetStringSelection() == "Japanese 20k [Julius]") {
 		server = "julius.sourceforge.jp";
 		tgz = "/archive/japanese-models.tar.gz";
 	} else if(c_language->GetStringSelection() == "Japanese 60k [Julius]") {
-		server = "iij.dl.sourceforge.jp";
-		tgz = "/julius/51158/dictation-kit-v4.1.tar.gz";
+		//server = "iij.dl.sourceforge.jp";
+		//tgz = "/julius/51158/dictation-kit-v4.1.tar.gz";
+		server = "cloud.github.com";
+		tgz = "/downloads/patricksebastien/kiku/JapaneseAM60k.tar.gz";
 	}
 	
 	// 1) download
@@ -1667,8 +1688,10 @@ bool MainFrame::languagedownload() {
 			wxRemoveFile(GetCurrentWorkingDirectory()+"/language/dicteucjp");
 		}
 	} else if(c_language->GetStringSelection() == "Japanese 60k [Julius]") {
+
 		//mv file
-		wxRenameFile(GetCurrentWorkingDirectory()+"/language/dictation-kit-v4.1/model/lang_m/web.60k.htkdic", GetCurrentWorkingDirectory()+"/language/dicteucjp");
+		wxRenameFile(GetCurrentWorkingDirectory()+"/language/JapaneseAM60k/lang_m/web.60k.htkdic", GetCurrentWorkingDirectory()+"/language/dicteucjp");
+		
 		//convert
 		// check for iconv
 		wxString cp;
@@ -1685,7 +1708,7 @@ bool MainFrame::languagedownload() {
 		} else {
 			// using iconv to convert from euc-jp to utf8
 			wxArrayString outputic, errorsic;
-			wxExecute("iconv --from-code=EUC-JP --to-code=UTF8 -o "+GetCurrentWorkingDirectory()+"/language/dict "+GetCurrentWorkingDirectory()+"/language/dicteucjp", outputic, errorsic);
+			wxExecute("iconv --from-code=SHIFT_JIS --to-code=UTF8 -o "+GetCurrentWorkingDirectory()+"/language/dict "+GetCurrentWorkingDirectory()+"/language/dicteucjp", outputic, errorsic);
 			wxRemoveFile(GetCurrentWorkingDirectory()+"/language/dicteucjp");
 		}
 	}
@@ -1723,8 +1746,8 @@ bool MainFrame::languagedownload() {
 		} else if(c_language->GetStringSelection() == "Japanese 60k [Julius]") {
 			myFile.Write("-w dictionary\n");
 			myFile.Write("-wsil silB silE NULL\n");
-			myFile.Write("-h dictation-kit-v4.1/model/phone_m/hmmdefs_ptm_gid.binhmm\n");
-			myFile.Write("-hlist dictation-kit-v4.1/model/phone_m/logicalTri\n");
+			myFile.Write("-h JapaneseAM60k/phone_m/hmmdefs_ptm_gid.binhmm\n");
+			myFile.Write("-hlist JapaneseAM60k/phone_m/logicalTri\n");
 			myFile.Write("-spmodel \"sp\"\n");	
 		}
 		myFile.Write("-gprune safe\n");
@@ -3423,6 +3446,8 @@ long MainFrame::Hand(wxString type, wxString cmd)
 					xdo_type(xdo, xdotoolwindow, (const_cast<char*>((const char*)acmd[i].Trim().Trim(false).Mid(5).mb_str())), xdotooldelay);
 				} else if(xcmd[0] == "mousemove_relative") {
 					xdo_mousemove_relative (xdo, wxAtoi(xcmd[1]), wxAtoi(xcmd[2]));
+				} else if(xcmd[0] == "mousemove") {
+					xdo_mousemove (xdo, wxAtoi(xcmd[1]), wxAtoi(xcmd[2]), xdotoolwindow);
 				} else if(xcmd[0] == "click") {
 					int button = 1;
 					if(xcmd.GetCount() > 1) {

@@ -6,7 +6,7 @@
 #ifndef __main__
 #define __main__
 
-#define VERSION "2"
+#define VERSION "3"
 
 // main wxWidgets header file
 #include <wx/wx.h>
