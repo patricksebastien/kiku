@@ -269,6 +269,7 @@ bool V2cApplication::save()
 		wxArrayString pretrigger;
 		wxArrayString trigger;
 		wxArrayString command;
+		wxArrayString comment;
 		wxArrayString type;
 		
 		wxFileInputStream input(stdpath.GetUserDataDir()+"/v2c/"+tc_processname->GetValue()+".v2a");
@@ -287,6 +288,7 @@ bool V2cApplication::save()
 				pretrigger.Add( modules[i]["Pretrigger"].AsString() );
 				trigger.Add( modules[i]["Trigger"].AsString() );
 				command.Add( modules[i]["Command"].AsString() );
+				comment.Add( modules[i]["Comment"].AsString() );
 				type.Add( modules[i]["Type"].AsString() );
 			}
 			
@@ -297,6 +299,7 @@ bool V2cApplication::save()
 				actions["Pretrigger"] = pretrigger.Item(i);
 				actions["Trigger"] = trigger.Item(i);
 				actions["Command"] = command.Item(i);
+				actions["Comment"] = comment.Item(i);
 				actions["Type"] = type.Item(i);
 				root["Actions"].Append(actions);	
 			}

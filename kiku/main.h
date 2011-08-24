@@ -6,7 +6,7 @@
 #ifndef __main__
 #define __main__
 
-#define VERSION "3"
+#define VERSION "4"
 
 // main wxWidgets header file
 #include <wx/wx.h>
@@ -114,6 +114,7 @@ class MainApp : public wxApp
 {
 	public:
 		virtual bool OnInit();
+		wxLocale* m_locale;
 };
 
 // declare global static function wxGetApp()

@@ -20,7 +20,7 @@ gui_v2ceditor::gui_v2ceditor( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 	
 	wxFlexGridSizer* fgSizer1;
-	fgSizer1 = new wxFlexGridSizer( 5, 2, 0, 0 );
+	fgSizer1 = new wxFlexGridSizer( 6, 2, 0, 0 );
 	fgSizer1->AddGrowableCol( 1 );
 	fgSizer1->SetFlexibleDirection( wxHORIZONTAL );
 	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
@@ -66,6 +66,13 @@ gui_v2ceditor::gui_v2ceditor( wxWindow* parent, wxWindowID id, const wxString& t
 	c_type->SetMinSize( wxSize( 300,-1 ) );
 	
 	fgSizer1->Add( c_type, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	
+	m_staticText61 = new wxStaticText( this, wxID_ANY, _("Comment:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText61->Wrap( -1 );
+	fgSizer1->Add( m_staticText61, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	tc_comment = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer1->Add( tc_comment, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	bSizer3->Add( fgSizer1, 1, wxALL|wxEXPAND, 5 );
 	

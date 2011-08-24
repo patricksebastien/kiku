@@ -10,7 +10,7 @@
 
 
 ## Copy files to the fakeroot directory structure
-cur_rev=3
+cur_rev=4
 arch=`uname -m`
 
 if [ "${arch}" = "i686" ]; then

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 11 2011)
+// C++ code generated with wxFormBuilder (version Jun  6 2011)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -21,7 +21,7 @@ gui_activeword::gui_activeword( wxWindow* parent, wxWindowID id, const wxString&
 	wxBoxSizer* bSizer4;
 	bSizer4 = new wxBoxSizer( wxVERTICAL );
 	
-	listctrl_launcher = new wxListCtrl( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_VRULES );
+	listctrl_launcher = new wxListCtrl( m_panel3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_AUTOARRANGE|wxLC_REPORT|wxLC_VRULES );
 	bSizer4->Add( listctrl_launcher, 1, wxALL|wxEXPAND, 5 );
 	
 	b_applicationrefresh11 = new wxButton( m_panel3, wxID_ANY, _("Refresh"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -35,7 +35,7 @@ gui_activeword::gui_activeword( wxWindow* parent, wxWindowID id, const wxString&
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
 	
-	listctrl_app = new wxListCtrl( m_panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_VRULES );
+	listctrl_app = new wxListCtrl( m_panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_HRULES|wxLC_REPORT|wxLC_SORT_ASCENDING|wxLC_VRULES );
 	bSizer2->Add( listctrl_app, 1, wxALL|wxEXPAND, 5 );
 	
 	b_applicationrefresh = new wxButton( m_panel1, wxID_ANY, _("Refresh"), wxDefaultPosition, wxDefaultSize, 0 );

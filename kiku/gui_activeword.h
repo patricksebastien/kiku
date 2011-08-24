@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Apr 11 2011)
+// C++ code generated with wxFormBuilder (version Jun  6 2011)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -53,7 +53,7 @@ class gui_activeword : public wxDialog
 	
 	public:
 		
-		gui_activeword( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Active word"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 640,480 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+		gui_activeword( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Active word"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 640,480 ), long style = wxCAPTION|wxCLOSE_BOX|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER|wxSYSTEM_MENU ); 
 		~gui_activeword();
 	
 };

@@ -2,6 +2,11 @@
  * Author: Patrick Sébastien
  * http://www.workinprogress.ca/kiku
  * 
+ * 0.4
+ * fix locale
+ * add comment field in V2C Editor
+ * alphabetical ordering in Active word
+ * 
  * 0.3
  * fix taskbar message appears you don't support taskbar...
  * add mousemove
@@ -29,7 +34,6 @@
  * 
  * // IF REQUESTED
  * single word or grammar mode checkbox (http://julius.sourceforge.jp/en_index.php?q=en_grammar.html)
- * alsa plugin stripped invalid sample = libpd is causing the problem
  * automatic unpause using volume threshold will be fix if no more julius threading problem (no meter when pause)
  * embed mkss, mkhmmbin...
  * tts
@@ -68,6 +72,7 @@ wxArrayString noti; // notification
 wxArrayString pretrigger;
 wxArrayString trigger;
 wxArrayString command;
+wxArrayString comment;
 wxArrayString type; // xdotool, shell
 wxArrayString process; // processname
 wxArrayString v2c; // shortcut, application, launcher
@@ -108,6 +113,19 @@ void rfloat(const char *s, float myd) {
 ////////////////////////////////////////////////////////////////////////////////
 bool MainApp::OnInit()
 {
+	// locale
+	m_locale = new wxLocale;
+	int sys_lang = wxLocale::GetSystemLanguage();
+    if( sys_lang != wxLANGUAGE_DEFAULT )
+    {
+		m_locale->Init(sys_lang);         // set custom locale
+		m_locale->AddCatalogLookupPathPrefix("locale");   // set "locale" prefix
+		m_locale->AddCatalog("wxproton");            // our private domain
+		m_locale->AddCatalog("wxstd");            // wx common domain is default
+		// Restore "C" numeric locale
+		setlocale(LC_NUMERIC, "C");
+    }
+	
 	// web update / download language
 	wxSocketBase::Initialize();
 	
@@ -208,12 +226,12 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	
 	int tries = 0;
 	// taskbar
-	while ( !wxTaskBarIcon::IsAvailable() && tries < 10)
+	while ( !wxTaskBarIcon::IsAvailable() && tries < 20)
     {
 		tries++;
 		sleep(1);
     }
-	if(tries == 10) {
+	if(tries == 20) {
 		wxMessageBox
         (
             "There appears to be no system tray support in your current environment.",
@@ -813,6 +831,7 @@ bool MainFrame::getv2c(wxString v2c)
 			wxArrayString pretrigger;
 			wxArrayString trigger;
 			wxArrayString command;
+			wxArrayString comment;
 			wxArrayString type;
 			
 			if(wxFileExists(GetCurrentWorkingDirectory()+"/v2c/shortcut.v2s")) {
@@ -831,6 +850,7 @@ bool MainFrame::getv2c(wxString v2c)
 						pretrigger.Add( modules[i]["Pretrigger"].AsString() );
 						trigger.Add( modules[i]["Trigger"].AsString() );
 						command.Add( modules[i]["Command"].AsString() );
+						comment.Add( modules[i]["Comment"].AsString() );
 						type.Add( modules[i]["Type"].AsString() );
 					}
 				}
@@ -856,6 +876,7 @@ bool MainFrame::getv2c(wxString v2c)
 			pretrigger.Add( modulesshortcut[0]["Pretrigger"].AsString() );
 			trigger.Add( modulesshortcut[0]["Trigger"].AsString() );
 			command.Add( modulesshortcut[0]["Command"].AsString() );
+			comment.Add( modulesshortcut[0]["Comment"].AsString() );
 			type.Add( modulesshortcut[0]["Type"].AsString() );
 			// write shortcut.v2s
 			wxJSONValue root;
@@ -866,6 +887,7 @@ bool MainFrame::getv2c(wxString v2c)
 				actions["Pretrigger"] = pretrigger.Item(i);
 				actions["Trigger"] = trigger.Item(i);
 				actions["Command"] = command.Item(i);
+				actions["Comment"] = comment.Item(i);
 				actions["Type"] = type.Item(i);
 				root["Actions"].Append(actions);	
 			}
@@ -1169,6 +1191,7 @@ void MainFrame::v2cloading()
 	pretrigger.Empty();
 	trigger.Empty();
 	command.Empty();
+	comment.Empty();
 	type.Empty();
 	process.Empty();
 	v2c.Empty();
@@ -1194,6 +1217,7 @@ void MainFrame::v2cloading()
 					pretrigger.Add( modules[i]["Pretrigger"].AsString().Upper() );
 					trigger.Add( modules[i]["Trigger"].AsString().Upper() );
 					command.Add( modules[i]["Command"].AsString() );
+					comment.Add( modules[i]["Comment"].AsString() );
 					type.Add( modules[i]["Type"].AsString() );
 					v2c.Add("v2s");
 					process.Add("");
@@ -1225,6 +1249,7 @@ void MainFrame::v2cloading()
 						pretrigger.Add( modules[i]["Pretrigger"].AsString().Upper() );
 						trigger.Add( modules[i]["Trigger"].AsString().Upper() );
 						command.Add( modules[i]["Command"].AsString() );
+						comment.Add( modules[i]["Comment"].AsString() );
 						type.Add( modules[i]["Type"].AsString() );
 						v2c.Add("v2a");
 						process.Add(root["ProcessName"].AsString());
@@ -1235,6 +1260,7 @@ void MainFrame::v2cloading()
 				pretrigger.Add( root["Launcher"]["Pretrigger"].AsString().Upper() );
 				trigger.Add( root["Launcher"]["Trigger"].AsString().Upper() );
 				command.Add( root["Launcher"]["Command"].AsString() );
+				comment.Add( root["Launcher"]["Comment"].AsString() );
 				type.Add( root["Launcher"]["Type"].AsString() );
 				process.Add( root["ProcessName"].AsString() );
 				v2c.Add("launcher");
@@ -1263,6 +1289,7 @@ void MainFrame::v2cloading()
 					pretrigger.Add( root["Launcher"]["Pretrigger"].AsString().Upper() );
 					trigger.Add( root["Launcher"]["Trigger"].AsString().Upper() );
 					command.Add( root["Launcher"]["Command"].AsString() );
+					comment.Add( root["Launcher"]["Comment"].AsString() );
 					type.Add( root["Launcher"]["Type"].AsString() );
 					process.Add( root["ProcessName"].AsString() );
 					v2c.Add("launcher");
@@ -1317,6 +1344,7 @@ void MainFrame::v2cloading(wxString file, long pid)
 				pretrigger.Add( modules[i]["Pretrigger"].AsString().Upper() );
 				trigger.Add( modules[i]["Trigger"].AsString().Upper() );
 				command.Add( modules[i]["Command"].AsString() );
+				comment.Add( modules[i]["Comment"].AsString() );
 				process.Add( root["ProcessName"].AsString() );
 				type.Add( modules[i]["Type"].AsString() );
 				v2c.Add("v2a");
@@ -1516,6 +1544,8 @@ void MainFrame::OnMonitorTimer(wxTimerEvent& event)
                 trigger.Insert("", pidra[pid], pidcount[pid]);
                 command.RemoveAt(pidra[pid], pidcount[pid]);
                 command.Insert("", pidra[pid], pidcount[pid]);
+				comment.RemoveAt(pidra[pid], pidcount[pid]);
+                comment.Insert("", pidra[pid], pidcount[pid]);
                 process.RemoveAt(pidra[pid], pidcount[pid]);
                 process.Insert("", pidra[pid], pidcount[pid]);
                 type.RemoveAt(pidra[pid], pidcount[pid]);
@@ -1550,6 +1580,8 @@ void Process::OnTerminate(int pid, int status)
 				trigger.Insert("", pidra[pid], pidcount[pid]);
 				command.RemoveAt(pidra[pid], pidcount[pid]);
 				command.Insert("", pidra[pid], pidcount[pid]);
+				comment.RemoveAt(pidra[pid], pidcount[pid]);
+				comment.Insert("", pidra[pid], pidcount[pid]);
 				process.RemoveAt(pidra[pid], pidcount[pid]);
 				process.Insert("", pidra[pid], pidcount[pid]);
 				type.RemoveAt(pidra[pid], pidcount[pid]);

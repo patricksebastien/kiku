@@ -48,6 +48,7 @@ V2cEditor::V2cEditor(wxWindow *parent, wxString language, wxString v2a, V2cAppli
 	wxArrayString pretrigger;
 	wxArrayString trigger;
 	wxArrayString command;
+	wxArrayString comment;
 	wxArrayString type;
 	
 	wxFileInputStream input(stdpath.GetUserDataDir()+"/v2c/"+g_v2a+".v2a");
@@ -69,6 +70,7 @@ V2cEditor::V2cEditor(wxWindow *parent, wxString language, wxString v2a, V2cAppli
 			tc_pretrig->SetValue(modules[i]["Pretrigger"].AsString());
 			tc_trig->SetValue(modules[i]["Trigger"].AsString());
 			tc_command->SetValue(modules[i]["Command"].AsString());
+			tc_comment->SetValue(modules[i]["Comment"].AsString());
 			c_type->SetStringSelection(modules[i]["Type"].AsString());
 		}
 	}
@@ -92,6 +94,7 @@ V2cEditor::V2cEditor(MainFrame *parent, wxString language, wxString v2a, wxStrin
 	wxArrayString pretrigger;
 	wxArrayString trigger;
 	wxArrayString command;
+	wxArrayString comment;
 	wxArrayString type;
 	
 	wxFileInputStream input(stdpath.GetUserDataDir()+"/v2c/shortcut.v2s");
@@ -113,6 +116,7 @@ V2cEditor::V2cEditor(MainFrame *parent, wxString language, wxString v2a, wxStrin
 			tc_pretrig->SetValue(modules[i]["Pretrigger"].AsString());
 			tc_trig->SetValue(modules[i]["Trigger"].AsString());
 			tc_command->SetValue(modules[i]["Command"].AsString());
+			tc_comment->SetValue(modules[i]["Comment"].AsString());
 			c_type->SetStringSelection(modules[i]["Type"].AsString());
 		}
 	}
@@ -171,6 +175,7 @@ bool V2cEditor::save()
 				wxArrayString pretrigger;
 				wxArrayString trigger;
 				wxArrayString command;
+				wxArrayString comment;
 				wxArrayString type;
 				
 				wxString fileinput;
@@ -194,6 +199,7 @@ bool V2cEditor::save()
 						pretrigger.Add( modules[i]["Pretrigger"].AsString() );
 						trigger.Add( modules[i]["Trigger"].AsString() );
 						command.Add( modules[i]["Command"].AsString() );
+						comment.Add( modules[i]["Comment"].AsString() );
 						type.Add( modules[i]["Type"].AsString() );
 					}
 				}
@@ -210,6 +216,7 @@ bool V2cEditor::save()
 				actions["Pretrigger"] = tc_pretrig->GetValue();
 				actions["Trigger"] = tc_trig->GetValue();
 				actions["Command"] = tc_command->GetValue();
+				actions["Comment"] = tc_comment->GetValue();
 				actions["Type"] = c_type->GetStringSelection();
 				root["Actions"].Append(actions);
 				
@@ -220,6 +227,7 @@ bool V2cEditor::save()
 					actions["Pretrigger"] = pretrigger.Item(i);
 					actions["Trigger"] = trigger.Item(i);
 					actions["Command"] = command.Item(i);
+					actions["Comment"] = comment.Item(i);
 					actions["Type"] = type.Item(i);
 					root["Actions"].Append(actions);	
 				}
@@ -266,6 +274,7 @@ bool V2cEditor::save()
 				actions["Pretrigger"] = tc_pretrig->GetValue();
 				actions["Trigger"] = tc_trig->GetValue();
 				actions["Command"] = tc_command->GetValue();
+				actions["Comment"] = tc_comment->GetValue();
 				actions["Type"] = c_type->GetStringSelection();
 				root["Actions"].Append(actions);		
 
@@ -298,6 +307,7 @@ bool V2cEditor::save()
 				wxArrayString pretrigger;
 				wxArrayString trigger;
 				wxArrayString command;
+				wxArrayString comment;
 				wxArrayString type;
 				wxArrayString triggerunique;
 
@@ -326,12 +336,14 @@ bool V2cEditor::save()
 							pretrigger.Add(tc_pretrig->GetValue());
 							trigger.Add(tc_trig->GetValue());
 							command.Add(tc_command->GetValue());
+							comment.Add(tc_comment->GetValue());
 							type.Add(c_type->GetStringSelection());
 						} else {
 							noti.Add( modules[i]["Notification"].AsString() );
 							pretrigger.Add( modules[i]["Pretrigger"].AsString() );
 							trigger.Add( modules[i]["Trigger"].AsString() );
 							command.Add( modules[i]["Command"].AsString() );
+							comment.Add( modules[i]["Comment"].AsString() );
 							type.Add( modules[i]["Type"].AsString() );
 						}
 					}
@@ -350,6 +362,7 @@ bool V2cEditor::save()
 					actions["Pretrigger"] = pretrigger.Item(i);
 					actions["Trigger"] = trigger.Item(i);
 					actions["Command"] = command.Item(i);
+					actions["Comment"] = comment.Item(i);
 					actions["Type"] = type.Item(i);
 					root["Actions"].Append(actions);	
 				}
@@ -405,6 +418,7 @@ void V2cEditor::Onb_delete(wxCommandEvent& event)
 	wxArrayString pretrigger;
 	wxArrayString trigger;
 	wxArrayString command;
+	wxArrayString comment;
 	wxArrayString type;
 	
 	wxString fileinput;
@@ -432,6 +446,7 @@ void V2cEditor::Onb_delete(wxCommandEvent& event)
 			pretrigger.Add( modules[i]["Pretrigger"].AsString() );
 			trigger.Add( modules[i]["Trigger"].AsString() );
 			command.Add( modules[i]["Command"].AsString() );
+			comment.Add( modules[i]["Comment"].AsString() );
 			type.Add( modules[i]["Type"].AsString() );
 		}
 	}
@@ -449,6 +464,7 @@ void V2cEditor::Onb_delete(wxCommandEvent& event)
 		actions["Pretrigger"] = pretrigger.Item(i);
 		actions["Trigger"] = trigger.Item(i);
 		actions["Command"] = command.Item(i);
+		actions["Comment"] = comment.Item(i);
 		actions["Type"] = type.Item(i);
 		root["Actions"].Append(actions);	
 	}

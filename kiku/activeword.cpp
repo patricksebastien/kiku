@@ -6,6 +6,15 @@
 #include "activeword.h"
 #include "main.h"
 
+int wxCALLBACK MyCompareFunction(wxIntPtr item1, wxIntPtr item2, wxIntPtr WXUNUSED(sortData))
+{
+	extern wxArrayString trigger;
+	wxString a, b;
+	a = trigger.Item(item1);
+	b = trigger.Item(item2);
+	return a.CmpNoCase(b);
+}
+
 ActiveWord::ActiveWord( wxWindow* parent ) : gui_activeword( parent )
 {
 	m_parent = (MainFrame *)parent;
@@ -28,25 +37,29 @@ ActiveWord::~ActiveWord()
 void ActiveWord::initlist()
 {	
 	// shortcut
-	listctrl_shortcut->InsertColumn(0, "Command");
+	listctrl_shortcut->InsertColumn(0, "Trigger");
 	listctrl_shortcut->InsertColumn(1, "Pre-trigger");
-	listctrl_shortcut->InsertColumn(2, "Trigger");
+	listctrl_shortcut->InsertColumn(2, "Command");
+	listctrl_shortcut->InsertColumn(3, "Comment");
 	listctrl_shortcut->SetColumnWidth( 0, WIDTH );
     listctrl_shortcut->SetColumnWidth( 1, WIDTH );
     listctrl_shortcut->SetColumnWidth( 2, WIDTH );
+	listctrl_shortcut->SetColumnWidth( 3, WIDTH );
 	
 	// application
-	listctrl_app->InsertColumn(0, "ProcessName");
+	listctrl_app->InsertColumn(0, "Trigger");
 	listctrl_app->InsertColumn(1, "Pre-trigger");
-	listctrl_app->InsertColumn(2, "Trigger");
+	listctrl_app->InsertColumn(2, "ProcessName");
+	listctrl_app->InsertColumn(3, "Comment");
 	listctrl_app->SetColumnWidth( 0, WIDTH );
     listctrl_app->SetColumnWidth( 1, WIDTH );
     listctrl_app->SetColumnWidth( 2, WIDTH );
+	listctrl_app->SetColumnWidth( 3, WIDTH );
 	
 	// launcher
-	listctrl_launcher->InsertColumn(0, "ProcessName");
+	listctrl_launcher->InsertColumn(0, "Trigger");
 	listctrl_launcher->InsertColumn(1, "Pre-trigger");
-	listctrl_launcher->InsertColumn(2, "Trigger");
+	listctrl_launcher->InsertColumn(2, "ProcessName");
 	listctrl_launcher->SetColumnWidth( 0, WIDTH );
     listctrl_launcher->SetColumnWidth( 1, WIDTH );
     listctrl_launcher->SetColumnWidth( 2, WIDTH );
@@ -67,6 +80,7 @@ void ActiveWord::fetchactions()
 	extern wxArrayString trigger;
 	extern wxArrayString pretrigger;
 	extern wxArrayString command;
+	extern wxArrayString comment;
 	extern wxArrayString process;
 	extern wxArrayString v2c;
 	
@@ -75,28 +89,29 @@ void ActiveWord::fetchactions()
     for (unsigned int i = 0; i < trigger.GetCount(); i++ )
     {
 		if(v2c.Item(i) == "v2s") {
-			listctrl_shortcut->InsertItem(0, ""); // bad
-			listctrl_shortcut->SetItem(0, 0, command.Item(i).Lower());
-			listctrl_shortcut->SetItem(0, 1, pretrigger.Item(i).Lower());
-			listctrl_shortcut->SetItem(0, 2, trigger.Item(i).Lower());
+			long tmp = listctrl_shortcut->InsertItem(listctrl_shortcut->GetItemCount(), trigger.Item(i).Lower(), 0);
+			listctrl_shortcut->SetItem(tmp, 1, pretrigger.Item(i).Lower());
+			listctrl_shortcut->SetItem(tmp, 2, command.Item(i).Lower());
+			listctrl_shortcut->SetItem(tmp, 3, comment.Item(i).Lower());
 		}
     }
     listctrl_shortcut->Show();
-	
 	
 	// application
     listctrl_app->Hide();
     for (unsigned int i = 0; i < trigger.GetCount(); i++ )
     {
 		if(v2c.Item(i) == "v2a") {
-			listctrl_app->InsertItem(0, ""); // bad
-			listctrl_app->SetItem(0, 0, process.Item(i).Lower());
-			listctrl_app->SetItem(0, 1, pretrigger.Item(i).Lower());
-			listctrl_app->SetItem(0, 2, trigger.Item(i).Lower());
+			long tmp = listctrl_app->InsertItem(listctrl_app->GetItemCount(), trigger.Item(i).Lower(), 0);
+			listctrl_app->SetItemData(tmp, i);
+			listctrl_app->SetItem(tmp, 1, pretrigger.Item(i).Lower());
+			listctrl_app->SetItem(tmp, 2, process.Item(i).Lower());
+			listctrl_app->SetItem(tmp, 3, comment.Item(i).Lower());
 		}
     }
     listctrl_app->Show();
-	
+	listctrl_app->SortItems(MyCompareFunction, 0);
+
 	// launcher
     listctrl_launcher->Hide();
     for (unsigned int i = 0; i < trigger.GetCount(); i++ )
@@ -104,10 +119,9 @@ void ActiveWord::fetchactions()
 		if(v2c.Item(i) == "launcher") {
 			
 			if(command.Item(i).Lower() != "null") {
-				listctrl_launcher->InsertItem(0, ""); // bad
-				listctrl_launcher->SetItem(0, 0, command.Item(i).Lower());
-				listctrl_launcher->SetItem(0, 1, pretrigger.Item(i).Lower());
-				listctrl_launcher->SetItem(0, 2, trigger.Item(i).Lower());
+				long tmp = listctrl_launcher->InsertItem(listctrl_launcher->GetItemCount(), trigger.Item(i).Lower(), 0);
+				listctrl_launcher->SetItem(tmp, 1, pretrigger.Item(i).Lower());
+				listctrl_launcher->SetItem(tmp, 2, command.Item(i).Lower());
 			}
 		}
     }
