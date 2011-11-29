@@ -11,6 +11,9 @@ COMPILATION:
 It's doable, but i wouldn't say it's easy.
 Follow those steps (change the path):
 
+Dependencies:
+apt-get install build-essential git subversion cvs libgtk2.0-dev flex libxtst-dev libasound2-dev codelite 
+
 1) Fetch kiku
 mkdir -p ~/src && cd ~/src
 git clone https://github.com/patricksebastien/kiku.git 
