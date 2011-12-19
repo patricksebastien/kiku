@@ -135,8 +135,11 @@ void V2cApplication::autocompleteprocess()
 	wxTextEntryBase *processname = tc_processname;
 	wxArrayString completion_choices;
 	
+	int bytesread;
+	const int BUFFERSIZE = 1000;
+	
 	char chrarry_CommandLinePath[100];
-	char chrarry_NameOfProcess[300];
+	char chrarry_NameOfProcess[BUFFERSIZE];
 	char* chrptr_StringToCompare = NULL ;
 	pid_t pid_ProcessIdentifier = (pid_t) -1 ;
 	struct dirent* de_DirEntity = NULL ;
@@ -158,10 +161,15 @@ void V2cApplication::autocompleteprocess()
 				FILE* fd_CmdLineFile = fopen (chrarry_CommandLinePath, "rt") ;  // open the file for reading text
 				if (fd_CmdLineFile)
 				{
-					int fsrs;
-					fsrs = fscanf(fd_CmdLineFile, "%s", chrarry_NameOfProcess) ; // read from /proc/<NR>/cmdline
-					fclose(fd_CmdLineFile);  // close the file prior to exiting the routine
-
+					bytesread = fread(chrarry_NameOfProcess, 1, BUFFERSIZE, fd_CmdLineFile);
+					int i;
+					for (i = 0; i < bytesread; ++i) {
+						if (chrarry_NameOfProcess[i] == '\0') {
+							chrarry_NameOfProcess[i] = ' ';
+						}
+					}
+					chrarry_NameOfProcess[bytesread] = '\0';
+					fclose(fd_CmdLineFile);
 
 					if (strrchr(chrarry_NameOfProcess, '/'))
 						chrptr_StringToCompare = strrchr(chrarry_NameOfProcess, '/') +1;

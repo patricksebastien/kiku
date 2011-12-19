@@ -1,0 +1,146 @@
+MainApp	/home/psc/11h11/code/kiku/kiku/main.cpp	/^IMPLEMENT_APP(MainApp);$/;"	variable	line:76
+kiku	/home/psc/11h11/code/kiku/kiku/main.cpp	/^MainFrame *kiku;$/;"	variable	line:79
+noti	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxArrayString noti; \/\/ notification$/;"	variable	line:81
+pretrigger	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxArrayString pretrigger;$/;"	variable	line:82
+trigger	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxArrayString trigger;$/;"	variable	line:83
+command	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxArrayString command;$/;"	variable	line:84
+comment	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxArrayString comment;$/;"	variable	line:85
+type	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxArrayString type; \/\/ xdotool, shell$/;"	variable	line:86
+process	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxArrayString process; \/\/ processname$/;"	variable	line:87
+v2c	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxArrayString v2c; \/\/ shortcut, application, launcher$/;"	variable	line:88
+juliusformat_word	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxArrayString juliusformat_word; \/\/ dict of the language$/;"	variable	line:89
+juliusformat_pronoun	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxArrayString juliusformat_pronoun; \/\/ dict of the language$/;"	variable	line:90
+actionwaitingpretrigger	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxString actionwaitingpretrigger;$/;"	variable	line:91
+pidra	/home/psc/11h11/code/kiku/kiku/main.cpp	/^pidrahash pidra;$/;"	variable	line:93
+pidcount	/home/psc/11h11/code/kiku/kiku/main.cpp	/^pidcounthash pidcount;$/;"	variable	line:94
+processname	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxArrayString processname; \/\/ fill if monitor process$/;"	variable	line:95
+processnamepid	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxArrayString processnamepid; \/\/ fill by monitor process$/;"	variable	line:96
+pspid	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxArrayString pspid; \/\/ fill by monitor process$/;"	variable	line:97
+pspnameid	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxArrayString pspnameid; \/\/ avoiding multiple call to v2cloading for the same processname$/;"	variable	line:98
+finaldictprevious	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxString finaldictprevious; \/\/ is there any change to the dictionary$/;"	variable	line:99
+juliusisready	/home/psc/11h11/code/kiku/kiku/main.cpp	/^bool juliusisready;$/;"	variable	line:101
+v2clauncher	/home/psc/11h11/code/kiku/kiku/main.cpp	/^bool v2clauncher;$/;"	variable	line:102
+paused	/home/psc/11h11/code/kiku/kiku/main.cpp	/^bool paused;$/;"	variable	line:103
+listening	/home/psc/11h11/code/kiku/kiku/main.cpp	/^bool listening;$/;"	variable	line:104
+haveupdate	/home/psc/11h11/code/kiku/kiku/main.cpp	/^bool haveupdate;$/;"	variable	line:105
+updateurl	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxString updateurl;$/;"	variable	line:106
+rfloat	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void rfloat(const char *s, float myd) {$/;"	function	line:111	signature:(const char *s, float myd)	returns:void
+OnInit	/home/psc/11h11/code/kiku/kiku/main.cpp	/^bool MainApp::OnInit()$/;"	function	line:124	class:MainApp	signature:()	returns:bool MainApp::
+MainFrame	/home/psc/11h11/code/kiku/kiku/main.cpp	/^MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )$/;"	function	line:191	class:MainFrame	signature:(wxWindowGTK *parent)	returns:MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
+gnome_cr	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::gnome_cr(const gchar * command, const gchar * defaultApp)$/;"	function	line:364	class:MainFrame	signature:(const gchar * command, const gchar * defaultApp)	returns:void MainFrame::
+libpd_prvu	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::libpd_prvu(wxCommandEvent& event) {$/;"	function	line:391	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+Onc_driver	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onc_driver(wxCommandEvent& event)$/;"	function	line:401	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+Ons_volume	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Ons_volume(wxScrollEvent& event)$/;"	function	line:425	class:MainFrame	signature:(wxScrollEvent& event)	returns:void MainFrame::
+Onc_filter	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onc_filter(wxCommandEvent& event)$/;"	function	line:432	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+Ons_lp	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Ons_lp(wxScrollEvent& event)$/;"	function	line:450	class:MainFrame	signature:(wxScrollEvent& event)	returns:void MainFrame::
+Ons_hp	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Ons_hp(wxScrollEvent& event)$/;"	function	line:457	class:MainFrame	signature:(wxScrollEvent& event)	returns:void MainFrame::
+LoadPngIcon	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::LoadPngIcon(const unsigned char *embedded_png, int length, int icon_number)$/;"	function	line:468	class:MainFrame	signature:(const unsigned char *embedded_png, int length, int icon_number)	returns:void MainFrame::
+Onm_nb	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onm_nb( wxNotebookEvent& event )$/;"	function	line:477	class:MainFrame	signature:( wxNotebookEvent& event )	returns:void MainFrame::
+Onm_nbv2c	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onm_nbv2c( wxNotebookEvent& event )$/;"	function	line:505	class:MainFrame	signature:( wxNotebookEvent& event )	returns:void MainFrame::
+Onb_activeword	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onb_activeword( wxCommandEvent& event )$/;"	function	line:519	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+Dob_activeword	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Dob_activeword()$/;"	function	line:524	class:MainFrame	signature:()	returns:void MainFrame::
+Onpb_v2capplication	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onpb_v2capplication( wxCommandEvent& event )$/;"	function	line:533	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+Dopb_v2capplication	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Dopb_v2capplication()$/;"	function	line:538	class:MainFrame	signature:()	returns:void MainFrame::
+Onb_v2capplicationedit	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onb_v2capplicationedit( wxCommandEvent& event )$/;"	function	line:544	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+Onpc_v2capplication	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onpc_v2capplication( wxUpdateUIEvent& event )$/;"	function	line:550	class:MainFrame	signature:( wxUpdateUIEvent& event )	returns:void MainFrame::
+V2cApplicationReload	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::V2cApplicationReload()$/;"	function	line:561	class:MainFrame	signature:()	returns:void MainFrame::
+V2cApplicationLoad	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::V2cApplicationLoad()$/;"	function	line:572	class:MainFrame	signature:()	returns:void MainFrame::
+Onpb_v2cshortcut	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onpb_v2cshortcut( wxCommandEvent& event )$/;"	function	line:593	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+Dopb_v2cshortcut	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Dopb_v2cshortcut()$/;"	function	line:598	class:MainFrame	signature:()	returns:void MainFrame::
+Onpc_v2cshortcut	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onpc_v2cshortcut( wxUpdateUIEvent& event )$/;"	function	line:604	class:MainFrame	signature:( wxUpdateUIEvent& event )	returns:void MainFrame::
+Onpb_v2cshortcutedit	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onpb_v2cshortcutedit( wxCommandEvent& event )$/;"	function	line:615	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+V2cShortcutReload	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::V2cShortcutReload()$/;"	function	line:622	class:MainFrame	signature:()	returns:void MainFrame::
+V2cShortcutLoad	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::V2cShortcutLoad()$/;"	function	line:633	class:MainFrame	signature:()	returns:void MainFrame::
+Onb_v2cimportapp	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onb_v2cimportapp( wxCommandEvent& event )$/;"	function	line:664	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+Onpc_v2cimportapp	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onpc_v2cimportapp( wxCommandEvent& event )$/;"	function	line:680	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+Onb_v2cimportshortcut	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onb_v2cimportshortcut( wxCommandEvent& event )$/;"	function	line:685	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+Onpc_v2cimportshortcut	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onpc_v2cimportshortcut( wxCommandEvent& event )$/;"	function	line:701	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+importhtml	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::importhtml(wxString v2c)$/;"	function	line:706	class:MainFrame	signature:(wxString v2c)	returns:void MainFrame::
+listv2c	/home/psc/11h11/code/kiku/kiku/main.cpp	/^bool MainFrame::listv2c(wxString v2c)$/;"	function	line:735	class:MainFrame	signature:(wxString v2c)	returns:bool MainFrame::
+getv2c	/home/psc/11h11/code/kiku/kiku/main.cpp	/^bool MainFrame::getv2c(wxString v2c)$/;"	function	line:806	class:MainFrame	signature:(wxString v2c)	returns:bool MainFrame::
+downloadv2c	/home/psc/11h11/code/kiku/kiku/main.cpp	/^bool MainFrame::downloadv2c(wxString server, wxString tgz)$/;"	function	line:922	class:MainFrame	signature:(wxString server, wxString tgz)	returns:bool MainFrame::
+gunzipv2c	/home/psc/11h11/code/kiku/kiku/main.cpp	/^bool MainFrame::gunzipv2c(wxString v2c, wxString fn)$/;"	function	line:961	class:MainFrame	signature:(wxString v2c, wxString fn)	returns:bool MainFrame::
+importsuccess	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::importsuccess()$/;"	function	line:1010	class:MainFrame	signature:()	returns:void MainFrame::
+writedictionary	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::writedictionary()$/;"	function	line:1031	class:MainFrame	signature:()	returns:void MainFrame::
+Oncb_dict	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Oncb_dict( wxCommandEvent& event )$/;"	function	line:1155	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+autocomplete	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::autocomplete()$/;"	function	line:1161	class:MainFrame	signature:()	returns:void MainFrame::
+v2cloading	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::v2cloading()$/;"	function	line:1198	class:MainFrame	signature:()	returns:void MainFrame::
+v2cloading	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::v2cloading(wxString file, long pid)$/;"	function	line:1334	class:MainFrame	signature:(wxString file, long pid)	returns:void MainFrame::
+v2cloadingprocessname	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::v2cloadingprocessname()$/;"	function	line:1369	class:MainFrame	signature:()	returns:void MainFrame::
+Onrb_v2cmethod	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onrb_v2cmethod( wxCommandEvent& event )$/;"	function	line:1393	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+Oncb_v2cmonitor	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Oncb_v2cmonitor( wxCommandEvent& event )$/;"	function	line:1412	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+Oncb_v2clauncher	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Oncb_v2clauncher( wxCommandEvent& event )$/;"	function	line:1429	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+IsNumeric	/home/psc/11h11/code/kiku/kiku/main.cpp	/^int MainFrame::IsNumeric(const char* ccharptr_CharacterList)$/;"	function	line:1444	class:MainFrame	signature:(const char* ccharptr_CharacterList)	returns:int MainFrame::
+OnMonitorTimer	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::OnMonitorTimer(wxTimerEvent& event)$/;"	function	line:1452	class:MainFrame	signature:(wxTimerEvent& event)	returns:void MainFrame::
+OnTerminate	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void Process::OnTerminate(int pid, int status)$/;"	function	line:1584	class:Process	signature:(int pid, int status)	returns:void Process::
+OnLanguageProgess	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::OnLanguageProgess(int bs, int ts)$/;"	function	line:1623	class:MainFrame	signature:(int bs, int ts)	returns:void MainFrame::
+Onb_languagedownload	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onb_languagedownload( wxCommandEvent& event )$/;"	function	line:1630	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+languagedownload	/home/psc/11h11/code/kiku/kiku/main.cpp	/^bool MainFrame::languagedownload() {$/;"	function	line:1646	class:MainFrame	signature:()	returns:bool MainFrame::
+EnableOSC	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::EnableOSC() {$/;"	function	line:1912	class:MainFrame	signature:()	returns:void MainFrame::
+Oncb_oscenable	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Oncb_oscenable(wxCommandEvent& event)$/;"	function	line:1929	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+~MainFrame	/home/psc/11h11/code/kiku/kiku/main.cpp	/^MainFrame::~MainFrame()$/;"	function	line:1952	class:MainFrame	signature:()	returns:MainFrame::
+OnCloseFrame	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::OnCloseFrame(wxCloseEvent& event)$/;"	function	line:1956	class:MainFrame	signature:(wxCloseEvent& event)	returns:void MainFrame::
+OnQuit	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::OnQuit()$/;"	function	line:1961	class:MainFrame	signature:()	returns:void MainFrame::
+webexit	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::webexit()$/;"	function	line:1977	class:MainFrame	signature:()	returns:void MainFrame::
+juliusgentlyexit	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::juliusgentlyexit()$/;"	function	line:2002	class:MainFrame	signature:()	returns:void MainFrame::
+startwebthread	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::startwebthread(wxString what)$/;"	function	line:2058	class:MainFrame	signature:(wxString what)	returns:void MainFrame::
+OnWeb	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::OnWeb(wxCommandEvent& event)$/;"	function	line:2079	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+Onb_update	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onb_update( wxCommandEvent& event )$/;"	function	line:2096	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+startjuliusthread	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::startjuliusthread()$/;"	function	line:2105	class:MainFrame	signature:()	returns:void MainFrame::
+startjulius	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::startjulius()$/;"	function	line:2139	class:MainFrame	signature:()	returns:void MainFrame::
+regexonlyint	/home/psc/11h11/code/kiku/kiku/main.cpp	/^int MainFrame::regexonlyint(wxString conftxt)$/;"	function	line:2148	class:MainFrame	signature:(wxString conftxt)	returns:int MainFrame::
+readjuliusconf	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::readjuliusconf()$/;"	function	line:2160	class:MainFrame	signature:()	returns:void MainFrame::
+writejuliusconf	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::writejuliusconf(wxString opt)$/;"	function	line:2273	class:MainFrame	signature:(wxString opt)	returns:void MainFrame::
+Oncb_engdefault	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Oncb_engdefault(wxCommandEvent& event)$/;"	function	line:2526	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+Onsp_engthreshold	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onsp_engthreshold(wxSpinEvent& event)$/;"	function	line:2545	class:MainFrame	signature:(wxSpinEvent& event)	returns:void MainFrame::
+Onsp_engzero	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onsp_engzero(wxSpinEvent& event)$/;"	function	line:2551	class:MainFrame	signature:(wxSpinEvent& event)	returns:void MainFrame::
+Onb_spectrum	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void  MainFrame::Onb_spectrum( wxCommandEvent& event )$/;"	function	line:2564	class:MainFrame	signature:( wxCommandEvent& event )	returns:void  MainFrame::
+calculatespectrum	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::calculatespectrum()$/;"	function	line:2569	class:MainFrame	signature:()	returns:void MainFrame::
+Oncb_engzmean	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Oncb_engzmean(wxCommandEvent& event)$/;"	function	line:2594	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+Onc_enggprune	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onc_enggprune(wxCommandEvent& event)$/;"	function	line:2599	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+Onc_engiwcd1	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onc_engiwcd1(wxCommandEvent& event)$/;"	function	line:2604	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+Onsp_engiwcd1	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onsp_engiwcd1(wxSpinEvent& event)$/;"	function	line:2614	class:MainFrame	signature:(wxSpinEvent& event)	returns:void MainFrame::
+Onsp_engtmix	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onsp_engtmix(wxSpinEvent& event)$/;"	function	line:2619	class:MainFrame	signature:(wxSpinEvent& event)	returns:void MainFrame::
+Onsp_engbeam	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onsp_engbeam(wxSpinEvent& event)$/;"	function	line:2624	class:MainFrame	signature:(wxSpinEvent& event)	returns:void MainFrame::
+Ontc_engpenalty	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Ontc_engpenalty(wxCommandEvent& event)$/;"	function	line:2629	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+Onb_restartjulius	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onb_restartjulius( wxCommandEvent& event ) {$/;"	function	line:2635	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+onJuliusPronun	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::onJuliusPronun(wxCommandEvent& event)$/;"	function	line:2645	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+onJuliusSentence	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::onJuliusSentence(wxCommandEvent& event)$/;"	function	line:2661	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+onJuliusScore	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::onJuliusScore(wxCommandEvent& event)$/;"	function	line:2804	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+onJuliusReady	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::onJuliusReady(wxCommandEvent& event)$/;"	function	line:2813	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+onJuliusWatch	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::onJuliusWatch(wxCommandEvent& event)$/;"	function	line:2866	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+Oncb_pause	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Oncb_pause(wxCommandEvent& event)$/;"	function	line:2919	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+pauser	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::pauser(bool state)$/;"	function	line:2924	class:MainFrame	signature:(bool state)	returns:void MainFrame::
+readpreference	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::readpreference()$/;"	function	line:2964	class:MainFrame	signature:()	returns:void MainFrame::
+writepreference	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::writepreference()$/;"	function	line:3095	class:MainFrame	signature:()	returns:void MainFrame::
+createpreference	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::createpreference()$/;"	function	line:3184	class:MainFrame	signature:()	returns:void MainFrame::
+Onm_prefupdate	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onm_prefupdate( wxCommandEvent& event ) { $/;"	function	line:3225	class:MainFrame	signature:( wxCommandEvent& event )	returns:void MainFrame::
+Onc_notification	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Onc_notification(wxCommandEvent& event)$/;"	function	line:3229	class:MainFrame	signature:(wxCommandEvent& event)	returns:void MainFrame::
+OnResetIconTimer	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::OnResetIconTimer(wxTimerEvent& event)$/;"	function	line:3252	class:MainFrame	signature:(wxTimerEvent& event)	returns:void MainFrame::
+OnUnpauseTimer	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::OnUnpauseTimer(wxTimerEvent& event)$/;"	function	line:3276	class:MainFrame	signature:(wxTimerEvent& event)	returns:void MainFrame::
+autopause	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::autopause()$/;"	function	line:3285	class:MainFrame	signature:()	returns:void MainFrame::
+searchandexecute	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::searchandexecute(wxString word)$/;"	function	line:3308	class:MainFrame	signature:(wxString word)	returns:void MainFrame::
+Eye	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::Eye(wxString txt)$/;"	function	line:3360	class:MainFrame	signature:(wxString txt)	returns:void MainFrame::
+Hand	/home/psc/11h11/code/kiku/kiku/main.cpp	/^long MainFrame::Hand(wxString type, wxString cmd)$/;"	function	line:3395	class:MainFrame	signature:(wxString type, wxString cmd)	returns:long MainFrame::
+OnLink	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainFrame::OnLink(wxHtmlLinkEvent& event) {$/;"	function	line:3651	class:MainFrame	signature:(wxHtmlLinkEvent& event)	returns:void MainFrame::
+GetCurrentWorkingDirectory	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxString MainFrame::GetCurrentWorkingDirectory()$/;"	function	line:3657	class:MainFrame	signature:()	returns:wxString MainFrame::
+Entry	/home/psc/11h11/code/kiku/kiku/main.cpp	/^JuliusThread::ExitCode JuliusThread::Entry()$/;"	function	line:3665	class:JuliusThread	signature:()	returns:JuliusThread::ExitCode JuliusThread::
+~JuliusThread	/home/psc/11h11/code/kiku/kiku/main.cpp	/^JuliusThread::~JuliusThread()$/;"	function	line:3677	class:JuliusThread	signature:()	returns:JuliusThread::
+PU_EXIT	/home/psc/11h11/code/kiku/kiku/main.cpp	/^    PU_EXIT,$/;"	enumerator	line:3687	enum:__anon3
+PU_APP	/home/psc/11h11/code/kiku/kiku/main.cpp	/^	PU_APP,$/;"	enumerator	line:3688	enum:__anon3
+PU_SHORTCUT	/home/psc/11h11/code/kiku/kiku/main.cpp	/^	PU_SHORTCUT,$/;"	enumerator	line:3689	enum:__anon3
+PU_CHECKMARK	/home/psc/11h11/code/kiku/kiku/main.cpp	/^    PU_CHECKMARK,$/;"	enumerator	line:3690	enum:__anon3
+PU_ACTIVEWORD	/home/psc/11h11/code/kiku/kiku/main.cpp	/^	PU_ACTIVEWORD,$/;"	enumerator	line:3691	enum:__anon3
+PU_WEBSITE	/home/psc/11h11/code/kiku/kiku/main.cpp	/^	PU_WEBSITE,$/;"	enumerator	line:3692	enum:__anon3
+PU_UPDATE	/home/psc/11h11/code/kiku/kiku/main.cpp	/^	PU_UPDATE$/;"	enumerator	line:3693	enum:__anon3
+MainTaskBarIcon	/home/psc/11h11/code/kiku/kiku/main.cpp	/^MainTaskBarIcon::MainTaskBarIcon(MainFrame *handler)$/;"	function	line:3709	class:MainTaskBarIcon	signature:(MainFrame *handler)	returns:MainTaskBarIcon::MainTaskBarIcon(MainFrame *handler)
+OnShowKiku	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainTaskBarIcon::OnShowKiku(wxCommandEvent& )$/;"	function	line:3721	class:MainTaskBarIcon	signature:(wxCommandEvent& )	returns:void MainTaskBarIcon::
+OnMenuUICheckmark	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainTaskBarIcon::OnMenuUICheckmark(wxUpdateUIEvent &event)$/;"	function	line:3732	class:MainTaskBarIcon	signature:(wxUpdateUIEvent &event)	returns:void MainTaskBarIcon::
+OnLeftButtonDClick	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainTaskBarIcon::OnLeftButtonDClick(wxTaskBarIconEvent&)$/;"	function	line:3737	class:MainTaskBarIcon	signature:(wxTaskBarIconEvent&)	returns:void MainTaskBarIcon::
+OnMenuExit	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainTaskBarIcon::OnMenuExit(wxCommandEvent& )$/;"	function	line:3744	class:MainTaskBarIcon	signature:(wxCommandEvent& )	returns:void MainTaskBarIcon::
+OnMenuWebsite	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainTaskBarIcon::OnMenuWebsite(wxCommandEvent& )$/;"	function	line:3749	class:MainTaskBarIcon	signature:(wxCommandEvent& )	returns:void MainTaskBarIcon::
+OnMenuDownloadUpdate	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainTaskBarIcon::OnMenuDownloadUpdate(wxCommandEvent& )$/;"	function	line:3754	class:MainTaskBarIcon	signature:(wxCommandEvent& )	returns:void MainTaskBarIcon::
+OnMenuApp	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainTaskBarIcon::OnMenuApp(wxCommandEvent& )$/;"	function	line:3760	class:MainTaskBarIcon	signature:(wxCommandEvent& )	returns:void MainTaskBarIcon::
+OnMenuShortcut	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainTaskBarIcon::OnMenuShortcut(wxCommandEvent& )$/;"	function	line:3771	class:MainTaskBarIcon	signature:(wxCommandEvent& )	returns:void MainTaskBarIcon::
+OnMenuActiveWord	/home/psc/11h11/code/kiku/kiku/main.cpp	/^void MainTaskBarIcon::OnMenuActiveWord(wxCommandEvent& )$/;"	function	line:3782	class:MainTaskBarIcon	signature:(wxCommandEvent& )	returns:void MainTaskBarIcon::
+CreatePopupMenu	/home/psc/11h11/code/kiku/kiku/main.cpp	/^wxMenu *MainTaskBarIcon::CreatePopupMenu()$/;"	function	line:3793	class:MainTaskBarIcon	signature:()	returns:wxMenu *MainTaskBarIcon::

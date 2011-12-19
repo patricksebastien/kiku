@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Session Name="/home/psc/11h11/code/kiku/kiku.workspace">
-  <int Value="0" Name="m_selectedTab"/>
+  <int Value="1" Name="m_selectedTab"/>
   <wxString Value="/home/psc/11h11/code/kiku/kiku.workspace" Name="m_workspaceName"/>
   <TabInfoArray Name="TabInfoArray">
     <TabInfo>
-      <wxString Value="/home/psc/11h11/code/kiku/kiku/main.cpp" Name="FileName"/>
-      <int Value="42" Name="FirstVisibleLine"/>
-      <int Value="8" Name="CurrentLine"/>
+      <wxString Value="/home/psc/11h11/code/kiku/kiku/julius.cpp" Name="FileName"/>
+      <int Value="93" Name="FirstVisibleLine"/>
+      <int Value="96" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>
     <TabInfo>
-      <wxString Value="/home/psc/11h11/code/kiku/kiku/main.h" Name="FileName"/>
+      <wxString Value="/home/psc/11h11/code/kiku/kiku/main.cpp" Name="FileName"/>
       <int Value="0" Name="FirstVisibleLine"/>
-      <int Value="10" Name="CurrentLine"/>
+      <int Value="6" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>
   </TabInfoArray>
@@ -20,7 +20,7 @@
     <long Value="1" Name="Count"/>
     <SerializedObject Name="Breakpoint0">
       <wxString Value="/home/psc/11h11/code/kiku/kiku/main.cpp" Name="file"/>
-      <int Value="2579" Name="lineno"/>
+      <int Value="2585" Name="lineno"/>
       <wxString Value="" Name="function_name"/>
       <wxString Value="" Name="memory_address"/>
       <int Value="1" Name="bp_type"/>

@@ -2,6 +2,16 @@
  * Author: Patrick Sébastien
  * http://www.workinprogress.ca/kiku
  * 
+ * 0.5
+ * updated libpd
+ * list arguments for process instead of process name only
+ * added a new language: Portuguese
+ * http://laps.ufpa.br/falabrasil/files/LapsAM-1.5-16k-SimonBR.rar
+ * http://laps.ufpa.br/falabrasil/files/dicionario_stress.rar
+ * added a new language: German
+ * http://www.repository.voxforge1.org/downloads/de/Tags/AcousticModels/
+ * remove master_promts from english am
+ * 
  * 0.4
  * fix locale
  * add comment field in V2C Editor
@@ -1441,8 +1451,12 @@ int MainFrame::IsNumeric(const char* ccharptr_CharacterList)
 
 void MainFrame::OnMonitorTimer(wxTimerEvent& event)
 {
+	int bytesread;
+	const int BUFFERSIZE = 1000;
+	
     char chrarry_CommandLinePath[100];
-    char chrarry_NameOfProcess[300];
+    char chrarry_NameOfProcess[BUFFERSIZE];
+	char chrarry_OnlyNameOfProcess[BUFFERSIZE];
     char* chrptr_StringToCompare = NULL ;
     pid_t pid_ProcessIdentifier = (pid_t) -1 ;
     struct dirent* de_DirEntity = NULL ;
@@ -1468,20 +1482,27 @@ void MainFrame::OnMonitorTimer(wxTimerEvent& event)
                 if (fd_CmdLineFile)
                 {
 					int fsrs;
-                    fsrs = fscanf(fd_CmdLineFile, "%s", chrarry_NameOfProcess) ; // read from /proc/<NR>/cmdline
-                    fclose(fd_CmdLineFile);  // close the file prior to exiting the routine
-
+					fsrs = fscanf(fd_CmdLineFile, "%s", chrarry_OnlyNameOfProcess) ; // read from /proc/<NR>/cmdline
+					
+					// with arguments
+					bytesread = fread(chrarry_NameOfProcess, 1, BUFFERSIZE, fd_CmdLineFile);
+					int i;
+					for (i = 0; i < bytesread; ++i) {
+						if (chrarry_NameOfProcess[i] == '\0') {
+							chrarry_NameOfProcess[i] = ' ';
+						}
+					}
+					chrarry_NameOfProcess[bytesread] = '\0';
+					fclose(fd_CmdLineFile);
 
                     if (strrchr(chrarry_NameOfProcess, '/'))
                         chrptr_StringToCompare = strrchr(chrarry_NameOfProcess, '/') +1;
                     else
-                        chrptr_StringToCompare = chrarry_NameOfProcess ;
+                        chrptr_StringToCompare = chrarry_NameOfProcess;
 
-                    //printf("Process name: %s\n", chrarry_NameOfProcess);
-                    //printf("Pure Process name: %s\n", chrptr_StringToCompare );
-
-                    
-
+                    printf("Compare Process name: %s\n", chrptr_StringToCompare);
+                    printf("Pure Process name: %s\n", chrarry_NameOfProcess );
+					
                     //get the pid
                     pid_ProcessIdentifier = (pid_t) atoi(de_DirEntity->d_name) ;
                     pspid.Add(wxString::Format("%i",pid_ProcessIdentifier));

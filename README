@@ -9,10 +9,10 @@ http://www.workinprogress.ca/kiku/video/
 ------------------------------------------------------------------------
 COMPILATION:
 It's doable, but i wouldn't say it's easy.
-Follow those steps (change the path):
+Follow those steps (adjust paths):
 
 Dependencies:
-apt-get install build-essential git subversion cvs libgtk2.0-dev flex libxtst-dev libasound2-dev codelite 
+apt-get install build-essential git subversion cvs libgtk2.0-dev flex libxtst-dev libasound2-dev codelite liblo-dev libnotify-dev libxosd-dev libgconf2-dev libpulse-dev
 
 1) Fetch kiku
 mkdir -p ~/src && cd ~/src
