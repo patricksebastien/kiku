@@ -24,21 +24,23 @@ svn checkout http://svn.wxwidgets.org/svn/wx/wxWidgets/trunk wxWidgets
 
 PATCH
 open src/unix/utilsunx.cpp:
-//data->exitcode = DoWaitForChild(data->pid, WNOHANG);
-data->exitcode = DoWaitForChild(data->pid);
+	//data->exitcode = DoWaitForChild(data->pid, WNOHANG);
+	data->exitcode = DoWaitForChild(data->pid);
 
 include/wx/textentry.h
-bool AutoComplete(const wxArrayString& choices, int minimumkey)
-        { return DoAutoCompleteStrings(choices, minimumkey); }  
+	bool AutoComplete(const wxArrayString& choices, int minimumkey = 1)
+			{ return DoAutoCompleteStrings(choices, minimumkey); }   
+	virtual bool DoAutoCompleteStrings(const wxArrayString& WXUNUSED(choices), int WXUNUSED(minimumkey))
+			{ return false; }
         
 src/gtk/textentry.cpp
-bool wxTextEntry::DoAutoCompleteStrings(const wxArrayString& choices, int minimumkey)
-...
-	gtk_entry_completion_set_text_column(completion, 0);
-	gtk_entry_completion_set_minimum_key_length(completion, minimumkey);
+	bool wxTextEntry::DoAutoCompleteStrings(const wxArrayString& choices, int minimumkey)
+	...
+		gtk_entry_completion_set_text_column(completion, 0);
+		gtk_entry_completion_set_minimum_key_length(completion, minimumkey);
 	
 include/wx/gtk/textentry.h
-virtual bool DoAutoCompleteStringsKey(const wxArrayString& choices, int minimumkey);
+	virtual bool DoAutoCompleteStrings(const wxArrayString& choices, int minimumkey = 1);
 
 ./configure --prefix=/home/you/src/wx291svnrelease --enable-unicode --disable-shared --without-gnomeprint --without-gtkprint
 make -j3
