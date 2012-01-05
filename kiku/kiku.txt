@@ -1,0 +1,1 @@
+./Release/gui.o ./Release/main.o ./Release/julius.o ./Release/jsonreader.o ./Release/jsonval.o ./Release/jsonwriter.o ./Release/language.o ./Release/gui_v2capplication.o ./Release/v2capplication.o ./Release/gui_v2ceditor.o ./Release/v2ceditor.o ./Release/gui_activeword.o ./Release/activeword.o ./Release/web.o

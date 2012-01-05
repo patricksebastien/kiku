@@ -11,6 +11,7 @@
  * added a new language: German
  * http://www.repository.voxforge1.org/downloads/de/Tags/AcousticModels/
  * remove master_promts from english am
+ * active window: added close, resize
  * 
  * 0.4
  * fix locale
@@ -150,11 +151,18 @@ bool MainApp::OnInit()
 	kiku->SetIcon(icontb);
 	
 	wxStandardPaths stdpath;
-
+	
+	wxString current_desktop;
+	wxGetEnv("XDG_CURRENT_DESKTOP", &current_desktop);
 	if(!wxFileExists(stdpath.GetUserDataDir()+"/language/julius.conf")) {
 		kiku->Show();
 	} else {
-		kiku->Hide();
+		// Add an exception for Unity (kiku doesn't support the new indicator system)
+		if(current_desktop == "Unity") {
+			kiku->Show();
+		} else {
+			kiku->Hide();
+		}		
 	}
 	
 	// callback function of julius
@@ -199,7 +207,7 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	libpd_init_audio(1, 1, 16000, 4); // if users report glitch: check tick per buffer
 	
 	// compute audio    [; pd dsp 1(
-	libpd_start_message();
+	libpd_start_message(1);
 	libpd_add_float(1.0f);
 	libpd_finish_message("pd", "dsp");
 
@@ -1481,27 +1489,27 @@ void MainFrame::OnMonitorTimer(wxTimerEvent& event)
                 FILE* fd_CmdLineFile = fopen (chrarry_CommandLinePath, "rt") ;  // open the file for reading text
                 if (fd_CmdLineFile)
                 {
-					int fsrs;
-					fsrs = fscanf(fd_CmdLineFile, "%s", chrarry_OnlyNameOfProcess) ; // read from /proc/<NR>/cmdline
-					
-					// with arguments
+					int fsrs = fscanf(fd_CmdLineFile, "%s", chrarry_OnlyNameOfProcess) ; // read from /proc/<NR>/cmdline
+					rewind(fd_CmdLineFile);
 					bytesread = fread(chrarry_NameOfProcess, 1, BUFFERSIZE, fd_CmdLineFile);
-					int i;
-					for (i = 0; i < bytesread; ++i) {
-						if (chrarry_NameOfProcess[i] == '\0') {
+					for (int i = 0; i < bytesread; ++i)
+						if (chrarry_NameOfProcess[i] == '\0')
 							chrarry_NameOfProcess[i] = ' ';
-						}
-					}
 					chrarry_NameOfProcess[bytesread] = '\0';
 					fclose(fd_CmdLineFile);
+	
+                    if (strrchr(chrarry_OnlyNameOfProcess, '/')) {
+                        chrptr_StringToCompare = strrchr(chrarry_OnlyNameOfProcess, '/') +1;
+                    } else {
+                        chrptr_StringToCompare = chrarry_OnlyNameOfProcess;
+						wxString stc(chrptr_StringToCompare, wxConvUTF8);
+						if(stc.Find("python") != wxNOT_FOUND) {
+								chrptr_StringToCompare = strrchr(chrarry_NameOfProcess, '/') +1;
+						}
+					}
 
-                    if (strrchr(chrarry_NameOfProcess, '/'))
-                        chrptr_StringToCompare = strrchr(chrarry_NameOfProcess, '/') +1;
-                    else
-                        chrptr_StringToCompare = chrarry_NameOfProcess;
-
-                    printf("Compare Process name: %s\n", chrptr_StringToCompare);
-                    printf("Pure Process name: %s\n", chrarry_NameOfProcess );
+                    //printf("Compare Process name: %s\n", chrptr_StringToCompare);
+                    //printf("Pure Process name: %s\n", chrarry_OnlyNameOfProcess );
 					
                     //get the pid
                     pid_ProcessIdentifier = (pid_t) atoi(de_DirEntity->d_name) ;
@@ -3365,7 +3373,12 @@ void MainFrame::Eye(wxString txt)
 			hey.SetMessage(txt);
 			hey.Show(sp_notdelay->GetValue());
 		} else if(c_notstyle->GetStringSelection() == "Notify") {
-			nn = notify_notification_new("kiku", txt, NULL, NULL);
+			// add an exception
+			#if LIBNOTIFYVER == 4
+				nn = notify_notification_new("kiku", txt, NULL);
+			#else
+				nn = notify_notification_new("kiku", txt, NULL, NULL);
+			#endif
 			notify_notification_set_timeout(nn, sp_notdelay->GetValue());
 			if (!notify_notification_show(nn, NULL))
 			{

@@ -27,6 +27,19 @@ open src/unix/utilsunx.cpp:
 //data->exitcode = DoWaitForChild(data->pid, WNOHANG);
 data->exitcode = DoWaitForChild(data->pid);
 
+include/wx/textentry.h
+bool AutoComplete(const wxArrayString& choices, int minimumkey)
+        { return DoAutoCompleteStrings(choices, minimumkey); }  
+        
+src/gtk/textentry.cpp
+bool wxTextEntry::DoAutoCompleteStrings(const wxArrayString& choices, int minimumkey)
+...
+	gtk_entry_completion_set_text_column(completion, 0);
+	gtk_entry_completion_set_minimum_key_length(completion, minimumkey);
+	
+include/wx/gtk/textentry.h
+virtual bool DoAutoCompleteStringsKey(const wxArrayString& choices, int minimumkey);
+
 ./configure --prefix=/home/you/src/wx291svnrelease --enable-unicode --disable-shared --without-gnomeprint --without-gtkprint
 make -j3
 make install
@@ -60,7 +73,7 @@ git clone git://gitorious.org/pdlib/libpd.git
 make libs/libpd.so
 mkdir staticlib
 cp libpd_wrapper/*.o staticlib/
-cp pure-data/src/ *.o staticlib/
+cp pure-data/src/*.o staticlib/
 ar rcs libpd.a *.o
 cp libpd.a ~/kiku/common
 cp ./libpd_wrapper/z_libpd.h ~/kiku/common

@@ -135,47 +135,54 @@ void V2cApplication::autocompleteprocess()
 	wxTextEntryBase *processname = tc_processname;
 	wxArrayString completion_choices;
 	
+	
 	int bytesread;
 	const int BUFFERSIZE = 1000;
 	
-	char chrarry_CommandLinePath[100];
-	char chrarry_NameOfProcess[BUFFERSIZE];
-	char* chrptr_StringToCompare = NULL ;
-	pid_t pid_ProcessIdentifier = (pid_t) -1 ;
-	struct dirent* de_DirEntity = NULL ;
-	DIR* dir_proc = NULL ;
-	dir_proc = opendir(PROC_DIRECTORY) ;
-	if (dir_proc == NULL)
-	{
-		wxMessageBox("Couldn't open the " PROC_DIRECTORY " directory");
-	}
-	while ( (de_DirEntity = readdir(dir_proc)) )
-	{
-		if (de_DirEntity->d_type == DT_DIR)
-		{
-			if (IsNumeric(de_DirEntity->d_name))
-			{
-				strcpy(chrarry_CommandLinePath, PROC_DIRECTORY) ;
-				strcat(chrarry_CommandLinePath, de_DirEntity->d_name) ;
-				strcat(chrarry_CommandLinePath, "/cmdline") ;
-				FILE* fd_CmdLineFile = fopen (chrarry_CommandLinePath, "rt") ;  // open the file for reading text
-				if (fd_CmdLineFile)
-				{
+    char chrarry_CommandLinePath[100];
+    char chrarry_NameOfProcess[BUFFERSIZE];
+	char chrarry_OnlyNameOfProcess[BUFFERSIZE];
+    char* chrptr_StringToCompare = NULL ;
+    pid_t pid_ProcessIdentifier = (pid_t) -1 ;
+    struct dirent* de_DirEntity = NULL ;
+    DIR* dir_proc = NULL ;
+    dir_proc = opendir(PROC_DIRECTORY) ;
+    if (dir_proc == NULL)
+    {
+        wxMessageBox("Couldn't open the " PROC_DIRECTORY " directory");
+    }
+
+    while ( (de_DirEntity = readdir(dir_proc)) )
+    {
+        if (de_DirEntity->d_type == DT_DIR)
+        {
+            if (IsNumeric(de_DirEntity->d_name))
+            {
+                strcpy(chrarry_CommandLinePath, PROC_DIRECTORY) ;
+                strcat(chrarry_CommandLinePath, de_DirEntity->d_name) ;
+                strcat(chrarry_CommandLinePath, "/cmdline") ;
+                FILE* fd_CmdLineFile = fopen (chrarry_CommandLinePath, "rt") ;  // open the file for reading text
+                if (fd_CmdLineFile)
+                {
+					int fsrs = fscanf(fd_CmdLineFile, "%s", chrarry_OnlyNameOfProcess) ; // read from /proc/<NR>/cmdline
+					rewind(fd_CmdLineFile);
 					bytesread = fread(chrarry_NameOfProcess, 1, BUFFERSIZE, fd_CmdLineFile);
-					int i;
-					for (i = 0; i < bytesread; ++i) {
-						if (chrarry_NameOfProcess[i] == '\0') {
+					for (int i = 0; i < bytesread; ++i)
+						if (chrarry_NameOfProcess[i] == '\0')
 							chrarry_NameOfProcess[i] = ' ';
-						}
-					}
 					chrarry_NameOfProcess[bytesread] = '\0';
 					fclose(fd_CmdLineFile);
-
-					if (strrchr(chrarry_NameOfProcess, '/'))
-						chrptr_StringToCompare = strrchr(chrarry_NameOfProcess, '/') +1;
-					else
-						chrptr_StringToCompare = chrarry_NameOfProcess ;
-
+	
+                    if (strrchr(chrarry_OnlyNameOfProcess, '/')) {
+                        chrptr_StringToCompare = strrchr(chrarry_OnlyNameOfProcess, '/') +1;
+                    } else {
+                        chrptr_StringToCompare = chrarry_OnlyNameOfProcess;
+						wxString stc(chrptr_StringToCompare, wxConvUTF8);
+						if(stc.Find("python") != wxNOT_FOUND) {
+								chrptr_StringToCompare = strrchr(chrarry_NameOfProcess, '/') +1;
+						}
+					}
+					
 					//printf("Process name: %s\n", chrarry_NameOfProcess);
 					//printf("Pure Process name: %s\n", chrptr_StringToCompare );
 
