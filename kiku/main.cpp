@@ -3,15 +3,19 @@
  * http://www.workinprogress.ca/kiku
  * 
  * 0.5
- * updated libpd
+ * compile for newer version of debian based system
+ * new languages: German & Portuguese
  * list arguments for process instead of process name only
- * added a new language: Portuguese
- * http://laps.ufpa.br/falabrasil/files/LapsAM-1.5-16k-SimonBR.rar
- * http://laps.ufpa.br/falabrasil/files/dicionario_stress.rar
- * added a new language: German
- * http://www.repository.voxforge1.org/downloads/de/Tags/AcousticModels/
+ * patch wxwidgets to specify the number of characters before autocomplete
+ * fix segfault (if liblo not enabled & kiku quit)
+ * updated libpd
  * remove master_promts from english am
- * active window: added close, resize
+ * fix help (problem with encoding)
+ * retouch of some windows gui to be compatible with gnome3
+ * added beam option max
+ * added basic application (kiku) & shortcut for japanese
+ * 
+ * do not load dict in memory? (german have 400k words to put in memory for autocomplete and writedictionary)...
  * 
  * 0.4
  * fix locale
@@ -42,6 +46,8 @@
  * cleanup removeat and insertat
  * eventually clean the constructor of v2ceditor (this, this)
  * switch from dictionary file to grammar_manager julius API
+ * the new build system for plugin fix the julius threading problem?
+ * regex to look running process (maybe not needed anymore)
  * 
  * // IF REQUESTED
  * single word or grammar mode checkbox (http://julius.sourceforge.jp/en_index.php?q=en_grammar.html)
@@ -55,8 +61,17 @@
  * wxjson (include) - if new: jsonval.cpp in wxJSONValue::Item() //wxLogTrace( traceMask, _T("(%s) actual object: %s"), __PRETTY_FUNCTION__, GetInfo().c_str()); (fix bug in 64bit)
  * when updating xdotool / libpd - copy *.h to kiku
  * 64 bit: cp 64 bit version of libpd.a & libxdo.a
+ * 
+ * // LANGUAGE
+ * Portuguese
+ * http://laps.ufpa.br/falabrasil/files/LapsAM-1.5-16k-SimonBR.rar
+ * http://laps.ufpa.br/falabrasil/files/dicionario_stress.rar
+ * http://www.laps.ufpa.br/falabrasil/simonbr.php
+ * 
+ * Sphinx (will need to convert)
+ * http://sourceforge.net/projects/cmusphinx/files/Acoustic%20and%20Language%20Models/French%20Language%20Model/
  *********************************************************************/
-
+#define DEBUGR
 #include "main.h"
 
 // gnome
@@ -104,6 +119,7 @@ bool v2clauncher;
 bool paused;
 bool listening;
 bool haveupdate;
+bool freshinstall;
 wxString updateurl;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -341,6 +357,9 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 		// go to notebook language
 		m_nb->SetSelection(5);
 		
+		// to not free the thread onquit
+		freshinstall = true;
+		
 	
 	} else {
 		// fetch preference.conf
@@ -349,6 +368,9 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 		// web update
 		haveupdate = false; // for tb
 		startwebthread("/KIKU/packages.txt");
+		
+		// to free the thread onquit
+		freshinstall = false;
 		
 		// liblo
 		if(cb_oscenable->GetValue()) {
@@ -746,14 +768,22 @@ bool MainFrame::listv2c(wxString v2c)
 	if(v2c == "application") {
 		if(language == "en") {
 			urltxt = "/KIKU/v2c/v2c_application.txt";
-		} else {
+		} else if(language == "jp" || language =="jp60k") {
 			urltxt = "/KIKU/v2c/v2c_application_ja.txt";
+		} else if(language == "german") {
+			urltxt = "/KIKU/v2c/v2c_application_german.txt";
+		} else if(language == "portuguese") {
+			urltxt = "/KIKU/v2c/v2c_application_portuguese.txt";
 		}
 	} else if(v2c == "shortcut") {
 		if(language == "en") {
 			urltxt = "/KIKU/v2c/v2c_shortcut.txt";
-		} else {
+		} else if(language == "jp" || language =="jp60k") {
 			urltxt = "/KIKU/v2c/v2c_shortcut_ja.txt";
+		} else if(language == "german") {
+			urltxt = "/KIKU/v2c/v2c_shortcut_german.txt";
+		} else if(language == "portuguese") {
+			urltxt = "/KIKU/v2c/v2c_shortcut_portuguese.txt";
 		}
 	}
 	wxHTTP get;
@@ -1128,15 +1158,39 @@ void MainFrame::writedictionary()
 	} else if(language == "jp" || language =="jp60k") {
 		finaldict.Append("</s>	[]	silB\n");
 		finaldict.Append("<s>	[]	silE\n");
+	} else if(language == "german") {
+		finaldict.Append("</s>	[]	sil\n");
+		finaldict.Append("<s>	[]	sil\n");
+	} else if(language == "portuguese") {
+		finaldict.Append("</s>	[]	sil\n");
+		finaldict.Append("<s>	[]	sil\n");
 	}
+	
 	// match with the language dictionary
 	for(unsigned int i=0; i<allword.GetCount(); i++)
 	{
 		if(allword.Item(i) != "NULL") {
-			long index = juliusformat_word.Index(allword.Item(i).Lower());
-			if(index != wxNOT_FOUND) {
-				finaldict.Append(juliusformat_word.Item(index)+" ["+juliusformat_word.Item(index)+"] "+juliusformat_pronoun.Item(index)+"\n");
-			} else {
+			/*
+			//long index = juliusformat_word.Index(allword.Item(i).Lower());
+			//if(index != wxNOT_FOUND) {
+				//finaldict.Append(juliusformat_word.Item(index)+" ["+juliusformat_word.Item(index)+"] "+juliusformat_pronoun.Item(index)+"\n");
+			//} else {
+				//wxMessageBox("You used a word that is not in the dictionary of the installed language: " + allword.Item(i));
+			//}
+			*/
+			// need to look in dictionary for the pronunciation of the word
+			wxFileInputStream input(stdpath.GetUserDataDir()+"/language/dict");
+			wxTextInputStream text(input, "\x09", wxConvUTF8 );
+			bool found = false;
+			while(input.IsOk() && !input.Eof() )
+			{
+				wxString line = text.ReadLine();
+				if(line.AfterFirst('[').BeforeFirst(']').Trim().Lower() == allword.Item(i).Lower()) {
+					finaldict.Append(allword.Item(i).Upper()+" ["+allword.Item(i)+"] "+line.AfterLast(']').Trim(false)+"\n");
+					found = true;
+				}
+			}
+			if(!found) {
 				wxMessageBox("You used a word that is not in the dictionary of the installed language: " + allword.Item(i));
 			}
 		}
@@ -1168,6 +1222,42 @@ void MainFrame::Oncb_dict( wxCommandEvent& event )
 
 void MainFrame::autocomplete()
 {
+	/*
+	wxFileInputStream input(stdpath.GetUserDataDir()+"/language/dict");
+	wxTextInputStream text(input, "\x09", wxConvUTF8 );
+	while(input.IsOk() && !input.Eof() )
+	{
+	  wxString line = text.ReadLine();
+	  juliusformat_word.push_back(line.AfterFirst('[').BeforeFirst(']').Trim().Lower());
+	  juliusformat_pronoun.push_back(line.AfterLast(']').Trim(false));
+	}
+	*/
+	/*
+	wxFFile tfile;
+	tfile.Open(stdpath.GetUserDataDir()+"/language/dict");
+	size_t bytes_read = 4000;
+	size_t bytes_readed = 0;
+	unsigned char buffer[4000+1];
+	while(!tfile.Eof())
+	{
+		fscanf(tfile, "%[^\n]", (char*)buffer);
+		buffer[bytes_read] = 0;
+		bytes_readed = tfile.Read((char*)buffer, bytes_read);
+		wxString buffRead((const char*)buffer);
+		juliusformat_word.push_back(buffRead.AfterFirst('[').BeforeFirst(']').Trim().Lower());
+		juliusformat_pronoun.push_back(buffRead.AfterLast(']').Trim(false));
+	}
+	tfile.Close();
+	wxPuts(juliusformat_word.Item(1));
+	wxPuts(juliusformat_pronoun.Item(1));
+	wxPuts(juliusformat_word.Item(2));
+	wxPuts(juliusformat_pronoun.Item(2));
+	wxPuts(juliusformat_word.Item(3));
+	wxPuts(juliusformat_pronoun.Item(3));
+	wxPuts(juliusformat_word.Item(4));
+	wxPuts(juliusformat_pronoun.Item(4));
+	*/
+	/*
 	wxTextFile tfile;
 	tfile.Open(stdpath.GetUserDataDir()+"/language/dict");
 	wxString tokenit;
@@ -1182,6 +1272,10 @@ void MainFrame::autocomplete()
 			lastword = tokenit.AfterFirst('[').BeforeFirst(']').Trim().Lower();
 		}
 	}
+	tfile.Close();
+	*/
+	
+	
 	/*
 	// problem with utf8
 	wxFileInputStream input(dict);
@@ -1353,7 +1447,7 @@ void MainFrame::v2cloading(wxString file, long pid)
 	if (modules.IsArray() ) {
 		
 		//Prepare HASH when application quit
-		//if(pidra.find(pid) == pidra.end()) { // to protect from loading twice (if launcher & monitor)
+		if(pidra.find(pid) == pidra.end()) { // to protect from loading twice (if launcher & monitor)
 			pidra[pid] = noti.GetCount();
 			pidcount[pid] = modules.Size();
 	
@@ -1367,7 +1461,7 @@ void MainFrame::v2cloading(wxString file, long pid)
 				type.Add( modules[i]["Type"].AsString() );
 				v2c.Add("v2a");
 			}
-		//}
+		}
 	}
 	
 	// write the dictionary to use
@@ -1487,9 +1581,13 @@ void MainFrame::OnMonitorTimer(wxTimerEvent& event)
                 strcat(chrarry_CommandLinePath, de_DirEntity->d_name) ;
                 strcat(chrarry_CommandLinePath, "/cmdline") ;
                 FILE* fd_CmdLineFile = fopen (chrarry_CommandLinePath, "rt") ;  // open the file for reading text
+				
                 if (fd_CmdLineFile)
                 {
 					int fsrs = fscanf(fd_CmdLineFile, "%s", chrarry_OnlyNameOfProcess) ; // read from /proc/<NR>/cmdline
+					// just avoiding -Wunused-variable
+					(void)fsrs;
+					
 					rewind(fd_CmdLineFile);
 					bytesread = fread(chrarry_NameOfProcess, 1, BUFFERSIZE, fd_CmdLineFile);
 					for (int i = 0; i < bytesread; ++i)
@@ -1507,8 +1605,10 @@ void MainFrame::OnMonitorTimer(wxTimerEvent& event)
 								chrptr_StringToCompare = strrchr(chrarry_NameOfProcess, '/') +1;
 						}
 					}
-
-                    //printf("Compare Process name: %s\n", chrptr_StringToCompare);
+					
+					wxString stc(chrptr_StringToCompare, wxConvUTF8);
+					//wxPuts("-"+stc.Trim()+"-");
+					
                     //printf("Pure Process name: %s\n", chrarry_OnlyNameOfProcess );
 					
                     //get the pid
@@ -1516,11 +1616,21 @@ void MainFrame::OnMonitorTimer(wxTimerEvent& event)
                     pspid.Add(wxString::Format("%i",pid_ProcessIdentifier));
 					
 					//search pure process name for loaded ProcessName
-                    int ps = processname.Index(chrptr_StringToCompare);
-
+					
+                    int ps = processname.Index(stc.Trim());
+					
+					
+					/*
+					wxPuts("--------------------------------------------");
+					for(unsigned int i = 0; i < processname.GetCount(); i++) {
+						
+						wxPuts(processname.Item(i));
+					}
+					*/
+						
                     //found one
                     if(ps != wxNOT_FOUND) {
-
+							
                             if(processnamepid.Index(wxString::Format("%i",pid_ProcessIdentifier)) == wxNOT_FOUND && pspnameid.Index(chrptr_StringToCompare) == wxNOT_FOUND) {
                                 #ifdef DEBUG
 									wxPuts("++++++++++++++++++++++++++++");
@@ -1546,6 +1656,7 @@ void MainFrame::OnMonitorTimer(wxTimerEvent& event)
                     }
                     */
                 }
+				
             }
         }
     }
@@ -1670,8 +1781,14 @@ bool MainFrame::languagedownload() {
 		//tgz = "/julius/51158/dictation-kit-v4.1.tar.gz";
 		server = "cloud.github.com";
 		tgz = "/downloads/patricksebastien/kiku/JapaneseAM60k.tar.gz";
+	} else if(c_language->GetStringSelection() == "German 370k [VoxForge]") {
+		server = "cloud.github.com";
+		tgz = "/downloads/patricksebastien/kiku/GermanAM370k.tar.gz";
+	} else if(c_language->GetStringSelection() == "Portuguese 65k [Fala Brasil]") {
+		server = "cloud.github.com";
+		tgz = "/downloads/patricksebastien/kiku/PortugueseAM65k.tar.gz";
 	}
-	
+
 	// 1) download
 	if(!m_pLanguage->download(server, tgz)) {
 		wxMessageBox("Cannot download the language file.\nMaybe the server is down or you have a connection problem.");
@@ -1719,6 +1836,9 @@ bool MainFrame::languagedownload() {
 			wxRemoveFile(GetCurrentWorkingDirectory()+"/language/hmmdefs");
 			wxRemoveFile(GetCurrentWorkingDirectory()+"/language/tiedlist");
 		}
+		
+		// remove unnecessary file
+		wxRemoveFile(GetCurrentWorkingDirectory()+"/language/master_prompts");
 		
 	} else if(c_language->GetStringSelection() == "Japanese 20k [Julius]") {
 		g_languagedownloading->Pulse();
@@ -1772,7 +1892,44 @@ bool MainFrame::languagedownload() {
 			wxExecute("iconv --from-code=SHIFT_JIS --to-code=UTF8 -o "+GetCurrentWorkingDirectory()+"/language/dict "+GetCurrentWorkingDirectory()+"/language/dicteucjp", outputic, errorsic);
 			wxRemoveFile(GetCurrentWorkingDirectory()+"/language/dicteucjp");
 		}
+	} else if(c_language->GetStringSelection() == "German 370k [VoxForge]") {
+		
+		wxString cp;
+		wxArrayString output, errors;
+		int code = wxExecute("which kiku_mkbinhmm", output, errors);
+		if ( code != -1 )
+		{
+			if(!output.IsEmpty()) {
+				cp = output[0];
+			}
+		}
+		if(cp == "") {
+			wxMessageBox("kiku_mkbinhmm / kiku_mkbinhmmlist is not installed on your system. will not make a binary version of the acoustic model.");
+			wxRenameFile(GetCurrentWorkingDirectory()+"/language/hmmdefs", GetCurrentWorkingDirectory()+"/language/hmmdefsbin");
+			wxRenameFile(GetCurrentWorkingDirectory()+"/language/tiedlist", GetCurrentWorkingDirectory()+"/language/tiedlistbin");
+		} else {
+			wxArrayString output, errors;
+			wxExecute("kiku_mkbinhmm "+GetCurrentWorkingDirectory()+"/language/hmmdefs "+GetCurrentWorkingDirectory()+"/language/hmmdefsbin", output, errors);
+			wxExecute("kiku_mkbinhmmlist "+GetCurrentWorkingDirectory()+"/language/hmmdefsbin "+GetCurrentWorkingDirectory()+"/language/tiedlist "+GetCurrentWorkingDirectory()+"/language/tiedlistbin", output, errors);
+			wxRemoveFile(GetCurrentWorkingDirectory()+"/language/hmmdefs");
+			wxRemoveFile(GetCurrentWorkingDirectory()+"/language/tiedlist");
+		}
+		
+	} else if(c_language->GetStringSelection() == "Portuguese 65k [Fala Brasil]") {
+		
+		wxString arch;
+		arch = wxPlatformInfo::Get().GetArchName();
+		if(arch == "64 bit") {
+			wxRenameFile(GetCurrentWorkingDirectory()+"/language/hmmdefs-64bits.bin", GetCurrentWorkingDirectory()+"/language/hmmdefsbin");
+			wxRemoveFile(GetCurrentWorkingDirectory()+"/language/hmmdefs-32bits.bin");
+		} else {
+			wxRenameFile(GetCurrentWorkingDirectory()+"/language/hmmdefs-32bits.bin", GetCurrentWorkingDirectory()+"/language/hmmdefsbin");
+			wxRemoveFile(GetCurrentWorkingDirectory()+"/language/hmmdefs-64bits.bin");
+		}
+		wxRenameFile(GetCurrentWorkingDirectory()+"/language/tiedlist", GetCurrentWorkingDirectory()+"/language/tiedlistbin");
+
 	}
+	
 	
 	// 4) remove model.tar.gz & model.tar
 	g_languagedownloading->Pulse();
@@ -1810,7 +1967,21 @@ bool MainFrame::languagedownload() {
 			myFile.Write("-h JapaneseAM60k/phone_m/hmmdefs_ptm_gid.binhmm\n");
 			myFile.Write("-hlist JapaneseAM60k/phone_m/logicalTri\n");
 			myFile.Write("-spmodel \"sp\"\n");	
+		} else if(c_language->GetStringSelection() == "German 370k [VoxForge]") {
+			myFile.Write("-w dictionary\n");
+			myFile.Write("-wsil sil sil NULL\n");
+			myFile.Write("-h hmmdefsbin\n");
+			myFile.Write("-hlist tiedlistbin\n");
+			myFile.Write("-spmodel \"sp\"\n");
+		} else if(c_language->GetStringSelection() == "Portuguese 65k [Fala Brasil]") {
+			myFile.Write("-w dictionary\n");
+			myFile.Write("-wsil sil sil sil\n");
+			myFile.Write("-h hmmdefsbin\n");
+			myFile.Write("-hlist tiedlistbin\n");
+			myFile.Write("-spmodel \"sp\"\n");
 		}
+		
+		
 		myFile.Write("-gprune safe\n");
 		myFile.Write("-sb 200.0\n");
 		myFile.Write("-iwsp\n");
@@ -1849,7 +2020,17 @@ bool MainFrame::languagedownload() {
 			dict.Write("</s>	[]	silE\n");
 			dict.Write("<s>	[]	silB\n");
 			dict.Write("寄付	[寄付]	k i f u \n");
-		}
+		} else if(c_language->GetStringSelection() == "German 370k [VoxForge]") {
+			language = "german";
+			dict.Write("</s>	[]	sil\n");
+			dict.Write("<s>	[]	sil\n");
+			dict.Write("GEBEN		[geben]		g e: b @ n\n");
+		} else if(c_language->GetStringSelection() == "Portuguese 65k [Fala Brasil]") {
+			language = "portuguese";
+			dict.Write("</s>	[]	sil\n");
+			dict.Write("<s>	[]	sil\n");
+			dict.Write("dar  [dar]  d a X\n");
+		}		
 		dict.Close();
 		
 		// turn on juliusthread
@@ -1875,6 +2056,10 @@ bool MainFrame::languagedownload() {
 			html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_firstinstalled.html");
 		} else if(c_language->GetStringSelection() == "Japanese 20k [Julius]" || c_language->GetStringSelection() == "Japanese 60k [Julius]") {
 			html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_firstinstalled_jp.html");
+		} else if(c_language->GetStringSelection() == "German 370k [VoxForge]") {
+			html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_firstinstalled_german.html");
+		} else if(c_language->GetStringSelection() == "Portuguese 65k [Fala Brasil]") {
+			html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_firstinstalled_portuguese.html");
 		}
 		
 	} else { // not an update
@@ -1970,12 +2155,16 @@ void MainFrame::OnQuit()
 {
 	wxSocketBase::Shutdown();
 	xdo_free(xdo);
-	lo_address_free(osc);
+	if(cb_oscenable->GetValue()) {
+		lo_address_free(osc);
+	}
 	delete m_taskBarIcon;
 	delete m_timer;
 	delete reseticonm_timer;
 	delete unpausem_timer;
-	webexit();
+	if(!freshinstall) {
+		webexit();
+	}
 	if(m_Julius && juliusisready) {
 		juliusgentlyexit();
 	} 
@@ -2483,6 +2672,18 @@ void MainFrame::writejuliusconf(wxString opt)
         }
 	
         juliusconftxt.AddLine("-b " + wxString::Format("%i",sp_engbeam->GetValue()));
+		
+	} else if(opt == "beammax") {
+
+        for ( line = juliusconftxt.GetFirstLine(); !juliusconftxt.Eof(); line = juliusconftxt.GetNextLine() )
+        {
+            if(line.Find("-b ") >= 0) {
+                juliusconftxt.RemoveLine(juliusconftxt.GetCurrentLine());
+                juliusconftxt.GoToLine(juliusconftxt.GetCurrentLine()-1);
+            }
+        }
+	
+        juliusconftxt.AddLine("-b max");
 
     } else if(opt == "penalty") {
 
@@ -2634,6 +2835,18 @@ void MainFrame::Onsp_engbeam(wxSpinEvent& event)
     writejuliusconf("beam");
 }
 
+void MainFrame::Oncb_beammax(wxCommandEvent& event)
+{
+	if(cb_beammax->GetValue()) {
+		sp_engbeam->Enable(0);
+		writejuliusconf("beammax");
+	} else {
+		sp_engbeam->Enable(1);
+		sp_engbeam->SetValue(14000);
+		writejuliusconf("beam");
+	}
+}
+
 void MainFrame::Ontc_engpenalty(wxCommandEvent& event)
 {
     writejuliusconf("penalty");
@@ -2729,14 +2942,27 @@ void MainFrame::onJuliusSentence(wxCommandEvent& event)
 						calculatespectrum();
 						html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_v2c.html");
 					}
-				} else {
+				} else if(c_language->GetStringSelection() == "Japanese 20k [Julius]" || c_language->GetStringSelection() == "Japanese 60k [Julius]") {
 					// kifu = donation
 					if(event.GetString().Upper() == "寄付") {
 						wxLaunchDefaultBrowser("http://www.workinprogress.ca/kiku/donation/");
 						calculatespectrum();
 						html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_v2c.html");
 					}
+				} else if(c_language->GetStringSelection() == "German 370k [VoxForge]") {
+					if(event.GetString().Upper() == "GEBEN") {
+						wxLaunchDefaultBrowser("http://www.workinprogress.ca/kiku/donation/");
+						calculatespectrum();
+						html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_v2c.html");
+					}
+				} else if(c_language->GetStringSelection() == "Portuguese 65k [Fala Brasil]") {
+					if(event.GetString().Upper() == "DAR") {
+						wxLaunchDefaultBrowser("http://www.workinprogress.ca/kiku/donation/");
+						calculatespectrum();
+						html_language->LoadPage("http://www.workinprogress.ca/KIKU/help/language_v2c.html");
+					}
 				}
+				
 			}			
 			// search word in pretrigger
 			triggering = pretrigger.Index(event.GetString().Upper());
@@ -2997,8 +3223,17 @@ void MainFrame::readpreference()
 		language = "jp60k";
 		c_language->Show(0);
 		b_languagedownload->Show(0);
+	} else if(rootpref["language"].AsString() == "german") {
+		st_language_select->SetLabel("German 370k [VoxForge]");
+		language = "german";
+		c_language->Show(0);
+		b_languagedownload->Show(0);
+	} else if(rootpref["language"].AsString() == "portuguese") {
+		st_language_select->SetLabel("Portuguese 65k [Fala Brasil]");
+		language = "portuguese";
+		c_language->Show(0);
+		b_languagedownload->Show(0);
 	}
-	
 	if(rootpref["threshold"].IsInt()) {
 		if(rootpref["threshold"].AsInt() <= 0) {
 			tc_scorethres->ChangeValue("0.000000");
@@ -3336,6 +3571,7 @@ void MainFrame::searchandexecute(wxString word)
 		//if(pretrigger.Item(actionning) == "" || actionwaiting) {
 		if(go) {
 			pid = Hand(type.Item(actionning), command.Item(actionning));
+			// notification
 			Eye(noti.Item(actionning));
 			
 			// v2clauncher mode
@@ -3347,7 +3583,7 @@ void MainFrame::searchandexecute(wxString word)
 								wxPuts("++++++++++++++++++++++++++++");
 								wxPuts("Launcher...");
 								wxPuts("File: "+GetCurrentWorkingDirectory() + "/v2c/" + process.Item(actionning) + ".v2a");
-								wxPuts(wxString::Format("PID: %i", pid));
+								wxPuts(wxString::Format("PID: %li", pid));
 								wxPuts("++++++++++++++++++++++++++++");
 							#endif
 							
@@ -3594,6 +3830,9 @@ long MainFrame::Hand(wxString type, wxString cmd)
 			listening = false;
 			pauser(true);
 		} else if(cmd == "quit") {
+			reseticonm_timer->Stop();
+			listening = false;
+			pauser(true);
 			OnQuit();
 		}
 	} else if(type == "open sound control") { // liblo

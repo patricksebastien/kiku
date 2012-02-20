@@ -2,10 +2,10 @@
 ## Auto Generated makefile by CodeLite IDE
 ## any manual changes will be erased      
 ##
-## Release
+## Debug
 ProjectName            :=kiku
-ConfigurationName      :=Release
-IntermediateDirectory  :=./Release
+ConfigurationName      :=Debug
+IntermediateDirectory  :=./Debug
 OutDir                 := $(IntermediateDirectory)
 WorkspacePath          := "/home/psc/src/kiku"
 ProjectPath            := "/home/psc/src/kiku/kiku"
@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=psc
-Date                   :=12-01-03
+Date                   :=12-02-19
 CodeLitePath           :="/home/psc/.codelite"
 LinkerName             :=g++
 ArchiveTool            :=ar rcus
@@ -31,16 +31,16 @@ SourceSwitch           :=-c
 CompilerName           :=g++
 C_CompilerName         :=gcc
 OutputFile             :=$(IntermediateDirectory)/$(ProjectName)
-Preprocessors          :=$(PreprocessorSwitch)__WX__ 
+Preprocessors          :=$(PreprocessorSwitch)__WX__ -DDEBUG 
 ObjectSwitch           :=-o 
 ArchiveOutputSwitch    := 
 PreprocessOnlySwitch   :=-E 
 ObjectsFileList        :="/home/psc/src/kiku/kiku/kiku.txt"
 PCHCompileFlags        :=
 MakeDirCommand         :=mkdir -p
-CmpOptions             := -O2 -DLIBNOTIFYVER=4 $(shell /home/psc/src/wx291svnrelease/bin/wx-config --cxxflags) $(shell /home/psc/src/juliuscvs/bin/libjulius-config --cflags) $(shell /home/psc/src/juliuscvs/bin/libsent-config --cflags) $(shell /usr/bin/xosd-config --cflags) $(shell pkg-config --cflags libnotify) $(shell pkg-config gconf-2.0 --cflags) $(Preprocessors)
+CmpOptions             := -g -DLIBNOTIFYVER=4 $(shell /home/psc/src/wx291svnrelease/bin/wx-config --cxxflags) $(shell /home/psc/src/juliuscvs/bin/libjulius-config --cflags) $(shell /home/psc/src/juliuscvs/bin/libsent-config --cflags) $(shell /usr/bin/xosd-config --cflags) $(shell pkg-config --cflags libnotify) $(shell pkg-config gconf-2.0 --cflags) $(Preprocessors)
 C_CmpOptions           :=  $(Preprocessors)
-LinkOptions            :=  -s $(shell /home/psc/src/wx291svnrelease/bin/wx-config --libs) $(shell /home/psc/src/juliuscvs/bin/libjulius-config --libs) $(shell /home/psc/src/juliuscvs/bin/libsent-config --libs) $(shell /usr/bin/xosd-config --libs) $(shell pkg-config --libs libnotify) $(shell pkg-config gconf-2.0 --libs) -Wl,-export-dynamic -Wl,-whole-archive ../common/libpd.a -Wl,-no-whole-archive
+LinkOptions            :=  $(shell /home/psc/src/wx291svnrelease/bin/wx-config --libs) $(shell /home/psc/src/juliuscvs/bin/libjulius-config --libs) $(shell /home/psc/src/juliuscvs/bin/libsent-config --libs) $(shell /usr/bin/xosd-config --libs) $(shell pkg-config --libs libnotify) $(shell pkg-config gconf-2.0 --libs) -Wl,-export-dynamic -Wl,-whole-archive ../common/libpd.a -Wl,-no-whole-archive
 IncludePath            :=  $(IncludeSwitch). 
 IncludePCH             := 
 RcIncludePath          := 
@@ -68,7 +68,7 @@ $(OutputFile): $(IntermediateDirectory)/.d $(Objects)
 	$(LinkerName) $(OutputSwitch)$(OutputFile) @$(ObjectsFileList) $(LibPath) $(Libs) $(LinkOptions)
 
 $(IntermediateDirectory)/.d:
-	@test -d ./Release || $(MakeDirCommand) ./Release
+	@test -d ./Debug || $(MakeDirCommand) ./Debug
 
 PreBuild:
 
@@ -237,6 +237,6 @@ clean:
 	$(RM) $(IntermediateDirectory)/web$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/web$(PreprocessSuffix)
 	$(RM) $(OutputFile)
-	$(RM) "/home/psc/src/kiku/.build-release/kiku"
+	$(RM) "/home/psc/src/kiku/.build-debug/kiku"
 
 

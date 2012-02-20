@@ -126,8 +126,8 @@ void V2cApplication::autocomplete()
 	}
 	wxTextEntryBase *pretrig = tc_pretrig;
 	wxTextEntryBase *trig = tc_trig;
-	pretrig->AutoComplete(juliusformat_word);
-	trig->AutoComplete(juliusformat_word);
+	pretrig->AutoComplete(juliusformat_word, 3);
+	trig->AutoComplete(juliusformat_word, 3);
 }
 
 void V2cApplication::autocompleteprocess()
@@ -165,6 +165,8 @@ void V2cApplication::autocompleteprocess()
                 if (fd_CmdLineFile)
                 {
 					int fsrs = fscanf(fd_CmdLineFile, "%s", chrarry_OnlyNameOfProcess) ; // read from /proc/<NR>/cmdline
+					// just avoiding -Wunused-variable
+					(void)fsrs;
 					rewind(fd_CmdLineFile);
 					bytesread = fread(chrarry_NameOfProcess, 1, BUFFERSIZE, fd_CmdLineFile);
 					for (int i = 0; i < bytesread; ++i)
@@ -189,7 +191,8 @@ void V2cApplication::autocompleteprocess()
 					// don't show basic process
 					pid_ProcessIdentifier = (pid_t) atoi(de_DirEntity->d_name) ;
 					if(pid_ProcessIdentifier > 1500) {
-						completion_choices.push_back(chrptr_StringToCompare);
+						wxString stc(chrptr_StringToCompare, wxConvUTF8);
+						completion_choices.push_back(stc.Trim());
 					}
 					
 				}
@@ -388,6 +391,12 @@ void V2cApplication::OnUpdateUI( wxUpdateUIEvent& event )
 			bugpn = true;
 		}
 	}
+}
+
+// cancel
+void V2cApplication::Onb_cancel(wxCommandEvent& event)
+{
+	Destroy();
 }
 
 void V2cApplication::Ontc_processname(wxCommandEvent& event)

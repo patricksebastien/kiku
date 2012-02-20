@@ -37,6 +37,7 @@ class V2cApplication : public gui_v2capplication {
 		virtual void Onb_addaction( wxCommandEvent& event );
 		virtual void Onb_editaction( wxCommandEvent& event );
 		virtual void Onb_delete( wxCommandEvent& event );
+		virtual void Onb_cancel( wxCommandEvent& event );
 		virtual void Ontc_processname( wxCommandEvent& event ); 		
 		void reloadedit();
 		

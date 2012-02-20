@@ -1,15 +1,16 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun  6 2011)
+// C++ code generated with wxFormBuilder (version Feb 19 2012)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __gui_v2ceditor__
-#define __gui_v2ceditor__
+#ifndef __GUI_V2CEDITOR_H__
+#define __GUI_V2CEDITOR_H__
 
+#include <wx/artprov.h>
+#include <wx/xrc/xmlres.h>
 #include <wx/intl.h>
-
 #include <wx/string.h>
 #include <wx/stattext.h>
 #include <wx/gdicmn.h>
@@ -47,23 +48,24 @@ class gui_v2ceditor : public wxDialog
 		wxChoice* c_type;
 		wxStaticText* m_staticText61;
 		wxTextCtrl* tc_comment;
-		
 		wxStaticLine* m_staticline1;
 		wxButton* b_add;
 		wxButton* b_delete;
+		wxButton* b_cancel;
 		wxHtmlWindow* html_v2ceditor;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void Onb_add( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onb_delete( wxCommandEvent& event ) { event.Skip(); }
+		virtual void Onb_cancel( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnLink( wxHtmlLinkEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		gui_v2ceditor( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("V2C editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 640,340 ), long style = wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER ); 
+		gui_v2ceditor( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("V2C editor"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 640,340 ), long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER ); 
 		~gui_v2ceditor();
 	
 };
 
-#endif //__gui_v2ceditor__
+#endif //__GUI_V2CEDITOR_H__

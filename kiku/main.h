@@ -26,6 +26,8 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/imagpng.h>
+#include <wx/ffile.h>
+#include <wx/platinfo.h>
 
 // libpd
 #include "../common/z_libpd.h"
@@ -223,6 +225,7 @@ protected:
 		void Onsp_engiwcd1(wxSpinEvent& event);
 		void Onsp_engtmix(wxSpinEvent& event);
 		void Onsp_engbeam(wxSpinEvent& event);
+		void Oncb_beammax( wxCommandEvent& event );
 		void Ontc_engpenalty(wxCommandEvent& event);
 		
 		// liblo

@@ -1,15 +1,16 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun  6 2011)
+// C++ code generated with wxFormBuilder (version Feb 19 2012)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __gui__
-#define __gui__
+#ifndef __GUI_H__
+#define __GUI_H__
 
+#include <wx/artprov.h>
+#include <wx/xrc/xmlres.h>
 #include <wx/intl.h>
-
 #include <wx/string.h>
 #include <wx/stattext.h>
 #include <wx/gdicmn.h>
@@ -58,7 +59,6 @@ class MainFrameBase : public wxFrame
 		wxCheckBox* cb_pause;
 		wxStaticBitmap* bm_update;
 		wxButton* b_update;
-		
 		wxStaticText* m_staticText8;
 		wxTextCtrl* tc_scorethres;
 		wxStaticText* m_staticText9;
@@ -145,9 +145,9 @@ class MainFrameBase : public wxFrame
 		wxStaticText* m_staticText26;
 		wxStaticText* m_staticText271;
 		wxSpinCtrl* sp_engbeam;
+		wxCheckBox* cb_beammax;
 		wxStaticText* m_staticText28;
 		wxTextCtrl* tc_engpenalty;
-		
 		wxStaticText* m_staticText48;
 		wxButton* b_restartjulius;
 		wxPanel* p_audio;
@@ -160,7 +160,6 @@ class MainFrameBase : public wxFrame
 		wxStaticText* m_staticText36;
 		wxStaticText* st_volume;
 		wxSlider* s_volume;
-		
 		wxStaticText* m_staticText43;
 		wxChoice* c_filter;
 		wxStaticText* m_staticText40;
@@ -176,7 +175,6 @@ class MainFrameBase : public wxFrame
 		wxStaticText* st_language_select;
 		wxChoice* c_language;
 		wxButton* b_languagedownload;
-		
 		wxStaticText* st_languagedownloading;
 		wxGauge* g_languagedownloading;
 		wxStaticLine* m_staticline6;
@@ -220,6 +218,7 @@ class MainFrameBase : public wxFrame
 		virtual void Onsp_engiwcd1( wxSpinEvent& event ) { event.Skip(); }
 		virtual void Onsp_engtmix( wxSpinEvent& event ) { event.Skip(); }
 		virtual void Onsp_engbeam( wxSpinEvent& event ) { event.Skip(); }
+		virtual void Oncb_beammax( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Ontc_engpenalty( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onb_restartjulius( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onc_driver( wxCommandEvent& event ) { event.Skip(); }
@@ -239,4 +238,4 @@ class MainFrameBase : public wxFrame
 	
 };
 
-#endif //__gui__
+#endif //__GUI_H__

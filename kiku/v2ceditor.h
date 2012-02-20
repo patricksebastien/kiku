@@ -34,6 +34,7 @@ class V2cEditor : public gui_v2ceditor {
 		~V2cEditor();
 		virtual void Onb_add( wxCommandEvent& event );
 		virtual void Onb_delete( wxCommandEvent& event );
+		virtual void Onb_cancel( wxCommandEvent& event );
 		
 private:
 		V2cApplication *theparent;

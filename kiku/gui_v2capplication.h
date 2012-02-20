@@ -1,15 +1,16 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Nov 18 2010)
+// C++ code generated with wxFormBuilder (version Feb 19 2012)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __gui_v2capplication__
-#define __gui_v2capplication__
+#ifndef __GUI_V2CAPPLICATION_H__
+#define __GUI_V2CAPPLICATION_H__
 
+#include <wx/artprov.h>
+#include <wx/xrc/xmlres.h>
 #include <wx/intl.h>
-
 #include <wx/string.h>
 #include <wx/stattext.h>
 #include <wx/gdicmn.h>
@@ -49,7 +50,7 @@ class gui_v2capplication : public wxDialog
 		wxStaticText* m_staticText8;
 		wxTextCtrl* tc_command;
 		wxButton* b_save;
-		
+		wxButton* b_cancel;
 		wxButton* b_delete;
 		
 		// Virtual event handlers, overide them in your derived class
@@ -59,15 +60,16 @@ class gui_v2capplication : public wxDialog
 		virtual void OnUpdateUI( wxUpdateUIEvent& event ) { event.Skip(); }
 		virtual void Onb_editaction( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onb_save( wxCommandEvent& event ) { event.Skip(); }
+		virtual void Onb_cancel( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Onb_delete( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		wxString processnameval; 
 		
-		gui_v2capplication( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Application"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
+		gui_v2capplication( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Application"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 444,390 ), long style = wxCLOSE_BOX|wxDEFAULT_DIALOG_STYLE|wxDIALOG_NO_PARENT|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxRESIZE_BORDER ); 
 		~gui_v2capplication();
 	
 };
 
-#endif //__gui_v2capplication__
+#endif //__GUI_V2CAPPLICATION_H__

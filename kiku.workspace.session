@@ -5,16 +5,50 @@
   <TabInfoArray Name="TabInfoArray">
     <TabInfo>
       <wxString Value="/home/psc/src/kiku/kiku/main.cpp" Name="FileName"/>
-      <int Value="1481" Name="FirstVisibleLine"/>
-      <int Value="1488" Name="CurrentLine"/>
+      <int Value="1169" Name="FirstVisibleLine"/>
+      <int Value="1189" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/psc/src/kiku/kiku/gui.h" Name="FileName"/>
+      <int Value="217" Name="FirstVisibleLine"/>
+      <int Value="220" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/psc/src/kiku/kiku/gui.cpp" Name="FileName"/>
+      <int Value="7" Name="FirstVisibleLine"/>
+      <int Value="7" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/psc/src/kiku/kiku/main.h" Name="FileName"/>
+      <int Value="226" Name="FirstVisibleLine"/>
+      <int Value="226" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>
   </TabInfoArray>
   <SerializedObject Name="m_breakpoints">
-    <long Value="1" Name="Count"/>
+    <long Value="2" Name="Count"/>
     <SerializedObject Name="Breakpoint0">
       <wxString Value="/home/psc/11h11/code/kiku/kiku/main.cpp" Name="file"/>
       <int Value="2585" Name="lineno"/>
+      <wxString Value="" Name="function_name"/>
+      <wxString Value="" Name="memory_address"/>
+      <int Value="1" Name="bp_type"/>
+      <int Value="0" Name="watchpoint_type"/>
+      <wxString Value="" Name="watchpt_data"/>
+      <CData Name="commandlist"/>
+      <bool Value="0" Name="regex"/>
+      <bool Value="0" Name="is_temp"/>
+      <bool Value="1" Name="is_enabled"/>
+      <int Value="0" Name="ignore_number"/>
+      <wxString Value="" Name="conditions"/>
+      <int Value="0" Name="origin"/>
+    </SerializedObject>
+    <SerializedObject Name="Breakpoint1">
+      <wxString Value="/home/psc/src/kiku/kiku/main.cpp" Name="file"/>
+      <int Value="2152" Name="lineno"/>
       <wxString Value="" Name="function_name"/>
       <wxString Value="" Name="memory_address"/>
       <int Value="1" Name="bp_type"/>

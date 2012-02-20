@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun  6 2011)
+// C++ code generated with wxFormBuilder (version Feb 19 2012)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -74,6 +74,7 @@ gui_v2ceditor::gui_v2ceditor( wxWindow* parent, wxWindowID id, const wxString& t
 	tc_comment = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer1->Add( tc_comment, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 	
+	
 	bSizer3->Add( fgSizer1, 1, wxALL|wxEXPAND, 5 );
 	
 	
@@ -95,12 +96,18 @@ gui_v2ceditor::gui_v2ceditor( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	bSizer4->Add( b_delete, 0, wxTOP|wxBOTTOM|wxRIGHT, 5 );
 	
+	b_cancel = new wxButton( this, wxID_ANY, _("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer4->Add( b_cancel, 0, wxALL, 5 );
+	
+	
 	bSizer3->Add( bSizer4, 0, 0, 5 );
+	
 	
 	mainSizer->Add( bSizer3, 1, wxEXPAND, 5 );
 	
 	html_v2ceditor = new wxHtmlWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHW_SCROLLBAR_AUTO|wxSIMPLE_BORDER );
 	mainSizer->Add( html_v2ceditor, 1, wxALL|wxEXPAND, 5 );
+	
 	
 	this->SetSizer( mainSizer );
 	this->Layout();
@@ -110,6 +117,7 @@ gui_v2ceditor::gui_v2ceditor( wxWindow* parent, wxWindowID id, const wxString& t
 	// Connect Events
 	b_add->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( gui_v2ceditor::Onb_add ), NULL, this );
 	b_delete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( gui_v2ceditor::Onb_delete ), NULL, this );
+	b_cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( gui_v2ceditor::Onb_cancel ), NULL, this );
 	html_v2ceditor->Connect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( gui_v2ceditor::OnLink ), NULL, this );
 }
 
@@ -118,6 +126,7 @@ gui_v2ceditor::~gui_v2ceditor()
 	// Disconnect Events
 	b_add->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( gui_v2ceditor::Onb_add ), NULL, this );
 	b_delete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( gui_v2ceditor::Onb_delete ), NULL, this );
+	b_cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( gui_v2ceditor::Onb_cancel ), NULL, this );
 	html_v2ceditor->Disconnect( wxEVT_COMMAND_HTML_LINK_CLICKED, wxHtmlLinkEventHandler( gui_v2ceditor::OnLink ), NULL, this );
 	
 }

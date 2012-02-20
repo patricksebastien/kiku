@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun  6 2011)
+// C++ code generated with wxFormBuilder (version Feb 19 2012)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -33,6 +33,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	tcro_word = new wxTextCtrl( p_recognition, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
 	bSizer4->Add( tcro_word, 1, wxBOTTOM|wxEXPAND|wxLEFT|wxRIGHT, 5 );
 	
+	
 	bSizer3->Add( bSizer4, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer5;
@@ -47,6 +48,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	tcro_pronun = new wxTextCtrl( p_recognition, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
 	bSizer5->Add( tcro_pronun, 1, wxBOTTOM|wxEXPAND|wxLEFT|wxRIGHT, 5 );
 	
+	
 	bSizer3->Add( bSizer5, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer7;
@@ -60,6 +62,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	tcro_score = new wxTextCtrl( p_recognition, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 90,-1 ), wxTE_MULTILINE|wxTE_READONLY );
 	bSizer7->Add( tcro_score, 1, wxBOTTOM|wxLEFT|wxRIGHT, 5 );
+	
 	
 	bSizer3->Add( bSizer7, 0, wxEXPAND, 5 );
 	
@@ -78,6 +81,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	b_update = new wxButton( p_recognition, wxID_ANY, _("Update"), wxDefaultPosition, wxDefaultSize, 0 );
 	sizer_update->Add( b_update, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT, 5 );
 	
+	
 	bSizer8->Add( sizer_update, 0, 0, 5 );
 	
 	
@@ -92,6 +96,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	tc_scorethres = new wxTextCtrl( p_recognition, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 80,-1 ), 0 );
 	bSizer9->Add( tc_scorethres, 0, wxLEFT, 5 );
+	
 	
 	bSizer8->Add( bSizer9, 0, 0, 5 );
 	
@@ -112,7 +117,9 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	b_activeword = new wxButton( p_recognition, wxID_ANY, _("Active word"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer8->Add( b_activeword, 0, wxBOTTOM|wxRIGHT|wxLEFT|wxEXPAND, 5 );
 	
+	
 	bSizer3->Add( bSizer8, 0, wxEXPAND, 5 );
+	
 	
 	p_recognition->SetSizer( bSizer3 );
 	p_recognition->Layout();
@@ -140,17 +147,19 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer371 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxArrayString pc_v2capplicationChoices;
-	pc_v2capplication = new wxChoice( p_v2capplication, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2capplicationChoices, wxCB_SORT );
+	pc_v2capplication = new wxChoice( p_v2capplication, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2capplicationChoices, 0 );
 	pc_v2capplication->SetSelection( 0 );
 	bSizer371->Add( pc_v2capplication, 1, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxLEFT, 5 );
 	
 	pb_v2capplicationedit = new wxButton( p_v2capplication, wxID_ANY, _("Edit"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer371->Add( pb_v2capplicationedit, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
+	
 	bSizer361->Add( bSizer371, 0, wxEXPAND, 5 );
 	
 	html_v2capplication = new wxHtmlWindow( p_v2capplication, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHW_SCROLLBAR_AUTO|wxSIMPLE_BORDER );
 	bSizer361->Add( html_v2capplication, 1, wxALL|wxEXPAND, 5 );
+	
 	
 	p_v2capplication->SetSizer( bSizer361 );
 	p_v2capplication->Layout();
@@ -173,17 +182,19 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer372 = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxArrayString pc_v2cshortcutChoices;
-	pc_v2cshortcut = new wxChoice( p_v2cshortcut, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2cshortcutChoices, wxCB_SORT );
+	pc_v2cshortcut = new wxChoice( p_v2cshortcut, wxID_ANY, wxDefaultPosition, wxDefaultSize, pc_v2cshortcutChoices, 0 );
 	pc_v2cshortcut->SetSelection( 0 );
 	bSizer372->Add( pc_v2cshortcut, 1, wxBOTTOM|wxLEFT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	pb_v2cshortcutedit = new wxButton( p_v2cshortcut, wxID_ANY, _("Edit"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer372->Add( pb_v2cshortcutedit, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
+	
 	bSizer362->Add( bSizer372, 0, wxEXPAND, 5 );
 	
 	html_v2cshortcut = new wxHtmlWindow( p_v2cshortcut, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHW_SCROLLBAR_AUTO|wxSIMPLE_BORDER );
 	bSizer362->Add( html_v2cshortcut, 1, wxALL|wxEXPAND, 5 );
+	
 	
 	p_v2cshortcut->SetSizer( bSizer362 );
 	p_v2cshortcut->Layout();
@@ -208,6 +219,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	b_v2cimportapp = new wxButton( p_v2cimport, wxID_ANY, _("Download"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer40->Add( b_v2cimportapp, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
+	
 	bSizer38->Add( bSizer40, 0, wxEXPAND, 5 );
 	
 	m_staticText34 = new wxStaticText( p_v2cimport, wxID_ANY, _("Shortcut:"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -225,10 +237,12 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	b_v2cimportshortcut = new wxButton( p_v2cimport, wxID_ANY, _("Download"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer401->Add( b_v2cimportshortcut, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
+	
 	bSizer38->Add( bSizer401, 0, wxEXPAND, 5 );
 	
 	html_import = new wxHtmlWindow( p_v2cimport, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHW_SCROLLBAR_AUTO|wxSIMPLE_BORDER );
 	bSizer38->Add( html_import, 1, wxALL|wxEXPAND, 5 );
+	
 	
 	p_v2cimport->SetSizer( bSizer38 );
 	p_v2cimport->Layout();
@@ -236,6 +250,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	m_nbv2c->AddPage( p_v2cimport, _("Import"), false );
 	
 	bSizer34->Add( m_nbv2c, 1, wxEXPAND | wxALL, 5 );
+	
 	
 	p_V2C->SetSizer( bSizer34 );
 	p_V2C->Layout();
@@ -276,6 +291,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	cb_dict->SetValue(true); 
 	bSizer10->Add( cb_dict, 0, wxALL, 5 );
 	
+	
 	bSizer91->Add( bSizer10, 0, 0, 5 );
 	
 	m_staticline2 = new wxStaticLine( p_configutation, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
@@ -309,6 +325,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	m_staticText16->Wrap( -1 );
 	bSizer18->Add( m_staticText16, 0, wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxLEFT, 5 );
 	
+	
 	bSizer11->Add( bSizer18, 0, 0, 5 );
 	
 	cb_apscore = new wxCheckBox( p_configutation, wxID_ANY, _("Score"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -322,6 +339,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	wxBoxSizer* bSizer23;
 	bSizer23 = new wxBoxSizer( wxVERTICAL );
+	
 	
 	bSizer11->Add( bSizer23, 1, wxEXPAND, 5 );
 	
@@ -341,7 +359,9 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	m_staticText20->Wrap( -1 );
 	bSizer22->Add( m_staticText20, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
+	
 	bSizer11->Add( bSizer22, 0, 0, 5 );
+	
 	
 	bSizer91->Add( bSizer11, 0, 0, 5 );
 	
@@ -370,6 +390,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	c_notstyle->SetSelection( 0 );
 	bSizer13->Add( c_notstyle, 0, wxALL, 5 );
 	
+	
 	bSizer12->Add( bSizer13, 0, wxRIGHT, 5 );
 	
 	wxBoxSizer* bSizer16;
@@ -381,6 +402,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	sp_notdelay = new wxSpinCtrl( p_configutation, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 78,-1 ), wxSP_ARROW_KEYS, 1, 10, 0 );
 	bSizer16->Add( sp_notdelay, 0, wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
 	
 	bSizer12->Add( bSizer16, 0, wxRIGHT, 5 );
 	
@@ -414,6 +436,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	sp_oscport = new wxSpinCtrl( p_configutation, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 78,-1 ), wxSP_ARROW_KEYS, 1, 999999, 0 );
 	bSizer1611->Add( sp_oscport, 1, wxEXPAND|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
 	
+	
 	bSizer12->Add( bSizer1611, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer161;
@@ -429,12 +452,15 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	c_oscprotocol->SetSelection( 0 );
 	bSizer161->Add( c_oscprotocol, 1, wxRIGHT|wxLEFT|wxEXPAND, 5 );
 	
+	
 	bSizer12->Add( bSizer161, 1, wxEXPAND, 5 );
 	
 	cb_oscrecognition = new wxCheckBox( p_configutation, wxID_ANY, _("Send recognition"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer12->Add( cb_oscrecognition, 0, wxALL, 5 );
 	
+	
 	bSizer91->Add( bSizer12, 0, 0, 5 );
+	
 	
 	p_configutation->SetSizer( bSizer91 );
 	p_configutation->Layout();
@@ -460,6 +486,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	bSizer30 = new wxBoxSizer( wxVERTICAL );
 	
 	cb_engdefault = new wxCheckBox( p_engine, wxID_ANY, _("Default"), wxDefaultPosition, wxDefaultSize, 0 );
+	cb_engdefault->SetValue(true); 
 	bSizer30->Add( cb_engdefault, 0, wxALL, 5 );
 	
 	m_staticText29 = new wxStaticText( p_engine, wxID_ANY, _("Threshold"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -482,9 +509,12 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	cb_engzmean = new wxCheckBox( p_engine, wxID_ANY, _("ZMean"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer30->Add( cb_engzmean, 0, wxALL, 5 );
 	
+	
 	bSizer29->Add( bSizer30, 0, wxEXPAND, 5 );
 	
+	
 	bSizer25->Add( bSizer29, 1, wxEXPAND, 5 );
+	
 	
 	bSizer24->Add( bSizer25, 1, wxEXPAND, 5 );
 	
@@ -513,6 +543,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	c_enggprune->SetSelection( 0 );
 	bSizer32->Add( c_enggprune, 0, wxBOTTOM|wxLEFT|wxRIGHT, 5 );
 	
+	
 	bSizer26->Add( bSizer32, 0, 0, 5 );
 	
 	m_staticText32 = new wxStaticText( p_engine, wxID_ANY, _("Iwcd1:"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -533,6 +564,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	bSizer31->Add( sp_engiwcd1, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxRIGHT, 5 );
 	
+	
 	bSizer26->Add( bSizer31, 0, 0, 5 );
 	
 	m_staticText261 = new wxStaticText( p_engine, wxID_ANY, _("TMix:"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -541,6 +573,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	sp_engtmix = new wxSpinCtrl( p_engine, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, 0 );
 	bSizer26->Add( sp_engtmix, 0, wxBOTTOM|wxLEFT|wxRIGHT, 5 );
+	
 	
 	bSizer24->Add( bSizer26, 1, 0, 5 );
 	
@@ -560,8 +593,17 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	m_staticText271->Wrap( -1 );
 	bSizer27->Add( m_staticText271, 0, wxALL, 5 );
 	
+	wxBoxSizer* bSizer48;
+	bSizer48 = new wxBoxSizer( wxHORIZONTAL );
+	
 	sp_engbeam = new wxSpinCtrl( p_engine, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 100000, 0 );
-	bSizer27->Add( sp_engbeam, 0, wxBOTTOM|wxLEFT|wxRIGHT, 5 );
+	bSizer48->Add( sp_engbeam, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	cb_beammax = new wxCheckBox( p_engine, wxID_ANY, _("Max"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer48->Add( cb_beammax, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	
+	bSizer27->Add( bSizer48, 0, 0, 5 );
 	
 	m_staticText28 = new wxStaticText( p_engine, wxID_ANY, _("Penalty:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText28->Wrap( -1 );
@@ -580,7 +622,9 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	b_restartjulius = new wxButton( p_engine, wxID_ANY, _("Restart Engine"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer27->Add( b_restartjulius, 0, wxALL|wxALIGN_RIGHT, 5 );
 	
+	
 	bSizer24->Add( bSizer27, 1, wxEXPAND, 5 );
+	
 	
 	p_engine->SetSizer( bSizer24 );
 	p_engine->Layout();
@@ -621,7 +665,9 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	st_db->Wrap( -1 );
 	bSizer45->Add( st_db, 0, wxALL, 5 );
 	
+	
 	bSizer41->Add( bSizer45, 1, 0, 5 );
+	
 	
 	bSizer402->Add( bSizer41, 0, wxEXPAND, 5 );
 	
@@ -670,6 +716,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	st_lp->Wrap( -1 );
 	bSizer44->Add( st_lp, 0, wxALL, 5 );
 	
+	
 	bSizer42->Add( bSizer44, 0, 0, 5 );
 	
 	s_lp = new wxSlider( p_audio, wxID_ANY, 50, 3000, 20000, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
@@ -686,10 +733,12 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	st_hp->Wrap( -1 );
 	bSizer441->Add( st_hp, 0, wxALL, 5 );
 	
+	
 	bSizer42->Add( bSizer441, 0, 0, 5 );
 	
 	s_hp = new wxSlider( p_audio, wxID_ANY, 50, 5, 2999, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
 	bSizer42->Add( s_hp, 0, wxALL|wxEXPAND, 5 );
+	
 	
 	bSizer402->Add( bSizer42, 1, wxEXPAND, 5 );
 	
@@ -708,7 +757,9 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	b_spectrum1 = new wxButton( p_audio, wxID_ANY, _("Calculate Spectrum"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer43->Add( b_spectrum1, 0, wxALL, 5 );
 	
+	
 	bSizer402->Add( bSizer43, 0, wxEXPAND, 5 );
+	
 	
 	p_audio->SetSizer( bSizer402 );
 	p_audio->Layout();
@@ -730,7 +781,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	wxBoxSizer* bSizer321;
 	bSizer321 = new wxBoxSizer( wxHORIZONTAL );
 	
-	wxString c_languageChoices[] = { _("English 14k [VoxForge]"), _("Japanese 20k [Julius]"), _("Japanese 60k [Julius]") };
+	wxString c_languageChoices[] = { _("English 14k [VoxForge]"), _("German 370k [VoxForge]"), _("Japanese 20k [Julius]"), _("Japanese 60k [Julius]"), _("Portuguese 65k [Fala Brasil]") };
 	int c_languageNChoices = sizeof( c_languageChoices ) / sizeof( wxString );
 	c_language = new wxChoice( p_language, wxID_ANY, wxDefaultPosition, wxDefaultSize, c_languageNChoices, c_languageChoices, 0 );
 	c_language->SetSelection( 0 );
@@ -738,6 +789,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	b_languagedownload = new wxButton( p_language, wxID_ANY, _("Download"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer321->Add( b_languagedownload, 0, wxALIGN_CENTER_VERTICAL|wxBOTTOM|wxLEFT|wxRIGHT, 5 );
+	
 	
 	bSizer301->Add( bSizer321, 0, 0, 5 );
 	
@@ -751,6 +803,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	g_languagedownloading = new wxGauge( p_language, wxID_ANY, 100, wxDefaultPosition, wxDefaultSize, wxGA_HORIZONTAL );
 	bSizer301->Add( g_languagedownloading, 0, wxEXPAND|wxLEFT|wxRIGHT, 5 );
 	
+	
 	bSizer291->Add( bSizer301, 1, wxEXPAND, 5 );
 	
 	m_staticline6 = new wxStaticLine( p_language, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
@@ -762,7 +815,9 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	html_language = new wxHtmlWindow( p_language, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHW_SCROLLBAR_AUTO|wxSIMPLE_BORDER );
 	bSizer311->Add( html_language, 1, wxALL|wxEXPAND, 5 );
 	
+	
 	bSizer291->Add( bSizer311, 1, wxEXPAND, 5 );
+	
 	
 	p_language->SetSizer( bSizer291 );
 	p_language->Layout();
@@ -775,12 +830,14 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	html_help = new wxHtmlWindow( p_help, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHW_SCROLLBAR_AUTO|wxSIMPLE_BORDER );
 	bSizer81->Add( html_help, 1, wxALL|wxEXPAND, 5 );
 	
+	
 	p_help->SetSizer( bSizer81 );
 	p_help->Layout();
 	bSizer81->Fit( p_help );
 	m_nb->AddPage( p_help, _("Help"), false );
 	
 	mainSizer->Add( m_nb, 1, wxEXPAND | wxALL, 5 );
+	
 	
 	this->SetSizer( mainSizer );
 	this->Layout();
@@ -839,6 +896,7 @@ MainFrameBase::MainFrameBase( wxWindow* parent, wxWindowID id, const wxString& t
 	sp_engiwcd1->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engiwcd1 ), NULL, this );
 	sp_engtmix->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engtmix ), NULL, this );
 	sp_engbeam->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engbeam ), NULL, this );
+	cb_beammax->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_beammax ), NULL, this );
 	tc_engpenalty->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Ontc_engpenalty ), NULL, this );
 	b_restartjulius->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_restartjulius ), NULL, this );
 	c_driver->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_driver ), NULL, this );
@@ -929,6 +987,7 @@ MainFrameBase::~MainFrameBase()
 	sp_engiwcd1->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engiwcd1 ), NULL, this );
 	sp_engtmix->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engtmix ), NULL, this );
 	sp_engbeam->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MainFrameBase::Onsp_engbeam ), NULL, this );
+	cb_beammax->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MainFrameBase::Oncb_beammax ), NULL, this );
 	tc_engpenalty->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( MainFrameBase::Ontc_engpenalty ), NULL, this );
 	b_restartjulius->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MainFrameBase::Onb_restartjulius ), NULL, this );
 	c_driver->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MainFrameBase::Onc_driver ), NULL, this );

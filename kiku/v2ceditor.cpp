@@ -137,8 +137,8 @@ void V2cEditor::autocomplete()
 	}
 	wxTextEntryBase *pretrig = tc_pretrig;
 	wxTextEntryBase *trig = tc_trig;
-	pretrig->AutoComplete(juliusformat_word);
-	trig->AutoComplete(juliusformat_word);
+	pretrig->AutoComplete(juliusformat_word, 3);
+	trig->AutoComplete(juliusformat_word, 3);
 }
 
 bool V2cEditor::save()
@@ -489,6 +489,12 @@ void V2cEditor::Onb_delete(wxCommandEvent& event)
 		theparent->reloadedit();
 	}
 			
+	Destroy();
+}
+
+// cancel
+void V2cEditor::Onb_cancel(wxCommandEvent& event)
+{
 	Destroy();
 }
 
