@@ -236,7 +236,7 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	xdotooldelay = 12000;
 	
 	// standard path
-	stdpath = wxStandardPaths::Get();
+	wxStandardPaths stdpath;
 
 	// keyboard shortcut - CTRL+Q
 	const int rid = wxNewId();
@@ -975,7 +975,6 @@ bool MainFrame::downloadv2c(wxString server, wxString tgz)
 	{
 		// standard path
 		wxStandardPaths stdpath;
-		stdpath = wxStandardPaths::Get();
 		wxFileOutputStream outStream(stdpath.GetTempDir()+"/v2c.gz");
 		const int DLBUFSIZE = 4096;
 		unsigned char buffer[DLBUFSIZE+1];
@@ -3960,7 +3959,7 @@ END_EVENT_TABLE()
 
 MainTaskBarIcon::MainTaskBarIcon(MainFrame *handler)
 {
-	wxStandardPaths stdpath = wxStandardPaths::Get();
+	wxStandardPaths stdpath;
 	
 	m_pHandler = handler;
 	if(!wxFileExists(stdpath.GetUserDataDir()+"/language/julius.conf")) {
@@ -4011,7 +4010,7 @@ void MainTaskBarIcon::OnMenuDownloadUpdate(wxCommandEvent& )
 
 void MainTaskBarIcon::OnMenuApp(wxCommandEvent& )
 {
-	wxStandardPaths stdpath = wxStandardPaths::Get();
+	wxStandardPaths stdpath;
 	
 	if(!wxFileExists(stdpath.GetUserDataDir()+"/language/julius.conf")) {
 		wxMessageBox("You need to install a language.");
@@ -4022,7 +4021,7 @@ void MainTaskBarIcon::OnMenuApp(wxCommandEvent& )
 
 void MainTaskBarIcon::OnMenuShortcut(wxCommandEvent& )
 {
-	wxStandardPaths stdpath = wxStandardPaths::Get();
+	wxStandardPaths stdpath;
 	
 	if(!wxFileExists(stdpath.GetUserDataDir()+"/language/julius.conf")) {
 		wxMessageBox("You need to install a language.");
@@ -4033,7 +4032,7 @@ void MainTaskBarIcon::OnMenuShortcut(wxCommandEvent& )
 
 void MainTaskBarIcon::OnMenuActiveWord(wxCommandEvent& )
 {
-	wxStandardPaths stdpath = wxStandardPaths::Get();
+	wxStandardPaths stdpath;
 	
 	if(!wxFileExists(stdpath.GetUserDataDir()+"/language/julius.conf")) {
 		wxMessageBox("You need to install a language.");

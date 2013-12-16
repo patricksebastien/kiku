@@ -9,7 +9,7 @@
 // add
 V2cApplication::V2cApplication(wxWindow *parent, wxString language) : gui_v2capplication( parent )
 {
-	stdpath = wxStandardPaths::Get();
+	wxStandardPaths stdpath;
 	
 	mf = (MainFrame *)parent;
 	editmode = false;
@@ -37,7 +37,7 @@ V2cApplication::V2cApplication(wxWindow *parent, wxString language) : gui_v2capp
 // edit
 V2cApplication::V2cApplication(wxWindow *parent, wxString language, wxString v2c) : gui_v2capplication( parent )
 {	
-	stdpath = wxStandardPaths::Get();
+	wxStandardPaths stdpath;
 	
 	mf = (MainFrame *)parent;
 	editmode = true;

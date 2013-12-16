@@ -9,7 +9,7 @@
 
 V2cEditor::V2cEditor(wxWindow *parent, wxString language, wxString v2a, V2cApplication *myparent) : gui_v2ceditor( parent )
 {
-	stdpath = wxStandardPaths::Get();
+	wxStandardPaths stdpath;
 	
 	theparent = myparent;
 	g_language = language;
@@ -21,7 +21,7 @@ V2cEditor::V2cEditor(wxWindow *parent, wxString language, wxString v2a, V2cAppli
 
 V2cEditor::V2cEditor(MainFrame *parent, wxString language, wxString v2a) : gui_v2ceditor( parent )
 {
-	stdpath = wxStandardPaths::Get();
+	wxStandardPaths stdpath;
 	
 	themf = parent;
 	g_language = language;
@@ -33,7 +33,7 @@ V2cEditor::V2cEditor(MainFrame *parent, wxString language, wxString v2a) : gui_v
 
 V2cEditor::V2cEditor(wxWindow *parent, wxString language, wxString v2a, V2cApplication *myparent, wxString edit) : gui_v2ceditor( parent )
 {
-	stdpath = wxStandardPaths::Get();
+	wxStandardPaths stdpath;
 	
 	theparent = myparent;
 	g_language = language;
@@ -79,7 +79,7 @@ V2cEditor::V2cEditor(wxWindow *parent, wxString language, wxString v2a, V2cAppli
 	
 V2cEditor::V2cEditor(MainFrame *parent, wxString language, wxString v2a, wxString edit) : gui_v2ceditor( parent )
 {
-	stdpath = wxStandardPaths::Get();
+	wxStandardPaths stdpath;
 	
 	themf = parent;
 	g_language = language;

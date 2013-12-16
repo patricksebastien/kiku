@@ -5,7 +5,7 @@
   <TabInfoArray Name="TabInfoArray">
     <TabInfo>
       <wxString Value="/home/psc/src/kiku/kiku/main.cpp" Name="FileName"/>
-      <int Value="1169" Name="FirstVisibleLine"/>
+      <int Value="1180" Name="FirstVisibleLine"/>
       <int Value="1189" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>
@@ -17,13 +17,13 @@
     </TabInfo>
     <TabInfo>
       <wxString Value="/home/psc/src/kiku/kiku/gui.cpp" Name="FileName"/>
-      <int Value="7" Name="FirstVisibleLine"/>
+      <int Value="6" Name="FirstVisibleLine"/>
       <int Value="7" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>
     <TabInfo>
       <wxString Value="/home/psc/src/kiku/kiku/main.h" Name="FileName"/>
-      <int Value="226" Name="FirstVisibleLine"/>
+      <int Value="225" Name="FirstVisibleLine"/>
       <int Value="226" Name="CurrentLine"/>
       <wxArrayString Name="Bookmarks"/>
     </TabInfo>

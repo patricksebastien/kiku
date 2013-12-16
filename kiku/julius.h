@@ -39,7 +39,7 @@ class MainFrame;
 class Julius {
 
 	public:
-		Julius(MainFrame* mf) { mf_pHandler = mf; stdpath = wxStandardPaths::Get(); }
+		Julius(MainFrame* mf) { mf_pHandler = mf; }
         bool start_recognition();
 		void pause_recognition();
 		void resume_recognition();

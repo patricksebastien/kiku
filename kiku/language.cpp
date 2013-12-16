@@ -32,7 +32,6 @@ bool Language::download(wxString server, wxString tgz)
 	{
 		// standard path
 		wxStandardPaths stdpath;
-		stdpath = wxStandardPaths::Get();
 		wxFileOutputStream outStream(stdpath.GetTempDir()+"/model.tar.gz");
 		int ts = httpStream->GetSize();
 		const int DLBUFSIZE = 4096;

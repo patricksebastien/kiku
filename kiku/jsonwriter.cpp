@@ -916,11 +916,7 @@ wxJSONWriter::WriteIntValue( wxOutputStream& os, const wxJSONValue& value )
     wxASSERT( data );
 
 #if defined( wxJSON_64BIT_INT )
-    #if wxCHECK_VERSION(2, 9, 0 ) || !defined( wxJSON_USE_UNICODE )
-        // this is fine for wxW 2.9 and for wxW 2.8 ANSI
-        snprintf( buffer, 32, "%" wxLongLongFmtSpec "d",
-        data->m_value.m_valInt64 );
-    #else
+
         // this is for wxW 2.8 Unicode: in order to use the cross-platform
         // format specifier, we use the wxString's sprintf() function and then
         // convert to UTF-8 before writing to the stream
@@ -933,7 +929,7 @@ wxJSONWriter::WriteIntValue( wxOutputStream& os, const wxJSONValue& value )
         wxASSERT( len < 32 );
         memcpy( buffer, cbData, len );
         buffer[len] = 0;
-    #endif
+    
 #else
     snprintf( buffer, 32, "%ld", data->m_value.m_valLong );
 #endif
@@ -970,11 +966,7 @@ wxJSONWriter::WriteUIntValue( wxOutputStream& os, const wxJSONValue& value )
     wxASSERT( data );
 
 #if defined( wxJSON_64BIT_INT )
-    #if wxCHECK_VERSION(2, 9, 0 ) || !defined( wxJSON_USE_UNICODE )
-        // this is fine for wxW 2.9 and for wxW 2.8 ANSI
-        snprintf( buffer, 32, "%" wxLongLongFmtSpec "u",
-        data->m_value.m_valUInt64 );
-    #else
+
         // this is for wxW 2.8 Unicode: in order to use the cross-platform
         // format specifier, we use the wxString's sprintf() function and then
         // convert to UTF-8 before writing to the stream
@@ -987,7 +979,7 @@ wxJSONWriter::WriteUIntValue( wxOutputStream& os, const wxJSONValue& value )
         wxASSERT( len < 32 );
         memcpy( buffer, cbData, len );
         buffer[len] = 0;
-    #endif
+    
 #else
     snprintf( buffer, 32, "%lu", data->m_value.m_valULong );
 #endif

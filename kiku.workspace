@@ -4,7 +4,7 @@
   <Project Name="pa" Path="plugin/pulseaudio/pa.project" Active="No"/>
   <Project Name="pamonitor" Path="plugin/pulseaudiomon/pamonitor.project" Active="No"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Release" Selected="no">
+    <WorkspaceConfiguration Name="Release" Selected="yes">
       <Project Name="pamonitor" ConfigName="Release"/>
       <Project Name="pa" ConfigName="Release"/>
       <Project Name="kiku" ConfigName="Release"/>
@@ -12,7 +12,7 @@
       <Project Name="alsa" ConfigName="Release"/>
       <Project Name="pafullapi" ConfigName="Release"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Debug" Selected="yes">
+    <WorkspaceConfiguration Name="Debug" Selected="no">
       <Project Name="pamonitor" ConfigName="Debug"/>
       <Project Name="pa" ConfigName="Debug"/>
       <Project Name="kiku" ConfigName="Debug"/>
