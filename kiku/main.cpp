@@ -58,8 +58,6 @@
  * when updating this application #define VERSION "x" & update make_deb version and gui.fbp - engine
  * each time touch gui: 145 & 178 (pc_v2capplication / pc_v2cshortcut) = wxCB_SORT
  * wxjson (include) - if new: jsonval.cpp in wxJSONValue::Item() //wxLogTrace( traceMask, _T("(%s) actual object: %s"), __PRETTY_FUNCTION__, GetInfo().c_str()); (fix bug in 64bit)
- * when updating xdotool / libpd - copy *.h to kiku
- * 64 bit: cp 64 bit version of libpd.a & libxdo.a
  * 
  * // LANGUAGE
  * Portuguese
