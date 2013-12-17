@@ -14,9 +14,8 @@
  * retouch of some windows gui to be compatible with gnome3
  * added beam option max
  * added basic application (kiku) & shortcut for japanese
- * 
- * do not load dict in memory? (german have 400k words to put in memory for autocomplete and writedictionary)...
- * 
+ * libnotify timeout is now working
+ *
  * 0.4
  * fix locale
  * add comment field in V2C Editor
@@ -367,6 +366,8 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	
 		// web update
 		haveupdate = false; // for tb
+		
+		// this is causing problem on 12.04
 		startwebthread("/KIKU/packages.txt");
 		
 		// to free the thread onquit
@@ -1221,7 +1222,6 @@ void MainFrame::Oncb_dict( wxCommandEvent& event )
 
 void MainFrame::autocomplete()
 {
-	/*
 	wxFileInputStream input(stdpath.GetUserDataDir()+"/language/dict");
 	wxTextInputStream text(input, "\x09", wxConvUTF8 );
 	while(input.IsOk() && !input.Eof() )
@@ -1230,7 +1230,7 @@ void MainFrame::autocomplete()
 	  juliusformat_word.push_back(line.AfterFirst('[').BeforeFirst(']').Trim().Lower());
 	  juliusformat_pronoun.push_back(line.AfterLast(']').Trim(false));
 	}
-	*/
+	
 	/*
 	wxFFile tfile;
 	tfile.Open(stdpath.GetUserDataDir()+"/language/dict");
@@ -1770,22 +1770,22 @@ bool MainFrame::languagedownload() {
 	if(c_language->GetStringSelection() == "English 14k [VoxForge]") {
 		//server = "voxforge.com";
 		//tgz = "/downloads/Nightly_Builds/current/HTK_AcousticModel-2010-12-16_16kHz_16bit_MFCC_O_D.tgz";
-		server = "cloud.github.com";
-		tgz = "/downloads/patricksebastien/kiku/EnglishAM14k.tar.gz";
+		server = "dl.dropboxusercontent.com";
+		tgz = "/u/1455235/EnglishAM14k.tar.gz";
 	} else if(c_language->GetStringSelection() == "Japanese 20k [Julius]") {
-		server = "julius.sourceforge.jp";
-		tgz = "/archive/japanese-models.tar.gz";
+		server = "dl.dropboxusercontent.com";
+		tgz = "/u/1455235/japanese-models.tar.gz";
 	} else if(c_language->GetStringSelection() == "Japanese 60k [Julius]") {
 		//server = "iij.dl.sourceforge.jp";
 		//tgz = "/julius/51158/dictation-kit-v4.1.tar.gz";
-		server = "cloud.github.com";
-		tgz = "/downloads/patricksebastien/kiku/JapaneseAM60k.tar.gz";
+		server = "dl.dropboxusercontent.com";
+		tgz = "/u/1455235/JapaneseAM60k.tar.gz";
 	} else if(c_language->GetStringSelection() == "German 370k [VoxForge]") {
-		server = "cloud.github.com";
-		tgz = "/downloads/patricksebastien/kiku/GermanAM370k.tar.gz";
+		server = "dl.dropboxusercontent.com";
+		tgz = "/u/1455235/GermanAM200k.tar.gz";
 	} else if(c_language->GetStringSelection() == "Portuguese 65k [Fala Brasil]") {
-		server = "cloud.github.com";
-		tgz = "/downloads/patricksebastien/kiku/PortugueseAM65k.tar.gz";
+		server = "dl.dropboxusercontent.com";
+		tgz = "/u/1455235/PortugueseAM65k.tar.gz";
 	}
 
 	// 1) download
@@ -3472,7 +3472,6 @@ void MainFrame::Onc_notification(wxCommandEvent& event)
 {
 	if(c_notstyle->GetStringSelection() != "None") {
 		if(c_notstyle->GetStringSelection() == "Notify") {
-			wxMessageBox("If you are using Notify OSD (default on Ubuntu) the delay will not work. Hopefully this bug will be fix in a near future.");
 			sp_notdelay->Enable(1);
 			cb_notpretrig->Enable(1);
 		} else if(c_notstyle->GetStringSelection() == "XOSD") {
@@ -3614,7 +3613,7 @@ void MainFrame::Eye(wxString txt)
 			#else
 				nn = notify_notification_new("kiku", txt, NULL, NULL);
 			#endif
-			notify_notification_set_timeout(nn, sp_notdelay->GetValue());
+			notify_notification_set_timeout(nn, sp_notdelay->GetValue() * 1000);
 			if (!notify_notification_show(nn, NULL))
 			{
 				wxMessageBox("Please report this problem to: kiku@11h11.com");

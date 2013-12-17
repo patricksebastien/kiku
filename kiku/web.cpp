@@ -6,7 +6,6 @@
 #include "web.h"
 #include "main.h"
 
-
 void Web::ParseFile(wxString whaturl)
 {
 	
