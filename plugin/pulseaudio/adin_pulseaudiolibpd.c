@@ -111,7 +111,7 @@ adin_read(SP16 * buf, int sampnum)
 		return (-2);
 	}
 	
-	libpd_process_short(inbuf, buf);
+	libpd_process_short(4, inbuf, buf);
 
 	cnt = bufsize / sizeof(SP16);
 	return(cnt);

@@ -117,7 +117,7 @@ adin_read(SP16 * buf, int sampnum)
 		return (-2);
 	}
 	
-	libpd_process_short(inbuf, buf);
+	libpd_process_short(4, inbuf, buf);
 	
 	if (pa_simple_write(s, buf, bufsize, &errorpa) < 0) {
 		printf("Error: adin_pulseaudio: pa_simple_read() failed: %s\n", pa_strerror(errorpa));

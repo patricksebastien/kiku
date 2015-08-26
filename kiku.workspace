@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CodeLite_Workspace Name="kiku" Database="./kiku.tags">
+<CodeLite_Workspace Name="kiku" Database="./kiku.tags" SWTLW="No">
   <Project Name="kiku" Path="kiku/kiku.project" Active="Yes"/>
   <Project Name="pa" Path="plugin/pulseaudio/pa.project" Active="No"/>
   <Project Name="pamonitor" Path="plugin/pulseaudiomon/pamonitor.project" Active="No"/>
