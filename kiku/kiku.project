@@ -74,10 +74,10 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g;-DLIBNOTIFYVER=4;$(shell /home/psc/src/wx291svnrelease/bin/wx-config --cxxflags);$(shell /home/psc/src/juliuscvs/bin/libjulius-config --cflags);$(shell /home/psc/src/juliuscvs/bin/libsent-config --cflags);$(shell /usr/bin/xosd-config --cflags);$(shell pkg-config --cflags libnotify);$(shell pkg-config gconf-2.0 --cflags)" C_Options="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
+      <Compiler Options="-g;-DLIBNOTIFYVER=4;$(shell wx-config --cppflags);$(shell /home/psc/src/juliuscvs/bin/libjulius-config --cflags);$(shell /home/psc/src/juliuscvs/bin/libsent-config --cflags);$(shell /usr/bin/xosd-config --cflags);$(shell pkg-config --cflags libnotify);$(shell pkg-config gconf-2.0 --cflags)" C_Options="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
         <Preprocessor Value="__WX__ -DDEBUG"/>
       </Compiler>
-      <Linker Options="$(shell /home/psc/src/wx291svnrelease/bin/wx-config --libs);$(shell /home/psc/src/juliuscvs/bin/libjulius-config --libs);$(shell /home/psc/src/juliuscvs/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs);$(shell pkg-config --libs libnotify);$(shell pkg-config gconf-2.0 --libs);-Wl,-export-dynamic -Wl,-whole-archive ../common/libpd.a -Wl,-no-whole-archive" Required="yes">
+      <Linker Options="$(shell wx-config --libs);$(shell /home/psc/src/juliuscvs/bin/libjulius-config --libs);$(shell /home/psc/src/juliuscvs/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs);$(shell pkg-config --libs libnotify);$(shell pkg-config gconf-2.0 --libs);-Wl,-export-dynamic -Wl,-whole-archive ../common/libpd.a -Wl,-no-whole-archive" Required="yes">
         <Library Value="liblo"/>
         <Library Value="xdo.a"/>
         <Library Value="Xtst"/>
@@ -114,10 +114,10 @@
       </Completion>
     </Configuration>
     <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-O2;-DLIBNOTIFYVER=4;$(shell /home/psc/src/wx291svnrelease/bin/wx-config --cxxflags);$(shell /home/psc/src/juliuscvs/bin/libjulius-config --cflags);$(shell /home/psc/src/juliuscvs/bin/libsent-config --cflags);$(shell /usr/bin/xosd-config --cflags);$(shell pkg-config --cflags libnotify);$(shell pkg-config gconf-2.0 --cflags)" C_Options="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
+      <Compiler Options="-O2;-DLIBNOTIFYVER=4;$(shell wx-config --cppflags);$(shell /home/psc/src/juliuscvs/bin/libjulius-config --cflags);$(shell /home/psc/src/juliuscvs/bin/libsent-config --cflags);$(shell /usr/bin/xosd-config --cflags);$(shell pkg-config --cflags libnotify);$(shell pkg-config gconf-2.0 --cflags)" C_Options="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
         <Preprocessor Value="__WX__"/>
       </Compiler>
-      <Linker Options="-s;$(shell /home/psc/src/wx291svnrelease/bin/wx-config --libs);$(shell /home/psc/src/juliuscvs/bin/libjulius-config --libs);$(shell /home/psc/src/juliuscvs/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs);$(shell pkg-config --libs libnotify);$(shell pkg-config gconf-2.0 --libs);-Wl,-export-dynamic -Wl,-whole-archive ../common/libpd.a -Wl,-no-whole-archive" Required="yes">
+      <Linker Options="-s;$(shell wx-config --libs);$(shell /home/psc/src/juliuscvs/bin/libjulius-config --libs);$(shell /home/psc/src/juliuscvs/bin/libsent-config --libs);$(shell /usr/bin/xosd-config --libs);$(shell pkg-config --libs libnotify);$(shell pkg-config gconf-2.0 --libs);-Wl,-export-dynamic -Wl,-whole-archive ../common/libpd.a -Wl,-no-whole-archive" Required="yes">
         <Library Value="liblo"/>
         <Library Value="xdo.a"/>
         <Library Value="Xtst"/>

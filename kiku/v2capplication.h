@@ -57,7 +57,7 @@ class V2cApplication : public gui_v2capplication {
 		bool bugpn;
 		
 		// standard path
-		wxStandardPaths stdpath;
+		wxStandardPathsBase& stdpath = wxStandardPaths::Get();
 
 };
 

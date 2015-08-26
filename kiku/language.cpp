@@ -8,10 +8,6 @@
 
 bool Language::download(wxString server, wxString tgz)
 {
-	#ifdef DEBUG
-		wxPuts("Start LanguageDownload");
-	#endif
-
 	// not in thread because: http://groups.google.com/group/wx-users/browse_thread/thread/a2ac8b947b657f78
 	wxHTTP get;
 	get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
@@ -27,13 +23,17 @@ bool Language::download(wxString server, wxString tgz)
 	}
 	
 	wxInputStream *httpStream = get.GetInputStream(tgz);
-	
 	if (get.GetError() == wxPROTO_NOERR)
 	{
 		// standard path
-		wxStandardPaths stdpath;
+		
+		wxStandardPathsBase& stdpath = wxStandardPaths::Get();
+		wxPuts(stdpath.GetTempDir());
 		wxFileOutputStream outStream(stdpath.GetTempDir()+"/model.tar.gz");
 		int ts = httpStream->GetSize();
+		wxString my;
+		my << ts;
+		wxPuts(my);
 		const int DLBUFSIZE = 4096;
 		unsigned char buffer[DLBUFSIZE+1];
 		do {
@@ -53,9 +53,6 @@ bool Language::download(wxString server, wxString tgz)
 	} else {
 		return 0;
 	}
-	#ifdef DEBUG
-		wxPuts("Done LanguageDownload");
-	#endif
 	wxDELETE(httpStream);
 	get.Close();
 	

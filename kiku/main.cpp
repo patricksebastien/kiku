@@ -2,6 +2,9 @@
  * Author: Patrick Sébastien
  * http://www.workinprogress.ca/kiku
  * 
+ * 0.6
+ * compile for 14.04 LTS using wxwidgets 3 (dynamic link instead of static)
+ * 
  * 0.5
  * compile for newer version of debian based system
  * new languages: German & Portuguese
@@ -163,7 +166,7 @@ bool MainApp::OnInit()
 	icontb.CopyFromBitmap( *iconpng );	
 	kiku->SetIcon(icontb);
 	
-	wxStandardPaths stdpath;
+	wxStandardPathsBase& stdpath = wxStandardPaths::Get();
 	
 	wxString current_desktop;
 	wxGetEnv("XDG_CURRENT_DESKTOP", &current_desktop);
@@ -214,10 +217,10 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	// libpd
 	libpd_init();
 	libpd_bind("prvu");
-	libpd_floathook = (t_libpd_floathook) rfloat;
+	//libpd_floathook = (t_libpd_floathook) rfloat;
 	
 	// input channel, output channel, sr, one tick per buffer
-	libpd_init_audio(1, 1, 16000, 4); // if users report glitch: check tick per buffer
+	libpd_init_audio(1, 1, 16000); // if users report glitch: check tick per buffer
 	
 	// compute audio    [; pd dsp 1(
 	libpd_start_message(1);
@@ -233,7 +236,8 @@ MainFrame::MainFrame(wxWindow *parent) : MainFrameBase( parent )
 	xdotooldelay = 12000;
 	
 	// standard path
-	wxStandardPaths stdpath;
+	wxStandardPathsBase& stdpath = wxStandardPaths::Get();
+
 
 	// keyboard shortcut - CTRL+Q
 	const int rid = wxNewId();
@@ -973,7 +977,8 @@ bool MainFrame::downloadv2c(wxString server, wxString tgz)
 	if (get.GetError() == wxPROTO_NOERR)
 	{
 		// standard path
-		wxStandardPaths stdpath;
+		wxStandardPathsBase& stdpath = wxStandardPaths::Get();
+
 		wxFileOutputStream outStream(stdpath.GetTempDir()+"/v2c.gz");
 		const int DLBUFSIZE = 4096;
 		unsigned char buffer[DLBUFSIZE+1];
@@ -1271,8 +1276,7 @@ void MainFrame::autocomplete()
 	}
 	tfile.Close();
 	*/
-	
-	
+
 	/*
 	// problem with utf8
 	wxFileInputStream input(dict);
@@ -1768,22 +1772,22 @@ bool MainFrame::languagedownload() {
 	if(c_language->GetStringSelection() == "English 14k [VoxForge]") {
 		//server = "voxforge.com";
 		//tgz = "/downloads/Nightly_Builds/current/HTK_AcousticModel-2010-12-16_16kHz_16bit_MFCC_O_D.tgz";
-		server = "dl.dropboxusercontent.com";
-		tgz = "/u/1455235/EnglishAM14k.tar.gz";
+		server = "www.workinprogress.ca";
+		tgz = "/KIKU/EnglishAM14k.tar.gz";
 	} else if(c_language->GetStringSelection() == "Japanese 20k [Julius]") {
-		server = "dl.dropboxusercontent.com";
-		tgz = "/u/1455235/japanese-models.tar.gz";
+		server = "www.workinprogress.ca";
+		tgz = "/KIKU/japanese-models.tar.gz";
 	} else if(c_language->GetStringSelection() == "Japanese 60k [Julius]") {
 		//server = "iij.dl.sourceforge.jp";
 		//tgz = "/julius/51158/dictation-kit-v4.1.tar.gz";
-		server = "dl.dropboxusercontent.com";
-		tgz = "/u/1455235/JapaneseAM60k.tar.gz";
+		server = "www.workinprogress.ca";
+		tgz = "/KIKU/JapaneseAM60k.tar.gz";
 	} else if(c_language->GetStringSelection() == "German 370k [VoxForge]") {
-		server = "dl.dropboxusercontent.com";
-		tgz = "/u/1455235/GermanAM200k.tar.gz";
+		server = "www.workinprogress.ca";
+		tgz = "/KIKU/GermanAM200k.tar.gz";
 	} else if(c_language->GetStringSelection() == "Portuguese 65k [Fala Brasil]") {
-		server = "dl.dropboxusercontent.com";
-		tgz = "/u/1455235/PortugueseAM65k.tar.gz";
+		server = "www.workinprogress.ca";
+		tgz = "/KIKU/PortugueseAM65k.tar.gz";
 	}
 
 	// 1) download
@@ -1791,7 +1795,6 @@ bool MainFrame::languagedownload() {
 		wxMessageBox("Cannot download the language file.\nMaybe the server is down or you have a connection problem.");
 		return 0;
 	}
-		
 	// 2) gunzip
 	g_languagedownloading->Pulse();
 	wxYield();
@@ -3956,7 +3959,7 @@ END_EVENT_TABLE()
 
 MainTaskBarIcon::MainTaskBarIcon(MainFrame *handler)
 {
-	wxStandardPaths stdpath;
+	wxStandardPathsBase& stdpath = wxStandardPaths::Get();
 	
 	m_pHandler = handler;
 	if(!wxFileExists(stdpath.GetUserDataDir()+"/language/julius.conf")) {
@@ -4007,7 +4010,7 @@ void MainTaskBarIcon::OnMenuDownloadUpdate(wxCommandEvent& )
 
 void MainTaskBarIcon::OnMenuApp(wxCommandEvent& )
 {
-	wxStandardPaths stdpath;
+	wxStandardPathsBase& stdpath = wxStandardPaths::Get();
 	
 	if(!wxFileExists(stdpath.GetUserDataDir()+"/language/julius.conf")) {
 		wxMessageBox("You need to install a language.");
@@ -4018,9 +4021,8 @@ void MainTaskBarIcon::OnMenuApp(wxCommandEvent& )
 
 void MainTaskBarIcon::OnMenuShortcut(wxCommandEvent& )
 {
-	wxStandardPaths stdpath;
-	
-	if(!wxFileExists(stdpath.GetUserDataDir()+"/language/julius.conf")) {
+	wxStandardPathsBase& stdp = wxStandardPaths::Get();
+	if(!wxFileExists(stdp.GetUserDataDir()+"/language/julius.conf")) {
 		wxMessageBox("You need to install a language.");
 	} else {
 		m_pHandler->Dopb_v2cshortcut();
@@ -4029,7 +4031,7 @@ void MainTaskBarIcon::OnMenuShortcut(wxCommandEvent& )
 
 void MainTaskBarIcon::OnMenuActiveWord(wxCommandEvent& )
 {
-	wxStandardPaths stdpath;
+	wxStandardPathsBase& stdpath = wxStandardPaths::Get();
 	
 	if(!wxFileExists(stdpath.GetUserDataDir()+"/language/julius.conf")) {
 		wxMessageBox("You need to install a language.");

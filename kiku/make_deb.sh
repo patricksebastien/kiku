@@ -10,7 +10,7 @@
 
 
 ## Copy files to the fakeroot directory structure
-cur_rev=5
+cur_rev=6
 arch=`uname -m`
 lnv=4 #libnotify version
 
@@ -66,7 +66,7 @@ Section: Accessibility
 Priority: optional
 Architecture: ${arch}
 Essential: no
-Depends: libx11-6, libc6, libgcc1, libstdc++6, zlib1g, libexpat1, libtiff4, libjpeg62, libpng12-0, libsm6, libxxf86vm1, libglib2.0-0, libfontconfig1, libfreetype6, libpango1.0-0, libcairo2, libgtk2.0-0, libatk1.0-0, libxosd2, libxext6, libxinerama1, libnotify${lnv}, libdbus-glib-1-2, libdbus-1-3, libxtst6, liblo7, libasound2, libpulse0
+Depends: libx11-6, libc6, libgcc1, libstdc++6, zlib1g, libexpat1, libtiff5, libwxgtk3.0-0, libjpeg62, libpng12-0, libsm6, libxxf86vm1, libglib2.0-0, libfontconfig1, libfreetype6, libpango1.0-0, libcairo2, libgtk2.0-0, libatk1.0-0, libxosd2, libxext6, libxinerama1, libnotify${lnv}, libdbus-glib-1-2, libdbus-1-3, libxtst6, liblo7, libasound2, libpulse0
 Installed-Size: ${inst_size}
 Maintainer: Patrick Sebastien <kiku@11h11.com>
 Description: Speech recognition

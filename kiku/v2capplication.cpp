@@ -9,7 +9,7 @@
 // add
 V2cApplication::V2cApplication(wxWindow *parent, wxString language) : gui_v2capplication( parent )
 {
-	wxStandardPaths stdpath;
+	wxStandardPathsBase& stdpath = wxStandardPaths::Get();
 	
 	mf = (MainFrame *)parent;
 	editmode = false;
@@ -37,7 +37,7 @@ V2cApplication::V2cApplication(wxWindow *parent, wxString language) : gui_v2capp
 // edit
 V2cApplication::V2cApplication(wxWindow *parent, wxString language, wxString v2c) : gui_v2capplication( parent )
 {	
-	wxStandardPaths stdpath;
+	wxStandardPathsBase& stdpath = wxStandardPaths::Get();
 	
 	mf = (MainFrame *)parent;
 	editmode = true;
@@ -126,8 +126,8 @@ void V2cApplication::autocomplete()
 	}
 	wxTextEntryBase *pretrig = tc_pretrig;
 	wxTextEntryBase *trig = tc_trig;
-	pretrig->AutoComplete(juliusformat_word, 3);
-	trig->AutoComplete(juliusformat_word, 3);
+	pretrig->AutoComplete(juliusformat_word);
+	trig->AutoComplete(juliusformat_word);
 }
 
 void V2cApplication::autocompleteprocess()

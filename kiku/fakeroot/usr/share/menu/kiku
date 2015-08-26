@@ -1,0 +1,4 @@
+?package(kiku):needs="x11" section="Applications/Accessibility" \ 
+        title="kiku" command="/usr/bin/kiku" \ 
+        icon="/usr/share/kiku/images/kiku.png" 
+

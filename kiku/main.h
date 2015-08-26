@@ -6,7 +6,7 @@
 #ifndef __main__
 #define __main__
 
-#define VERSION "5"
+#define VERSION "6"
 
 // main wxWidgets header file
 #include <wx/wx.h>
@@ -358,7 +358,7 @@ protected:
         long m_pidLast;
 		
 		// standard path
-		wxStandardPaths stdpath;
+		wxStandardPathsBase& stdpath = wxStandardPaths::Get();
 		wxString GetCurrentWorkingDirectory();
 		
 		// eye

@@ -47,7 +47,7 @@ private:
 		wxString m_edit;
 		
 		// standard path
-		wxStandardPaths stdpath;
+		wxStandardPathsBase& stdpath = wxStandardPaths::Get();
 		
 		void OnLink( wxHtmlLinkEvent& event );
 };

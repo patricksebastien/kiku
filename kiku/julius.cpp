@@ -377,7 +377,7 @@ bool Julius::loadConfigFile()
 
 	recog = j_create_instance_from_jconf(jconf);
 	if (recog == NULL) {
-		wxStandardPaths stdpath;
+		wxStandardPathsBase& stdpath = wxStandardPaths::Get();
 		wxRemoveFile(stdpath.GetUserDataDir()+"/language/julius.conf");
 		wxRemoveFile(stdpath.GetUserDataDir()+"/language/dictionary");
 		fprintf(stderr, "error in j_create_instance_from_jconf\n");

@@ -55,7 +55,7 @@ class Julius {
 		FILE *srm_log_fp;
 		
 		// standard path
-		wxStandardPaths stdpath;
+		wxStandardPathsBase& stdpath = wxStandardPaths::Get();
 };
 
 
